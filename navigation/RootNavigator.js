@@ -22,7 +22,6 @@ export default function RootNavigator() {
                 setIsLoading(false);
             }
         );
-
         // unsubscribe auth listener on unmount
         return unsubscribeAuthStateChanged;
     }, []);
