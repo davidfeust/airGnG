@@ -21,7 +21,7 @@ export default function Home() {
         <View style={styles.container}>
             <Text>Home</Text>
             <Text>{user.email}</Text>
-            <Button title={'login'} onPress={handleSignOut}/>
+            <Button title={'logout'} onPress={handleSignOut}/>
         </View>
     );
 }
