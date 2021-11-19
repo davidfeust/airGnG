@@ -1,5 +1,11 @@
-import React, { useState } from 'react';
-import { StyleSheet} from "react-native";
+import React, {useState} from 'react';
+import {Button, StyleSheet, TextInput, Text, View} from "react-native";
+import {globalStyles} from "../assets/styles/globalStyles";
+import Checkbox from 'expo-checkbox';
+import {getDatabase, ref, onValue} from 'firebase/database';
+import {db} from "../config/firebase";
+import {collection, addDoc} from "firebase/firestore";
+
 
 /**
  * create a page where the user fills a form
@@ -8,10 +14,57 @@ import { StyleSheet} from "react-native";
  * @returns <form>
  */
 export default function PostStation() {
-    
-    return ( <form style={styles.replaceMe}></form> );
+    const [address, setAddress] = useState("");
+    const [phone, setPhone] = useState("");
+    const [name, setName] = useState("");
+    const [price, setPrice] = useState("");
+    const [shadowed, setShadowed] = useState(false);
+
+    function buttonPost() {
+        console.log(address)
+        console.log(price)
+        console.log(shadowed)
+        console.log(name)
+        console.log(phone)
+
+
+        // try {
+        //     const docRef = addDoc(collection(db, "postedStation"), {
+        //         address: address,
+        //         price: price,
+        //         shadowed: shadowed,
+        //         name: name,
+        //         phone: phone
+        //     });
+        //     console.log("Document written with ID: ", docRef.id);
+        // } catch (e) {
+        //     console.error("Error adding document: ", e);
+        // }
+
+        addDoc(collection(db, "postedStation"), {
+            address: address,
+            price: price,
+            shadowed: shadowed,
+            name: name,
+            phone: phone
+        })
+            .then((docRef) => console.log("Document written with ID: ", docRef.id))
+            .catch(e => console.error("Error adding document: ", e));
+    }
+
+    return (
+        <View style={globalStyles.container}>
+            <Text style={globalStyles.title}>please fill the details on your station</Text>
+            <TextInput onChangeText={text => setAddress(text)} placeholder="Address"/>
+            <TextInput onChangeText={text => setPrice(text)} placeholder="Price per hour" keyboardType={"number-pad"}/>
+            <Text>contact info:</Text>
+            <TextInput onChangeText={text => setName(text)} placeholder="Name"/>
+            <TextInput onChangeText={text => setPhone(text)} placeholder="Phone number" keyboardType={"phone-pad"}/>
+            <Text>Shadowed parking spot</Text>
+            <Checkbox value={shadowed} onValueChange={setShadowed}/>
+            <Button onPress={buttonPost} title={"post"}/>
+        </View>
+    );
 }
 
-const styles = StyleSheet.create({
-    replaceMe:{alignItems:'center',},
-});
+const styles = StyleSheet.create({});
