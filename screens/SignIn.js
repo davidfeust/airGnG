@@ -20,7 +20,7 @@ export default function SignIn() {
 
     return (
         <View style={styles.container}>
-            <Text>Login</Text>
+            <Text style={styles.title}>SingIn</Text>
             <TextInput placeholder={'email'} onChangeText={(text) => setEmail(text)}/>
             <TextInput placeholder={'password'} onChangeText={(text) => setPassword(text)} secureTextEntry/>
             <Button title={'login'} onPress={handleLogin}/>
@@ -34,5 +34,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-    },
+    }
+    ,title: {
+        fontSize: 30,
+    }
 });
