@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
-import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
+import {signInWithEmailAndPassword} from "firebase/auth";
+import {auth} from "../config/firebase";
 
-const auth = getAuth();
-
-export default function Login() {
+export default function SignIn() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
