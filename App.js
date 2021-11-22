@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import StationCard from "./components/StationCard";
 import Routes from "./navigation";
+import PostStation from "./screens/PostStation";
 import SubscribeStation from "./screens/SubscribeStation";
 
 export default function App() {
@@ -9,6 +10,7 @@ export default function App() {
     // <Routes/>
     <View style={{flex:1, justifyContent:'center'}}>
         <SubscribeStation/>
+        {/* <PostStation/> */}
     </View>
   );
 }
