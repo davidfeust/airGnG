@@ -1,13 +1,14 @@
-import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
 import Home from "../screens/Home";
+import StationCard from "../components/StationCard";
 
 const Stack = createStackNavigator();
 
 export default function LoggedInStack() {
-    return (
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name='Home' component={Home}/>
-        </Stack.Navigator>
-    );
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Home" component={Home} />
+    </Stack.Navigator>
+  );
 }

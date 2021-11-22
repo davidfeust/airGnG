@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Button, Text, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Button,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import StationCard from "../components/StationCard";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../config/firebase";
@@ -32,17 +38,19 @@ export default function SubscribeStation() {
   }, []);
   return (
     <ScrollView>
-      {cards != []
-        ? cards.map(({ name, address, price, image, date }) => (
-            <StationCard
-              owner={name}
-              address={address}
-              price={price}
-              image={image}
-              date={date}
-            />
-          ))
-        : null}
+      {cards != [] ? (
+        cards.map(({ name, address, price, image, date }) => (
+          <StationCard
+            owner={name}
+            address={address}
+            price={price}
+            image={image}
+            date={date}
+          />
+        ))
+      ) : (
+        <ActivityIndicator size={"large"} color="blue" />
+      )}
       <Button title="press" />
     </ScrollView>
   );

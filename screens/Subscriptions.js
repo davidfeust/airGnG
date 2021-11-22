@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { StyleSheet} from "react-native";
-import { ScrollView } from 'react-native-gesture-handler';
+import React, { useState } from "react";
+import { StyleSheet } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
 /**
  * represents all the subscribed stations.
@@ -8,10 +8,9 @@ import { ScrollView } from 'react-native-gesture-handler';
  * @returns <ScrollView>
  */
 export default function Subscribtions() {
-    
-    return ( <ScrollView style={styles.replaceMe}></ScrollView> );
+  return <ScrollView></ScrollView>;
 }
 
 const styles = StyleSheet.create({
-    replaceMe:{alignItems:'center',},
+  replaceMe: { alignItems: "center" },
 });

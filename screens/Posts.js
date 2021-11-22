@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { StyleSheet} from "react-native";
-import { ScrollView } from 'react-native-gesture-handler';
+import React, { useState } from "react";
+import { StyleSheet } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
 /**
  * represents the page where a user can see the status of his post.
@@ -9,10 +9,9 @@ import { ScrollView } from 'react-native-gesture-handler';
  * @returns <ScrollView>
  */
 export default function Posts() {
-    
-    return ( <ScrollView style={styles.replaceMe}></ScrollView> );
+  return <ScrollView></ScrollView>;
 }
 
 const styles = StyleSheet.create({
-    replaceMe:{alignItems:'center',},
+  replaceMe: { alignItems: "center" },
 });

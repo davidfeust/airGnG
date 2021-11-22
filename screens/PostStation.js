@@ -30,19 +30,6 @@ export default function PostStation() {
     console.log(date);
     console.log(image);
 
-    // try {
-    //     const docRef = addDoc(collection(db, "postedStation"), {
-    //         address: address,
-    //         price: price,
-    //         shadowed: shadowed,
-    //         name: name,
-    //         phone: phone
-    //     });
-    //     console.log("Document written with ID: ", docRef.id);
-    // } catch (e) {
-    //     console.error("Error adding document: ", e);
-    // }
-
     addDoc(collection(db, "postedStation"), {
       address: address,
       price: price,
