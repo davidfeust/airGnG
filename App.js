@@ -8,21 +8,21 @@ import SubscribeStation from "./screens/SubscribeStation";
 export default function App() {
   return (
     // <Routes/>
-    <View style={{flex:1, justifyContent:'center'}}>
-        <SubscribeStation/>
-        {/* <PostStation/> */}
+    <View style={{ flex: 1, justifyContent: "center" }}>
+      <SubscribeStation />
+      {/* <PostStation /> */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    }
-    , title: {
-        fontSize: 30,
-    }
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  title: {
+    fontSize: 30,
+  },
 });
