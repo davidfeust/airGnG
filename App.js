@@ -1,9 +1,6 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import {StyleSheet} from "react-native";
 import Routes from "./navigation";
-import Home from "./screens/Home";
-import PostStation from "./screens/PostStation";
-import SubscribeStation from "./screens/SubscribeStation";
 
 export default function App() {
   return <Routes />;

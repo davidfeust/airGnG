@@ -5,8 +5,7 @@ import { doc, deleteDoc } from "firebase/firestore";
 import {db} from "../config/firebase";
 
 
-export default function MyStationCard({owner, address, date, price, image, onDelete, id}) {
-    // const [id, setId] = useState('');
+export default function MyStationCard({owner, address, date, price, image, onDelete, id, onEdit}) {
 
     const OnEdit = () => {
 
@@ -20,7 +19,7 @@ export default function MyStationCard({owner, address, date, price, image, onDel
                 price={price}
                 image={image}
                 date={date}>
-                <Button title="edit" onPress={() => OnEdit()}/>
+                <Button title="edit" onPress={() => onEdit(id)}/>
                 <Button title="delete" onPress={() => onDelete(id)}/>
             </StationCard>
         </View>

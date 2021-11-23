@@ -1,18 +1,10 @@
 import React, {useContext, useEffect, useState} from "react";
-import {
-    StyleSheet,
-    Button,
-    Text,
-    ScrollView,
-    ActivityIndicator,
-    View, Alert
-} from "react-native";
-import StationCard from "../components/StationCard";
+import {ActivityIndicator, Alert, ScrollView, StyleSheet, TouchableOpacity, View} from "react-native";
 import {collection, deleteDoc, doc, getDocs} from "firebase/firestore";
 import {db} from "../config/firebase";
 import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
 import MyStationCard from "../components/MyStationCard";
-import data from "bootstrap/js/src/dom/data";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 /**
  * represents the page where a user can see the status of his post.
@@ -20,9 +12,13 @@ import data from "bootstrap/js/src/dom/data";
  * but it might change...
  * @returns <ScrollView>
  */
-export default function MyPosts() {
+export default function MyPosts({navigation}) {
     const {user} = useContext(AuthenticatedUserContext);
     const [cards, setCards] = useState([]);
+
+    const onEdit = (id) => {
+        navigation.push('EditMyStation', {id: id})
+    }
 
     const onDelete = (id) => {
         console.log()
@@ -36,8 +32,7 @@ export default function MyPosts() {
                         console.log('Yes');
                         console.log(id)
                         await deleteDoc(doc(db, 'postedStation', id));
-                        setCards(cards.filter((card)=>card.id !== id))
-                        update()
+                        setCards(cards.filter((card) => card.id !== id))
                     },
                 },
                 // The "No" button
@@ -48,47 +43,61 @@ export default function MyPosts() {
             ]
         )
     }
-
+    const getCards = async () => {
+        const col = collection(db, "postedStation");
+        const cards_col = await getDocs(col);
+        setCards(cards_col.docs
+            .map((doc) => {
+                let id = doc.id;
+                let data = doc.data()
+                return {id, ...data};
+            })
+            .filter((doc) => doc.owner_id === user.uid))
+    };
 
     useEffect(() => {
-        const getCards = async () => {
-            const col = collection(db, "postedStation");
-            const cards_col = await getDocs(col);
-            // cards.forEach((card) => console.log(card.data()));
-            setCards(cards_col.docs
-                .map((doc) => {
-                    let id = doc.id;
-                    let data = doc.data()
-                    return {id, ...data};
-                })
-                .filter((doc) => doc.owner_id === user.uid))
-        };
-        getCards();
+        navigation.addListener('focus', getCards)
     }, []);
 
     return (
-        <ScrollView>
-            {cards !== [] ? (
-                cards.map(({name, address, price, image, date, id}) => (
-                    <MyStationCard
-                        owner={name}
-                        address={address}
-                        price={price}
-                        image={image}
-                        date={date}
-                        id={id}
-                        onDelete={onDelete}
-                    />
-                ))
-            ) : (
-                <ActivityIndicator size={"large"} color="blue"/>
-            )}
-            <Button title="press"/>
-        </ScrollView>
+        <View>
+            <TouchableOpacity style={styles.plus} onPress={() => navigation.push('PostStation')}>
+                <MaterialCommunityIcons name={'plus'} color={'gray'} size={18}/>
+            </TouchableOpacity>
+            <ScrollView>
+
+                {cards !== [] ? (
+                    cards.map(({name, address, price, image, date, id}) => (
+                        <MyStationCard
+                            owner={name}
+                            address={address}
+                            price={price}
+                            image={image}
+                            date={date}
+                            id={id}
+                            onDelete={onDelete}
+                            onEdit={onEdit}
+                        />
+                    ))
+                ) : (
+                    <ActivityIndicator size={"large"} color="blue"/>
+                )}
+
+            </ScrollView>
+        </View>
     );
 
 }
 
 const styles = StyleSheet.create({
     replaceMe: {alignItems: "center"},
+    plus: {
+
+        backgroundColor: 'blue',
+        borderRadius: 50,
+        height: 50,
+        width: 50,
+        alignContent: 'center',
+        justifyContent: 'center'
+    }
 });

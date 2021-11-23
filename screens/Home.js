@@ -33,9 +33,8 @@ export default function Home() {
         <Tab.Navigator>
             <Tab.Screen name="HomeTab" component={HomeTab}/>
             <Tab.Screen name="SubscribeStation" component={SubscribeStation}/>
-            <Tab.Screen name="MyPosts" component={MyPosts}/>
+            <Tab.Screen name="MyPosts" component={MyPosts} />
             <Tab.Screen name="Subscriptions" component={Subscriptions}/>
-            <Tab.Screen name="PostStation" component={PostStation}/>
         </Tab.Navigator>
     );
 }

@@ -1,12 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {
-    StyleSheet,
-    Button,
-    Text,
-    ScrollView,
-    ActivityIndicator,
-} from "react-native";
-import StationCard from "../components/StationCard";
+import {ActivityIndicator, Button, ScrollView, StyleSheet,} from "react-native";
 import {collection, getDocs} from "firebase/firestore";
 import {db} from "../config/firebase";
 import PublicStationCard from "../components/PublicStationCard";
@@ -28,20 +21,22 @@ async function getCards() {
 
 export default function SubscribeStation() {
     const [cards, setCards] = useState([]);
-    var update = false;
+
+    const getCards = async () => {
+        const col = collection(db, "postedStation");
+        const cards_col = await getDocs(col);
+        // cards.forEach((card) => console.log(card.data()));
+        setCards(cards_col.docs.map(doc => {
+            let id = doc.id;
+            let data = doc.data()
+            return {id, ...data};
+        }));
+    }
+
     useEffect(() => {
-        const getCards = async () => {
-            const col = collection(db, "postedStation");
-            const cards_col = await getDocs(col);
-            // cards.forEach((card) => console.log(card.data()));
-            setCards(cards_col.docs.map((doc) => {
-                let id = doc.id;
-                let data = doc.data()
-                return {id, ...data};
-            }));
-        };
-        getCards();
-    }, [update]);
+        navigation.addListener('focus', getCards)
+    }, []);
+
     return (
         <ScrollView>
             {cards != [] ? (
