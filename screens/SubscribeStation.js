@@ -19,7 +19,7 @@ async function getCards() {
     return cards;
 }
 
-export default function SubscribeStation() {
+export default function SubscribeStation({navigation}) {
     const [cards, setCards] = useState([]);
 
     const getCards = async () => {

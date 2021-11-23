@@ -3,6 +3,7 @@ import {Alert, Button, StyleSheet, Text, View} from 'react-native';
 import StationCard from "./StationCard";
 import { doc, deleteDoc } from "firebase/firestore";
 import {db} from "../config/firebase";
+import Checkbox from "expo-checkbox";
 
 
 export default function MyStationCard({owner, address, date, price, image, onDelete, id, onEdit, available}) {
