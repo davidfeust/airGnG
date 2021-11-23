@@ -18,8 +18,6 @@ export default function StationCard({owner, address, date, price, image, childre
             <Text>{address}</Text>
             <Text>price: {price} nis</Text>
             {/* <Card.Image source={{ uri: { image } }}></Card.Image> */}
-
-
             {children}
         </Card>
     );
