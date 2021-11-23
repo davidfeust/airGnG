@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
-  StyleSheet,
-  Button,
-  Text,
-  ScrollView,
-  ActivityIndicator,
+    StyleSheet,
+    Button,
+    Text,
+    ScrollView,
+    ActivityIndicator,
 } from "react-native";
 import StationCard from "../components/StationCard";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../config/firebase";
+import {collection, getDocs} from "firebase/firestore";
+import {db} from "../config/firebase";
+import PublicStationCard from "../components/PublicStationCard";
 
 /**
  * create a page with all available stations in the DB,
@@ -19,43 +20,50 @@ import { db } from "../config/firebase";
  * @returns <ScrollView>
  */
 async function getCards() {
-  const col = collection(db, "postedStation");
-  const cards = await getDocs(col);
-  cards.forEach((card) => console.log(card.data()));
-  return cards;
+    const col = collection(db, "postedStation");
+    const cards = await getDocs(col);
+    cards.forEach((card) => console.log(card.data()));
+    return cards;
 }
 
 export default function SubscribeStation() {
-  const [cards, setCards] = useState([]);
-  useEffect(() => {
-    const getCards = async () => {
-      const col = collection(db, "postedStation");
-      const cards_col = await getDocs(col);
-      // cards.forEach((card) => console.log(card.data()));
-      setCards(cards_col.docs.map((doc) => doc.data()));
-    };
-    getCards();
-  }, []);
-  return (
-    <ScrollView>
-      {cards != [] ? (
-        cards.map(({ name, address, price, image, date }) => (
-          <StationCard
-            owner={name}
-            address={address}
-            price={price}
-            image={image}
-            date={date}
-          />
-        ))
-      ) : (
-        <ActivityIndicator size={"large"} color="blue" />
-      )}
-      <Button title="press" />
-    </ScrollView>
-  );
+    const [cards, setCards] = useState([]);
+    var update = false;
+    useEffect(() => {
+        const getCards = async () => {
+            const col = collection(db, "postedStation");
+            const cards_col = await getDocs(col);
+            // cards.forEach((card) => console.log(card.data()));
+            setCards(cards_col.docs.map((doc) => {
+                let id = doc.id;
+                let data = doc.data()
+                return {id, ...data};
+            }));
+        };
+        getCards();
+    }, [update]);
+    return (
+        <ScrollView>
+            {cards != [] ? (
+                cards.map(({name, address, price, image, date, id}) => (
+                    <PublicStationCard
+                        owner={name}
+                        address={address}
+                        price={price}
+                        image={image}
+                        date={date}
+                        id={id}
+                        key={id}
+                    />
+                ))
+            ) : (
+                <ActivityIndicator size={"large"} color="blue"/>
+            )}
+            <Button title="press"/>
+        </ScrollView>
+    );
 }
 
 const styles = StyleSheet.create({
-  // replaceMe:{alignItems:'center',},
+    // replaceMe:{alignItems:'center',},
 });
