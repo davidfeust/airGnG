@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import {ActivityIndicator, Alert, ScrollView, StyleSheet, TouchableOpacity, View} from "react-native";
-import {collection, deleteDoc, doc, getDocs} from "firebase/firestore";
+import {collection, query,where, deleteDoc, doc, getDocs} from "firebase/firestore";
 import {db} from "../config/firebase";
 import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
 import MyStationCard from "../components/MyStationCard";
@@ -44,15 +44,14 @@ export default function MyPosts({navigation}) {
         )
     }
     const getCards = async () => {
-        const col = collection(db, "postedStation");
+        const col = query(collection(db, "postedStation"),where('owner_id', '==' , user.uid) );
         const cards_col = await getDocs(col);
         setCards(cards_col.docs
             .map((doc) => {
                 let id = doc.id;
                 let data = doc.data()
                 return {id, ...data};
-            })
-            .filter((doc) => doc.owner_id === user.uid))
+            }))
     };
 
     useEffect(() => {
