@@ -39,7 +39,7 @@ export default function SubscribeStation({navigation}) {
 
     return (
         <ScrollView>
-            {cards != [] ? (
+            {cards !== [] ? (
                 cards.map(({name, address, price, image, date, id}) => (
                     <PublicStationCard
                         owner={name}

@@ -61,10 +61,10 @@ export default function MyPosts({navigation}) {
     return (
         <View>
             <TouchableOpacity style={styles.plus} onPress={() => navigation.push('PostStation')}>
-                <MaterialCommunityIcons name={'plus'} color={'gray'} size={18}/>
+                <MaterialCommunityIcons style={{textAlign:'center',}} name={'plus'} color={'black'} size={26}/>
             </TouchableOpacity>
-            <ScrollView>
 
+            <ScrollView>
                 {cards !== [] ? (
                     cards.map(({name, address, price, image, date, id}) => (
                         <MyStationCard
@@ -76,6 +76,7 @@ export default function MyPosts({navigation}) {
                             id={id}
                             onDelete={onDelete}
                             onEdit={onEdit}
+                            key={id}
                         />
                     ))
                 ) : (
@@ -91,12 +92,15 @@ export default function MyPosts({navigation}) {
 const styles = StyleSheet.create({
     replaceMe: {alignItems: "center"},
     plus: {
-
-        backgroundColor: 'blue',
-        borderRadius: 50,
-        height: 50,
-        width: 50,
+        backgroundColor: '#054f01',
         alignContent: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        width: 55,
+        height: 55,
+        borderRadius: 30,
+        position: 'absolute',
+        bottom: 15,
+        right: 15,
+        zIndex: 2
     }
 });

@@ -56,30 +56,37 @@ export default function PostStation(props) {
     return (
         <View style={globalStyles.container}>
             <Text style={globalStyles.title}>
-                please fill the details on your station
+                Please fill the details on your station:
             </Text>
             <TextInput
+                style={globalStyles.text_input}
                 onChangeText={(text) => setAddress(text)}
                 placeholder="Address"
             />
             <TextInput
+                style={globalStyles.text_input}
                 onChangeText={(text) => setPrice(text)}
                 placeholder="Price per hour"
                 keyboardType={"number-pad"}
             />
             <TextInput
+                style={globalStyles.text_input}
                 onChangeText={(text) => setDate(text)}
                 placeholder="Date"
                 keyboardType={"number-pad"}
             />
             <Text>contact info:</Text>
-            <TextInput onChangeText={(text) => setName(text)} placeholder="Name"/>
             <TextInput
+                style={globalStyles.text_input}
+                onChangeText={(text) => setName(text)} placeholder="Name"/>
+            <TextInput
+                style={globalStyles.text_input}
                 onChangeText={(text) => setPhone(text)}
                 placeholder="Phone number"
                 keyboardType={"phone-pad"}
             />
             <TextInput
+                style={globalStyles.text_input}
                 onChangeText={(text) => setImage(text)}
                 placeholder="Image(url)"
                 keyboardType={"number-pad"}

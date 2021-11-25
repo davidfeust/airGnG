@@ -8,6 +8,7 @@ import PostStation from "./PostStation";
 import SubscribeStation from "./SubscribeStation";
 import Subscriptions from "./Subscriptions";
 import MyPosts from "./MyPosts";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 const auth = getAuth();
 
@@ -31,9 +32,34 @@ export default function Home() {
     );
     return (
         <Tab.Navigator>
-            <Tab.Screen name="HomeTab" component={HomeTab}/>
-            <Tab.Screen name="SubscribeStation" component={SubscribeStation}/>
-            <Tab.Screen name="MyPosts" component={MyPosts} />
+            <Tab.Screen
+                name="HomeTab"
+                component={HomeTab}
+                options={{
+                    tabBarLabel: 'Home',
+                    tabBarIcon: ({color, size}) => (
+                        <MaterialCommunityIcons name="home" color={color} size={size}/>
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="SubscribeStation"
+                component={SubscribeStation}
+                options={{
+                    tabBarLabel: 'Subscribe Station',
+                    tabBarIcon: ({color, size}) => (
+                        <MaterialCommunityIcons name="ev-station" color={color} size={size}/>
+                    ),
+                }}/>
+            <Tab.Screen
+                name="MyPosts"
+                component={MyPosts}
+                options={{
+                    tabBarLabel: 'My Posts',
+                    tabBarIcon: ({color, size}) => (
+                        <MaterialCommunityIcons name="post" color={color} size={size}/>
+                    ),
+                }}/>
             <Tab.Screen name="Subscriptions" component={Subscriptions}/>
         </Tab.Navigator>
     );

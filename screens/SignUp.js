@@ -3,6 +3,7 @@ import {auth} from "../config/firebase";
 import {Button, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {createUserWithEmailAndPassword} from "firebase/auth";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
+import {globalStyles} from "../assets/styles/globalStyles";
 
 /**
  * create a page where the user fills a form
@@ -45,19 +46,40 @@ export default function SignUp() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>
-                sing up</Text>
-            <TextInput onChangeText={text => setEmail(text)} placeholder="insert email" autoCompleteType={"email"}
+            <Text style={[globalStyles.title, styles.title]}>Sing Up</Text>
+            <TextInput style={[globalStyles.text_input, {marginTop: 20}]} onChangeText={text => setEmail(text)}
+                       placeholder="Insert email"
+                       autoCompleteType={"email"}
                        keyboardType={"email-address"}/>
-            <TextInput onChangeText={text => setPassword(text)} placeholder="insert password" secureTextEntry={showPass}
-                       autoCompleteType={"password"}/>
-            <TextInput onChangeText={text => setPasswordRepeat(text)} placeholder="repeat password"
-                       secureTextEntry={showPass}/>
-            <TouchableOpacity onPress={() => setShowPass(!showPass)}>
-                <MaterialCommunityIcons name={showPass ? "eye-off" : "eye"} color={'gray'} size={18}/>
+
+
+            <View style={[globalStyles.text_input, {
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+            }]}>
+                <View style={{flex: 10}}>
+                    <TextInput onChangeText={text => setPassword(text)}
+                               placeholder="Insert password" secureTextEntry={showPass}
+                               autoCompleteType={"password"}/>
+                </View>
+                <View style={{flex: 1}}>
+                    <TouchableOpacity onPress={() => setShowPass(!showPass)}>
+                        <MaterialCommunityIcons name={showPass ? "eye-off" : "eye"} color={'gray'} size={18}/>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+            <TextInput style={globalStyles.text_input} onChangeText={text => setPasswordRepeat(text)}
+                       placeholder="Repeat password"
+                       secureTextEntry={showPass}>
+            </TextInput>
+
+            <TouchableOpacity style={[globalStyles.bt, {marginTop: 60}]} onPress={handlerSingUp}>
+                <Text style={globalStyles.in_bt}>Sign Up</Text>
             </TouchableOpacity>
 
-            <Button onPress={handlerSingUp} title="sing up"/>
+
         </View>
     );
 }
@@ -67,9 +89,9 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
     },
     title: {
-        fontSize: 30,
+        marginTop: '30%',
+        marginBottom: '20%'
     }
 });

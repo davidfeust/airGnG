@@ -1,6 +1,9 @@
 import React from "react";
 import {StyleSheet} from "react-native";
 import Routes from "./navigation";
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs(['Setting a timer']);
 
 export default function App() {
   return <Routes />;
