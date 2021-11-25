@@ -5,6 +5,7 @@ import {db} from "../config/firebase";
 import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
 import MyStationCard from "../components/MyStationCard";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
+import {colors} from "../assets/styles/colors";
 
 /**
  * represents the page where a user can see the status of his post.
@@ -55,7 +56,7 @@ export default function MyPosts({navigation}) {
     };
 
     useEffect(() => {
-        navigation.addListener('focus', getCards) //whene we 'focus' the Subscriptions tab, getCards() is called 
+        navigation.addListener('focus', getCards) //whene we 'focus' the Subscriptions tab, getCards() is called
     }, []);
 
     return (
@@ -92,7 +93,7 @@ export default function MyPosts({navigation}) {
 const styles = StyleSheet.create({
     replaceMe: {alignItems: "center"},
     plus: {
-        backgroundColor: '#054f01',
+        backgroundColor: colors.primary,
         alignContent: 'center',
         justifyContent: 'center',
         width: 55,
