@@ -28,8 +28,10 @@ export default function MyStationCard({owner, address, date, price, image, onDel
                 date={date}>
                 <Text>available</Text>
                 <Checkbox value={innerAvailable} onValueChange={value => editAvailable(value)}/>
-                <Button title="edit" onPress={() => onEdit(id)}/>
-                <Button title="delete" onPress={() => onDelete(id)}/>
+                {onEdit!=null?  <Button title="edit" onPress={() => onEdit(id)}/> : null}
+                {onDelete!=null?   <Button title="delete" onPress={() => onDelete(id)}/> : null}
+               
+               
             </StationCard>
         </View>
     );

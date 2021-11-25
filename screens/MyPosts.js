@@ -17,7 +17,7 @@ export default function MyPosts({navigation}) {
     const [cards, setCards] = useState([]);
 
     const onEdit = (id) => {
-        navigation.push('EditMyStation', {id: id})
+        navigation.push('EditMyStation', {id: id}) // push to the navigation EditMyStation() component' so we could go back
     }
 
     const onDelete = (id) => {
@@ -55,7 +55,7 @@ export default function MyPosts({navigation}) {
     };
 
     useEffect(() => {
-        navigation.addListener('focus', getCards)
+        navigation.addListener('focus', getCards) //whene we 'focus' the Subscriptions tab, getCards() is called 
     }, []);
 
     return (

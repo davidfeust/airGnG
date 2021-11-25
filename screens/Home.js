@@ -30,7 +30,8 @@ export default function Home() {
         </View>
     );
     return (
-        <Tab.Navigator>
+        
+        <Tab.Navigator>  
             <Tab.Screen name="HomeTab" component={HomeTab}/>
             <Tab.Screen name="SubscribeStation" component={SubscribeStation}/>
             <Tab.Screen name="MyPosts" component={MyPosts} />

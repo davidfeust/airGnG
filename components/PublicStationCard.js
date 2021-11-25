@@ -30,7 +30,7 @@ export default function PublicStationCard({owner, address, date, price, image, i
                 <CheckBox className="check" title="available" checked={isAvailable}>
                     available
                 </CheckBox>
-                <Button title="order" onPress={OnOrder}/>
+               {isAvailable? <Button title="order" onPress={OnOrder}/>:null}
             </StationCard>
         </View>
     );
