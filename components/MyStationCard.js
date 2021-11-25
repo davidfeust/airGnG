@@ -29,19 +29,10 @@ export default function MyStationCard({owner, address, date, price, image, onDel
                 date={date}>
                 <Text>available</Text>
                 <Checkbox value={innerAvailable} onValueChange={value => editAvailable(value)}/>
-
-                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                    <TouchableOpacity>
-                        <MaterialCommunityIcons style={{textAlign:'center',}} name={'pencil'} color={'black'} size={26}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <MaterialCommunityIcons style={{textAlign:'center',}} name={'delete'} color={'black'} size={26}/>
-                    </TouchableOpacity>
-                </View>
+                {onEdit!=null?  <Button title="edit" onPress={() => onEdit(id)}/> : null}
+                {onDelete!=null?   <Button title="delete" onPress={() => onDelete(id)}/> : null}
 
 
-                <Button title="edit" onPress={() => onEdit(id)}/>
-                <Button title="delete" onPress={() => onDelete(id)}/>
             </StationCard>
         </View>
     );
