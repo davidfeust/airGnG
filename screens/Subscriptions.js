@@ -5,8 +5,15 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  View,} from "react-native";
-import {collection, query, where, deleteDoc, doc,getDoc,
+  View,
+} from "react-native";
+import {
+  collection,
+  query,
+  where,
+  deleteDoc,
+  doc,
+  getDoc,
   getDocs,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
@@ -58,8 +65,6 @@ export default function Subscriptions({ navigation }) {
 
     setCards(
       cards_col.docs.map((doc) => {
-
-
         let id = doc.id;
         let data = doc.data();
 
@@ -77,14 +82,7 @@ export default function Subscriptions({ navigation }) {
       <ScrollView>
         {cards !== [] ? (
           cards.map(
-            ({
-              date_of_post,
-              owner_name,
-              id,
-              owner_address,
-              price,
-              image,
-            }) => {
+            ({ date_of_post, owner_name, id, owner_address, price, image }) => {
               //    getDoc(
               // query(
               //   collection(db, "postedStation"),
@@ -93,15 +91,17 @@ export default function Subscriptions({ navigation }) {
               //   ).then((d) => d.date);
 
               //   console.log("Date = " +date)
-              return (<PublicStationCard
-              id={id}
-              owner={owner_name}
-              address={owner_address}
-               date={date_of_post}
-                price={price}
-              image={image}
-
-              />);
+              return (
+                <PublicStationCard
+                  key={id}
+                  id={id}
+                  owner={owner_name}
+                  address={owner_address}
+                  date={date_of_post}
+                  price={price}
+                  image={image}
+                />
+              );
             }
           )
         ) : (
