@@ -23,7 +23,10 @@ export default function StationCard({
       <Text>{date}</Text>
       <Text>{address}</Text>
       <Text>price: {price} nis</Text>
-      <Card.Image source={{ uri: image }}></Card.Image>
+      <Card.Image
+        style={{ width: 200, height: 200, alignItems: "center" }}
+        source={{ uri: image }}
+      ></Card.Image>
       {children}
     </Card>
   );
