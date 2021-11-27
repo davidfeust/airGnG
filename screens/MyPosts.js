@@ -20,6 +20,7 @@ import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvide
 import MyStationCard from "../components/MyStationCard";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors } from "../assets/styles/colors";
+import { publicStationsContext } from "../navigation/LoggedInStack";
 
 /**
  * represents the page where a user can see the status of his post.
@@ -29,7 +30,7 @@ import { colors } from "../assets/styles/colors";
  */
 export default function MyPosts({ navigation }) {
   const { user } = useContext(AuthenticatedUserContext);
-  const [cards, setCards] = useState([]);
+  const { cards } = useContext(publicStationsContext);
 
   const onEdit = (id) => {
     navigation.push("EditMyStation", { id: id }); // push to the navigation EditMyStation() component' so we could go back
@@ -59,24 +60,24 @@ export default function MyPosts({ navigation }) {
       ]
     );
   };
-  const getCards = async () => {
-    const col = query(
-      collection(db, "postedStation"),
-      where("owner_id", "==", user.uid)
-    );
-    const cards_col = await getDocs(col);
-    setCards(
-      cards_col.docs.map((doc) => {
-        let id = doc.id;
-        let data = doc.data();
-        return { id, ...data };
-      })
-    );
-  };
+  // const getCards = async () => {
+  //   const col = query(
+  //     collection(db, "postedStation"),
+  //     where("owner_id", "==", user.uid)
+  //   );
+  //   const cards_col = await getDocs(col);
+  //   setCards(
+  //     cards_col.docs.map((doc) => {
+  //       let id = doc.id;
+  //       let data = doc.data();
+  //       return { id, ...data };
+  //     })
+  //   );
+  // };
 
-  useEffect(() => {
-    navigation.addListener("focus", getCards); //whene we 'focus' the Subscriptions tab, getCards() is called
-  }, []);
+  // useEffect(() => {
+  //   navigation.addListener("focus", getCards); //whene we 'focus' the Subscriptions tab, getCards() is called
+  // }, []);
 
   return (
     <View>
