@@ -1,12 +1,12 @@
-import React, { useContext } from "react";
+import React, {useContext} from "react";
 import {
-  ActivityIndicator,
-  Button,
-  ScrollView,
-  StyleSheet,
+    ActivityIndicator,
+    Button,
+    ScrollView,
+    StyleSheet,
 } from "react-native";
 import PublicStationCard from "../components/PublicStationCard";
-import { publicStationsContext } from "../navigation/LoggedInStack";
+import {publicStationsContext} from "../navigation/LoggedInStack";
 
 /**
  * create a page with all available stations in the DB,
@@ -17,32 +17,31 @@ import { publicStationsContext } from "../navigation/LoggedInStack";
  * @returns <ScrollView>
  */
 
-export default function SubscribeStation({ navigation }) {
-  const { cards } = useContext(publicStationsContext);
+export default function SubscribeStation({navigation}) {
+    const {cards} = useContext(publicStationsContext);
 
-  console.log(cards);
-  return (
-    <ScrollView>
-      {cards !== [] ? (
-        cards.map(({ name, address, price, image, date, id }) => (
-          <PublicStationCard
-            owner={name}
-            address={address}
-            price={price}
-            image={image}
-            date={date}
-            id={id}
-            key={id}
-          />
-        ))
-      ) : (
-        <ActivityIndicator size={"large"} color="blue" />
-      )}
-      <Button title="press" />
-    </ScrollView>
-  );
+    return (
+        <ScrollView>
+            {cards !== [] ? (
+                cards.map(({name, address, price, image, date, id}) => (
+                    <PublicStationCard
+                        owner={name}
+                        address={address}
+                        price={price}
+                        image={image}
+                        date={date}
+                        id={id}
+                        key={id}
+                    />
+                ))
+            ) : (
+                <ActivityIndicator size={"large"} color="blue"/>
+            )}
+            <Button title="press"/>
+        </ScrollView>
+    );
 }
 
 const styles = StyleSheet.create({
-  // replaceMe:{alignItems:'center',},
+    // replaceMe:{alignItems:'center',},
 });

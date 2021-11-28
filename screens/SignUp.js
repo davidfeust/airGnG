@@ -22,9 +22,6 @@ export default function SignUp() {
     const [showPass, setShowPass] = useState(true);
 
     function handlerSingUp() {
-        console.log(email)
-        console.log(password)
-        console.log(passwordRepeat)
         if (password === passwordRepeat) {
             //    firebase
             createUserWithEmailAndPassword(auth, email, password)

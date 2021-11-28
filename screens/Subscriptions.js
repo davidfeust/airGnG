@@ -32,7 +32,6 @@ export default function Subscriptions({ navigation }) {
   const [cards, setCards] = useState([]); // useState is needed because cards is directy connected to the screen
 
   const onCancel = (id) => {
-    console.log();
     return Alert.alert(
       "Are your sure?",
       "Are you sure you want to cancel the submit?",
@@ -41,8 +40,6 @@ export default function Subscriptions({ navigation }) {
         {
           text: "Yes",
           onPress: async () => {
-            console.log("Yes");
-            console.log(id);
             await deleteDoc(doc(db, "Subscriptions", id));
             setCards(cards.filter((card) => card.id !== id));
           },
@@ -71,7 +68,6 @@ export default function Subscriptions({ navigation }) {
         return { id, ...data };
       })
     );
-    console.log(cards);
   };
 
   useEffect(() => {
@@ -90,7 +86,6 @@ export default function Subscriptions({ navigation }) {
               // )
               //   ).then((d) => d.date);
 
-              //   console.log("Date = " +date)
               return (
                 <PublicStationCard
                   key={id}

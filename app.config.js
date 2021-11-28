@@ -44,6 +44,7 @@ export default {
       storageBucket: process.env.STORAGE_BUCKET,
       messagingSenderId: process.env.MESSAGING_SENDER_ID,
       appId: process.env.APP_ID,
+      googleMapsApi: process.env.GOOGLE_MAPS_APIKEY
     },
   },
 };

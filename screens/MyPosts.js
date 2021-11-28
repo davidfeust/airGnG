@@ -37,7 +37,6 @@ export default function MyPosts({ navigation }) {
   };
 
   const onDelete = (id) => {
-    console.log();
     return Alert.alert(
       "Are your sure?",
       "Are you sure you want to remove this beautiful box?",
@@ -46,8 +45,6 @@ export default function MyPosts({ navigation }) {
         {
           text: "Yes",
           onPress: async () => {
-            console.log("Yes");
-            console.log(id);
             await deleteDoc(doc(db, "postedStation", id));
             setCards(cards.filter((card) => card.id !== id));
           },

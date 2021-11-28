@@ -26,13 +26,6 @@ export default function PostStation(props) {
   const [image, setImage] = useState("");
 
   function buttonPost() {
-    console.log(address);
-    console.log(price);
-    console.log(shadowed);
-    console.log(name);
-    console.log(phone);
-    console.log(date);
-    console.log(image);
 
     addDoc(collection(db, "postedStation"), {
       owner_id: user.uid,
@@ -45,7 +38,6 @@ export default function PostStation(props) {
       image: image,
     })
       .then((docRef) => {
-        console.log("Document written with ID: ", docRef.id);
         props.navigation.pop();
       })
       .catch((e) => console.error("Error adding document: ", e));

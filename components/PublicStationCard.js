@@ -9,14 +9,6 @@ export default function PublicStationCard({owner, address, date, price, image, i
 
     const OnOrder = (e) => {
         setIsAvailable(!isAvailable);
-        const to_push = {
-            owner: owner,
-            address: address,
-            date: date,
-            price: price,
-            image: image,
-        };
-        console.log(to_push);
     };
 
     return (
