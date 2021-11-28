@@ -6,7 +6,7 @@ import {
     StyleSheet,
 } from "react-native";
 import PublicStationCard from "../components/PublicStationCard";
-import {publicStationsContext} from "../navigation/LoggedInStack";
+import {publicStationsContext} from "../navigation/PublicStationsProvider";
 
 /**
  * create a page with all available stations in the DB,
