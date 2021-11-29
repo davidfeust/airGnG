@@ -24,6 +24,7 @@ export default function StationCard({
       <Text>{date}</Text>
       <Text>{address}</Text>
       <Text>price: {price} nis</Text>
+
       {image != undefined && (
         <Card.Image style={imageStyle} source={{ uri: image }} />
       )}
