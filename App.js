@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Routes from "./navigation";
 import { LogBox } from "react-native";
 

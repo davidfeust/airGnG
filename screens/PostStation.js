@@ -6,6 +6,7 @@ import { getDatabase, ref, onValue } from "firebase/database";
 import { db } from "../config/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
+import { addressToCords } from "../utils/GlobalFuncitions";
 
 /**
  * create a page where the user fills a form
@@ -25,7 +26,8 @@ export default function PostStation(props) {
   const [date, setDate] = useState("");
   const [image, setImage] = useState("");
 
-  function buttonPost() {
+  async function buttonPost() {
+    const cords = await addressToCords(address);
 
     addDoc(collection(db, "postedStation"), {
       owner_id: user.uid,
@@ -36,6 +38,7 @@ export default function PostStation(props) {
       phone: phone,
       date: date,
       image: image,
+      cords: cords,
     })
       .then((docRef) => {
         props.navigation.pop();
