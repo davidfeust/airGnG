@@ -39,5 +39,10 @@
     "@babel/core": "^7.12.9",
     "@react-navigation/native": "^6.0.6"
   },
-  "private": true
+  "private": true,
+  "splash": {
+    "image": "./assets/splash.png",
+    "resizeMode": "contain",
+    "backgroundColor": "#000000"
+  }
 }
