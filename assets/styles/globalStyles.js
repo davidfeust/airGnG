@@ -47,4 +47,12 @@ export const globalStyles = StyleSheet.create({
   checkbox_label: {
     margin: 10,
   },
+  mini_card: {
+    flexDirection: "row",
+    marginHorizontal: 80,
+    width: 100,
+    opacity: 0.8,
+    // elevation: 10,
+  },
+  mini_card_image_style: { width: 200, height: 100, alignItems: "center" },
 });

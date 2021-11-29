@@ -18,13 +18,11 @@ import {
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
-import MyStationCard from "../components/MyStationCard";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import PublicStationCard from "../components/PublicStationCard";
 
 /**
  * represents all the subscribed stations.
- * (a subscribed station is a station that the user picked from SubscribeStation.js)
+ * (a subscribed station is a station that the user picked from SearchStation.js)
  * @returns <ScrollView>
  */
 export default function Subscriptions({ navigation }) {
@@ -32,6 +30,7 @@ export default function Subscriptions({ navigation }) {
   const [cards, setCards] = useState([]); // useState is needed because cards is directy connected to the screen
 
   const onCancel = (id) => {
+    console.log();
     return Alert.alert(
       "Are your sure?",
       "Are you sure you want to cancel the submit?",
@@ -40,6 +39,8 @@ export default function Subscriptions({ navigation }) {
         {
           text: "Yes",
           onPress: async () => {
+            console.log("Yes");
+            console.log(id);
             await deleteDoc(doc(db, "Subscriptions", id));
             setCards(cards.filter((card) => card.id !== id));
           },
@@ -68,6 +69,7 @@ export default function Subscriptions({ navigation }) {
         return { id, ...data };
       })
     );
+    console.log(cards);
   };
 
   useEffect(() => {
@@ -79,13 +81,6 @@ export default function Subscriptions({ navigation }) {
         {cards !== [] ? (
           cards.map(
             ({ date_of_post, owner_name, id, owner_address, price, image }) => {
-              //    getDoc(
-              // query(
-              //   collection(db, "postedStation"),
-              //   where("owner_id", "==", owner_id)
-              // )
-              //   ).then((d) => d.date);
-
               return (
                 <PublicStationCard
                   key={id}

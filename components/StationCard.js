@@ -15,6 +15,7 @@ export default function StationCard({
   price,
   image,
   children,
+  imageStyle,
 }) {
   return (
     <Card>
@@ -24,10 +25,7 @@ export default function StationCard({
       <Text>{address}</Text>
       <Text>price: {price} nis</Text>
       {image != undefined && (
-        <Card.Image
-          style={{ width: 200, height: 200, alignItems: "center" }}
-          source={{ uri: image }}
-        />
+        <Card.Image style={imageStyle} source={{ uri: image }} />
       )}
       {children}
     </Card>

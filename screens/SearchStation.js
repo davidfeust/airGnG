@@ -9,6 +9,7 @@ import {
 import PublicStationCard from "../components/PublicStationCard";
 import { publicStationsContext } from "../navigation/PublicStationsProvider";
 import MapView, { AnimatedRegion, Marker } from "react-native-maps";
+import { globalStyles } from "../assets/styles/globalStyles";
 
 /**
  * create a page with all available stations in the DB,
@@ -47,7 +48,21 @@ export default function SearchStation({ navigation }) {
           />
         ))}
       </MapView>
-      <ScrollView horizontal style={{ position: "absolute", bottom: 10 }}>
+      <ScrollView
+        snapToInterval={
+          globalStyles.mini_card.width +
+          globalStyles.mini_card.marginHorizontal * 2
+        }
+        showsHorizontalScrollIndicator={false}
+        horizontal
+        pagingEnabled
+        style={{
+          position: "absolute",
+          bottom: 10,
+          alignSelf: "center",
+        }}
+        contentContainerStyle={{ paddingRight: 110 }}
+      >
         {cards !== [] ? (
           cards.map(({ name, address, price, image, date, id }) => (
             <PublicStationCard
@@ -58,6 +73,7 @@ export default function SearchStation({ navigation }) {
               date={date}
               id={id}
               key={id}
+              style={globalStyles.mini_card}
             />
           ))
         ) : (
