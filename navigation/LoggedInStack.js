@@ -4,7 +4,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 import Home from "../screens/Home";
 import StationCard from "../components/StationCard";
 import PostStation from "../screens/PostStation";
-import EditMyStation from "../components/EditMyStation";
+import EditMyStation from "../screens/EditMyStation";
 import MyStationCard from "../components/MyStationCard";
 import MyPosts from "../screens/MyPosts";
 import {collection, getDocs, onSnapshot} from "firebase/firestore";

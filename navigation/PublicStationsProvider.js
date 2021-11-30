@@ -20,6 +20,7 @@ export const PublicStationsProvider = ({ children }) => {
     };
 
     useEffect(() => {
+        // listener of firebase DB, call getCards() in case the data has changed
         const unsub = onSnapshot(collection(db, "postedStation"), (col) => {
             getCards();
         });

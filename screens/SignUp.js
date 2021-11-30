@@ -4,6 +4,7 @@ import {Button, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react
 import {createUserWithEmailAndPassword} from "firebase/auth";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {globalStyles} from "../assets/styles/globalStyles";
+import MyButton from "../components/MyButton";
 
 /**
  * create a page where the user fills a form
@@ -20,20 +21,25 @@ export default function SignUp() {
     const [password, setPassword] = useState("");
     const [passwordRepeat, setPasswordRepeat] = useState("");
     const [showPass, setShowPass] = useState(true);
+    const [processing, setProcessing] = useState(false);
 
     function handlerSingUp() {
         if (password === passwordRepeat) {
             //    firebase
+            setProcessing(true)
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     // Signed in
                     const user = userCredential.user;
                     // ...
+                    setProcessing(false)
+
                 })
                 .catch((error) => {
                     const errorCode = error.code;
                     const errorMessage = error.message;
                     alert(errorMessage);
+                    setProcessing(false)
                 });
 
         } else {
@@ -72,10 +78,7 @@ export default function SignUp() {
                        secureTextEntry={showPass}>
             </TextInput>
 
-            <TouchableOpacity style={[globalStyles.bt, {marginTop: 60}]} onPress={handlerSingUp}>
-                <Text style={globalStyles.in_bt}>Sign Up</Text>
-            </TouchableOpacity>
-
+            <MyButton onPress={handlerSingUp} text={'Sign Up'} style={{marginTop: 60}} processing={processing}/>
 
         </View>
     );

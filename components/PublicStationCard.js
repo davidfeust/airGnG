@@ -3,6 +3,7 @@ import { Button, StyleSheet, Text, View } from "react-native";
 import StationCard from "./StationCard";
 import { CheckBox } from "react-native-elements/dist/checkbox/CheckBox";
 import { globalStyles } from "../assets/styles/globalStyles";
+import MyButton from "./MyButton";
 
 export default function PublicStationCard({
   owner,
@@ -32,10 +33,12 @@ export default function PublicStationCard({
         <CheckBox className="check" title="available" checked={isAvailable}>
           available
         </CheckBox>
-        {isAvailable ? <Button title="order" onPress={OnOrder} /> : null}
+        {isAvailable ?
+            <View style={{alignItems: 'center'}}>
+              <MyButton text="order" onPress={OnOrder} />
+            </View>
+            : null}
       </StationCard>
     </View>
   );
 }
-
-const styles = StyleSheet.create({});

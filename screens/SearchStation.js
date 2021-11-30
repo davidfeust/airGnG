@@ -1,15 +1,15 @@
-import React, { useContext, useState } from "react";
+import React, {useContext, useState} from "react";
 import {
-  ActivityIndicator,
-  ScrollView,
-  StyleSheet,
-  View,
-  Dimensions,
+    ActivityIndicator,
+    ScrollView,
+    StyleSheet,
+    View,
+    Dimensions,
 } from "react-native";
 import PublicStationCard from "../components/PublicStationCard";
-import { publicStationsContext } from "../navigation/PublicStationsProvider";
-import MapView, { AnimatedRegion, Marker } from "react-native-maps";
-import { globalStyles } from "../assets/styles/globalStyles";
+import {publicStationsContext} from "../navigation/PublicStationsProvider";
+import MapView, {AnimatedRegion, Marker} from "react-native-maps";
+import {globalStyles} from "../assets/styles/globalStyles";
 
 /**
  * create a page with all available stations in the DB,
@@ -20,79 +20,79 @@ import { globalStyles } from "../assets/styles/globalStyles";
  * @returns <ScrollView>
  */
 
-export default function SearchStation({ navigation }) {
-  const { cards } = useContext(publicStationsContext);
-  const [region, setRegion] = useState({
-    latitude: 31.046051,
-    longitude: 34.851612,
-    latitudeDelta: 4,
-    longitudeDelta: 4,
-  });
+export default function SearchStation({navigation}) {
+    const {cards} = useContext(publicStationsContext);
+    const [region, setRegion] = useState({
+        latitude: 31.046051,
+        longitude: 34.851612,
+        latitudeDelta: 4,
+        longitudeDelta: 4,
+    });
 
-  const onRegionChange = (region) => {
-    setRegion({ region });
-  };
-  return (
-    <View style={styles.container}>
-      <MapView
-        region={region}
-        onRegionChange={onRegionChange}
-        initialRegion={region}
-        style={styles.map}
-      >
-        {cards.map((card) => (
-          <Marker
-            key={card.id}
-            title={card.address}
-            coordinate={{ latitude: card.cords.lat, longitude: card.cords.lng }}
-          />
-        ))}
-      </MapView>
-      <ScrollView
-        snapToInterval={
-          globalStyles.mini_card.width +
-          globalStyles.mini_card.marginHorizontal * 2
-        }
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        pagingEnabled
-        style={{
-          position: "absolute",
-          bottom: 10,
-          alignSelf: "center",
-        }}
-        contentContainerStyle={{ paddingRight: 110 }}
-      >
-        {cards !== [] ? (
-          cards.map(({ name, address, price, image, date, id }) => (
-            <PublicStationCard
-              owner={name}
-              address={address}
-              price={price}
-              image={image}
-              date={date}
-              id={id}
-              key={id}
-              style={globalStyles.mini_card}
-            />
-          ))
-        ) : (
-          <ActivityIndicator size={"large"} color="blue" />
-        )}
-      </ScrollView>
-    </View>
-  );
+    const onRegionChange = (region) => {
+        setRegion(region);
+    };
+    return (
+        <View style={styles.container}>
+            <MapView
+                region={region}
+                onRegionChange={onRegionChange}
+                initialRegion={region}
+                style={styles.map}
+            >
+                {cards.map((card) => (
+                    <Marker
+                        key={card.id}
+                        title={card.address}
+                        coordinate={{latitude: card.cords.lat, longitude: card.cords.lng}}
+                    />
+                ))}
+            </MapView>
+            <ScrollView
+                snapToInterval={
+                    globalStyles.mini_card.width +
+                    globalStyles.mini_card.marginHorizontal * 2
+                }
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                pagingEnabled
+                style={{
+                    position: "absolute",
+                    bottom: 10,
+                    alignSelf: "center",
+                }}
+                contentContainerStyle={{paddingRight: 110}}
+            >
+                {cards !== [] ? (
+                    cards.map(({name, address, price, image, date, id}) => (
+                        <PublicStationCard
+                            owner={name}
+                            address={address}
+                            price={price}
+                            image={image}
+                            date={date}
+                            id={id}
+                            key={id}
+                            style={globalStyles.mini_card}
+                        />
+                    ))
+                ) : (
+                    <ActivityIndicator size={"large"} color="blue"/>
+                )}
+            </ScrollView>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  map: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
-  },
+    container: {
+        flex: 1,
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    map: {
+        width: Dimensions.get("window").width,
+        height: Dimensions.get("window").height,
+    },
 });

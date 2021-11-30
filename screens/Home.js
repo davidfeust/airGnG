@@ -31,7 +31,7 @@ export default function Home() {
     </View>
   );
   return (
-    <Tab.Navigator>
+    <Tab.Navigator screenOptions={{headerShown: false}}>
       <Tab.Screen
         name="HomeTab"
         component={HomeTab}

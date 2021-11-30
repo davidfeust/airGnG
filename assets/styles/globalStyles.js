@@ -16,7 +16,7 @@ export const globalStyles = StyleSheet.create({
     color: colors.primary,
   },
   bt: {
-    width: 120,
+    width: 130,
     height: 45,
     backgroundColor: colors.primary,
     borderRadius: 15,
@@ -26,8 +26,9 @@ export const globalStyles = StyleSheet.create({
   },
   in_bt: {
     color: "white",
-    margin: 10,
-    width: "40%",
+    // margin: 10,
+    // width: "40%",
+    textAlign: "center",
   },
   text_input: {
     borderBottomWidth: 1,
