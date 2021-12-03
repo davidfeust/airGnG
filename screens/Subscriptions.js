@@ -19,6 +19,9 @@ import {
 import { db } from "../config/firebase";
 import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
 import PublicStationCard from "../components/PublicStationCard";
+import { myOrdersContext } from "../navigation/MyOrdersProvider";
+import { publicStationsContext } from "../navigation/PublicStationsProvider";
+import MyStationCard from "../components/MyStationCard";
 
 /**
  * represents all the subscribed stations.
@@ -27,10 +30,12 @@ import PublicStationCard from "../components/PublicStationCard";
  */
 export default function Subscriptions({ navigation }) {
   const { user } = useContext(AuthenticatedUserContext);
-  const [cards, setCards] = useState([]); // useState is needed because cards is directy connected to the screen
-
+  const { myOrders } = useContext(myOrdersContext);
+  const { cards } = useContext(publicStationsContext); // useState is needed because cards is directy connected to the screen
+  const myOrdersCards = cards.filter(({ id }) =>
+    myOrders.some(({ station_id }) => station_id == id)
+  );
   const onCancel = (id) => {
-    console.log();
     return Alert.alert(
       "Are your sure?",
       "Are you sure you want to cancel the submit?",
@@ -39,10 +44,19 @@ export default function Subscriptions({ navigation }) {
         {
           text: "Yes",
           onPress: async () => {
-            console.log("Yes");
-            console.log(id);
-            await deleteDoc(doc(db, "Subscriptions", id));
-            setCards(cards.filter((card) => card.id !== id));
+            // await getDocs(
+            //   query(
+            //     collection(db, "subscriptions"),
+            //     where("station_id", "==", id)
+            //   )
+            // ).then((docs) => docs.forEach((doc) => deleteDoc(doc)));
+            const toDelete = await getDocs(
+              query(
+                collection(db, "subscriptions"),
+                where("station_id", "==", id)
+              )
+            );
+            toDelete.forEach((doc) => deleteDoc(doc.ref));
           },
         },
         // The "No" button
@@ -54,35 +68,18 @@ export default function Subscriptions({ navigation }) {
     );
   };
 
-  const getCards = async () => {
-    const col = query(
-      collection(db, "Subscriptions"),
-      where("subscriptor_id", "==", user.uid)
-    );
-    const cards_col = await getDocs(col);
+  // useEffect(() => {
+  //   // navigation.addListener("focus", getCards); //whene we 'focus' the Subscriptions tab, getCards() is called
 
-    setCards(
-      cards_col.docs.map((doc) => {
-        let id = doc.id;
-        let data = doc.data();
-
-        return { id, ...data };
-      })
-    );
-    console.log(cards);
-  };
-
-  useEffect(() => {
-    navigation.addListener("focus", getCards); //whene we 'focus' the Subscriptions tab, getCards() is called
-  }, []);
+  // }, []);
   return (
     <View>
       <ScrollView>
-        {cards !== [] ? (
-          cards.map(
+        {myOrdersCards !== [] ? (
+          myOrdersCards.map(
             ({ date_of_post, owner_name, id, owner_address, price, image }) => {
               return (
-                <PublicStationCard
+                <MyStationCard
                   key={id}
                   id={id}
                   owner={owner_name}
@@ -90,6 +87,7 @@ export default function Subscriptions({ navigation }) {
                   date={date_of_post}
                   price={price}
                   image={image}
+                  onDelete={() => onCancel(id)}
                 />
               );
             }

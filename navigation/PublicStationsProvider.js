@@ -1,35 +1,29 @@
-import React, {useState, createContext, useEffect} from "react";
-import {collection, getDocs, onSnapshot} from "firebase/firestore";
-import {db} from "../config/firebase";
+import React, { useState, createContext, useEffect } from "react";
+import { collection, getDocs, onSnapshot } from "firebase/firestore";
+import { db } from "../config/firebase";
+import { getFromCol } from "../utils/GlobalFuncitions";
 
 export const publicStationsContext = createContext([]);
 
 export const PublicStationsProvider = ({ children }) => {
-    const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState([]);
+  const [orders, setOrders] = useState([]);
 
-    const getCards = async () => {
-        const col = collection(db, "postedStation");
-        const cards_col = await getDocs(col);
-        setCards(
-            cards_col.docs.map((doc) => {
-                let id = doc.id;
-                let data = doc.data();
-                return {id, ...data};
-            })
-        );
-    };
+  useEffect(() => {
+    // listener of firebase DB, call getFromCol() in case the data has changed
+    const unsubPosted = onSnapshot(collection(db, "postedStation"), (col) => {
+      getFromCol("postedStation", setCards);
+    });
+    const unsubOrdered = onSnapshot(collection(db, "subscriptions"), (col) => {
+      getFromCol("subscriptions", setOrders);
+    });
+  }, []);
 
-    useEffect(() => {
-        // listener of firebase DB, call getCards() in case the data has changed
-        const unsub = onSnapshot(collection(db, "postedStation"), (col) => {
-            getCards();
-        });
-    }, []);
-
-
-    return (
-        <publicStationsContext.Provider value={{ cards, setCards }}>
-            {children}
-        </publicStationsContext.Provider>
-    );
+  return (
+    <publicStationsContext.Provider
+      value={{ cards, setCards, orders, setOrders }}
+    >
+      {children}
+    </publicStationsContext.Provider>
+  );
 };
