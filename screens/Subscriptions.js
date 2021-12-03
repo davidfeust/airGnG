@@ -76,22 +76,20 @@ export default function Subscriptions({ navigation }) {
     <View>
       <ScrollView>
         {myOrdersCards !== [] ? (
-          myOrdersCards.map(
-            ({ date_of_post, owner_name, id, owner_address, price, image }) => {
-              return (
-                <MyStationCard
-                  key={id}
-                  id={id}
-                  owner={owner_name}
-                  address={owner_address}
-                  date={date_of_post}
-                  price={price}
-                  image={image}
-                  onDelete={() => onCancel(id)}
-                />
-              );
-            }
-          )
+          myOrdersCards.map(({ name, address, price, date, id, image }) => {
+            return (
+              <MyStationCard
+                key={id}
+                id={id}
+                owner={name}
+                address={address}
+                date={date}
+                price={price}
+                image={image}
+                onDelete={() => onCancel(id)}
+              />
+            );
+          })
         ) : (
           <ActivityIndicator size={"large"} color="blue" />
         )}
