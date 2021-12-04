@@ -6,9 +6,9 @@ import { db, storage } from "../config/firebase";
 import { globalStyles } from "../assets/styles/globalStyles";
 import Checkbox from "expo-checkbox";
 import BootstrapStyleSheet from "react-native-bootstrap-styles";
-import * as ImagePicker from "expo-image-picker";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+
 import { addressToCords } from "../utils/GlobalFuncitions";
+import { pickImage, uploadImage } from "../utils/GlobalFuncitions";
 
 const bootstrapStyleSheet = new BootstrapStyleSheet();
 const { s, c } = bootstrapStyleSheet;
@@ -36,32 +36,6 @@ export default function EditMyStation({ navigation, route }) {
     setDate(docData.date);
     setImage(docData.image);
   }, []);
-
-  const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      alert("not permitted");
-      return;
-    }
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      setImage(result.uri);
-    }
-  };
-
-  const uploadImage = async (uri) => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    const storageRef = await ref(storage, `${route.params.id}.jpg`);
-    await uploadBytes(storageRef, blob);
-    return await getDownloadURL(storageRef, `${route.params.id}.jpg`);
-  };
 
   async function onSave() {
     const cords = await addressToCords(address);
@@ -116,7 +90,10 @@ export default function EditMyStation({ navigation, route }) {
         keyboardType={"phone-pad"}
         value={phone}
       />
-      <Button onPress={pickImage} title="upload station image" />
+      <Button
+        onPress={() => pickImage(setImage)}
+        title="upload station image"
+      />
 
       {image != null ? (
         <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />

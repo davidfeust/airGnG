@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button, StyleSheet, TextInput, Text, View } from "react-native";
+import { Button, StyleSheet, TextInput, Text, View, Image } from "react-native";
 import { globalStyles } from "../assets/styles/globalStyles";
 import Checkbox from "expo-checkbox";
 import { getDatabase, ref, onValue } from "firebase/database";
@@ -7,7 +7,8 @@ import { db } from "../config/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
 import { addressToCords } from "../utils/GlobalFuncitions";
-
+import CustomDatePicker from "../components/CustomDatePicker";
+import { pickImage, uploadImage } from "../utils/GlobalFuncitions";
 /**
  * create a page where the user fills a form
  * on submitting, the user returns to previouse screen,
@@ -24,7 +25,7 @@ export default function PostStation(props) {
   const [price, setPrice] = useState("");
   const [shadowed, setShadowed] = useState(false);
   const [date, setDate] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null);
 
   async function buttonPost() {
     const cords = await addressToCords(address);
@@ -60,12 +61,7 @@ export default function PostStation(props) {
         placeholder="Price per hour"
         keyboardType={"number-pad"}
       />
-      <TextInput
-        style={globalStyles.text_input}
-        onChangeText={(text) => setDate(text)}
-        placeholder="Date"
-        keyboardType={"number-pad"}
-      />
+      <CustomDatePicker />
       <Text style={globalStyles.title}>Contact Details:</Text>
       <TextInput
         style={globalStyles.text_input}
@@ -78,12 +74,14 @@ export default function PostStation(props) {
         placeholder="Phone number"
         keyboardType={"phone-pad"}
       />
-      <TextInput
-        style={globalStyles.text_input}
-        onChangeText={(text) => setImage(text)}
-        placeholder="Image(url)"
-        keyboardType={"number-pad"}
+      <Button
+        onPress={() => pickImage(setImage)}
+        title="upload station image"
       />
+
+      {image != null ? (
+        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+      ) : null}
       <View style={globalStyles.flex_container}>
         <Checkbox
           style={globalStyles.checkbox}

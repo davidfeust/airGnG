@@ -2,6 +2,8 @@ import opencage from "opencage-api-client";
 import Constants from "expo-constants";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../config/firebase";
+import * as ImagePicker from "expo-image-picker";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export const addressToCords = async (address) => {
   try {
@@ -26,4 +28,30 @@ export const getFromCol = async (col_name, set_fun) => {
       return { id, ...data };
     })
   );
+};
+
+export const pickImage = async (setImage) => {
+  const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  if (status !== "granted") {
+    alert("not permitted");
+    return;
+  }
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.All,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+  });
+
+  if (!result.cancelled) {
+    setImage(result.uri);
+  }
+};
+
+export const uploadImage = async (uri) => {
+  const response = await fetch(uri);
+  const blob = await response.blob();
+  const storageRef = await ref(storage, `${route.params.id}.jpg`);
+  await uploadBytes(storageRef, blob);
+  return await getDownloadURL(storageRef, `${route.params.id}.jpg`);
 };

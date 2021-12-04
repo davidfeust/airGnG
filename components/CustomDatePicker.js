@@ -1,39 +1,44 @@
-import React, {useState} from 'react'
-import {View, Button} from 'react-native'
-import DatePicker from 'react-native-neat-date-picker'
-import {globalStyles} from "../assets/styles/globalStyles";
+import React, { useState } from "react";
+import { View, Button, TouchableOpacity } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { colors } from "../assets/styles/colors";
+
+import TimeSlot from "./TimeSlot";
+import { globalStyles } from "../assets/styles/globalStyles";
 
 export default function CustomDatePicker() {
+  const removeTimeSlot = (toRemove) => {
+    const newVal = timeSlots.filter((ts) => ts != toRemove);
+    console.log(newVal);
+    setTimeSlots(newVal);
+  };
+  const [timeSlots, setTimeSlots] = useState([<TimeSlot />]);
 
-    const [showDatePicker, setShowDatePicker] = useState(false)
+  const addTimeSlot = () => {
+    setTimeSlots([...timeSlots, <TimeSlot />]);
+  };
 
-    const openDatePicker = () => {
-        setShowDatePicker(true)
-    }
-
-    const onCancel = () => {
-        // You should close the modal in here
-        setShowDatePicker(false)
-    }
-
-    const onConfirm = (start,end) => {
-        // You should close the modal in here
-        setShowDatePicker(false)
-
-        // The parameter 'date' is a Date object so that you can use any Date prototype method.
-        console.log(start.getMonth(), end.getMonth())
-        console.log()
-    }
-
-    return (
-        <View style={globalStyles.container}>
-            <Button title={'open'} onPress={openDatePicker}/>
-            <DatePicker
-                isVisible={showDatePicker}
-                mode={'range'}
-                onCancel={onCancel}
-                onConfirm={onConfirm}
+  return (
+    <View>
+      {timeSlots.map((ts, idx) => (
+        <View key={idx} style={{ flexDirection: "row" }}>
+          {ts}
+          <TouchableOpacity onPress={() => removeTimeSlot(ts)}>
+            <MaterialCommunityIcons
+              name="minus-circle"
+              color={colors.primary}
+              size={30}
             />
+          </TouchableOpacity>
         </View>
-    );
+      ))}
+      <TouchableOpacity onPress={addTimeSlot} style={{ alignSelf: "center" }}>
+        <MaterialCommunityIcons
+          name="plus-circle"
+          color={colors.primary}
+          size={30}
+        />
+      </TouchableOpacity>
+    </View>
+  );
 }
