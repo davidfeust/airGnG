@@ -56,7 +56,7 @@ export default function SearchStation({ navigation }) {
   return (
     <View style={styles.container}>
       <MapView
-        region={region}
+        // region={region}
         onRegionChange={onRegionChange}
         initialRegion={region}
         style={styles.map}
