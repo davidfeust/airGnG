@@ -16,9 +16,10 @@ export default function StationCard({
   image,
   children,
   imageStyle,
+    style
 }) {
   return (
-    <Card>
+    <Card containerStyle={style}>
       <Card.Title>{owner}</Card.Title>
       <Card.Divider orientation="horizontal" />
       <Text>{date}</Text>

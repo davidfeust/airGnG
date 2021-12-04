@@ -39,7 +39,7 @@ export default function PublicStationCard({
   };
 
   return (
-    <View style={style}>
+    <View >
       <StationCard
         owner={owner}
         address={address}
@@ -47,6 +47,7 @@ export default function PublicStationCard({
         image={image}
         date={date}
         imageStyle={globalStyles.mini_card_image_style}
+        style={style}
       >
         {/* <CheckBox className="check" title="available" checked={isAvailable}>
           available

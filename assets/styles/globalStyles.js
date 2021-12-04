@@ -50,10 +50,10 @@ export const globalStyles = StyleSheet.create({
   },
   mini_card: {
     flexDirection: "row",
-    marginHorizontal: 80,
-    width: 100,
+    width: 300,
     opacity: 0.8,
-    // elevation: 10,
+    elevation: 10,
+    marginHorizontal: 10
   },
   mini_card_image_style: { width: 200, height: 100, alignItems: "center" },
 });
