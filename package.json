@@ -10,6 +10,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo-google-fonts/roboto": "^0.2.0",
     "@expo/vector-icons": "^12.0.5",
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-native-community/masked-view": "^0.1.11",
@@ -31,6 +32,8 @@
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-maps": "0.29.4",
+    "react-native-modal": "^13.0.0",
+    "react-native-neat-date-picker": "^1.1.2",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-web": "0.17.1",
     "react-navigation": "^4.4.4"
