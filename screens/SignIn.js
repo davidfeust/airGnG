@@ -1,18 +1,10 @@
 import React, {useState} from "react";
-import {
-    Button,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import {StyleSheet, Text, TextInput, TouchableOpacity, View,} from "react-native";
 import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../config/firebase";
 import {globalStyles} from "../assets/styles/globalStyles";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import MyButton from "../components/MyButton";
-import {waitFor} from "@babel/core/lib/gensync-utils/async";
 
 export default function SignIn() {
     const [email, setEmail] = useState("");
