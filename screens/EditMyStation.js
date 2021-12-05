@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Text, TextInput, View} from "react-native";
+import {Keyboard, ScrollView, Text, TextInput, TouchableWithoutFeedback, View} from "react-native";
 import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
 import {doc, getDoc, updateDoc} from "firebase/firestore";
 import {db} from "../config/firebase";
@@ -9,6 +9,8 @@ import Checkbox from "expo-checkbox";
 import {addressToCords, uploadImage} from "../utils/GlobalFuncitions";
 import ImagePicker from "../components/ImagePicker";
 import MyButton from "../components/MyButton";
+import DatePicker from "react-native-neat-date-picker";
+import CustomDatePicker from "../components/CustomDatePicker";
 
 
 export default function EditMyStation({navigation, route}) {
@@ -58,48 +60,53 @@ export default function EditMyStation({navigation, route}) {
     }
 
     return (
-        <View style={globalStyles.container}>
-            <Text style={globalStyles.title}>Edit</Text>
-            <TextInput
-                style={globalStyles.text_input}
-                onChangeText={(text) => setAddress(text)}
-                placeholder="Address"
-                value={address}
-            />
-            <TextInput
-                style={globalStyles.text_input}
-                onChangeText={(text) => setPrice(text)}
-                placeholder="Price per hour"
-                keyboardType={"number-pad"}
-                value={price}
-            />
-            <TextInput
-                style={globalStyles.text_input}
-                onChangeText={(text) => setDate(text)}
-                placeholder="Date"
-                keyboardType={"number-pad"}
-                value={date}
-            />
-            <Text>contact info:</Text>
-            <TextInput
-                style={globalStyles.text_input}
-                onChangeText={(text) => setName(text)}
-                placeholder="Name"
-            />
-            <TextInput
-                style={globalStyles.text_input}
-                onChangeText={(text) => setPhone(text)}
-                placeholder="Phone number"
-                keyboardType={"phone-pad"}
-                value={phone}
-            />
-            <ImagePicker image={image} setImage={setImage}/>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <ScrollView style={{backgroundColor: 'white', flex: 1}}>
+                <View style={[globalStyles.container, {paddingTop: 60}]}>
+                    <Text style={globalStyles.title}>Edit</Text>
+                    <TextInput
+                        style={globalStyles.text_input}
+                        onChangeText={(text) => setAddress(text)}
+                        placeholder="Address"
+                        value={address}
+                    />
+                    <TextInput
+                        style={globalStyles.text_input}
+                        onChangeText={(text) => setPrice(text)}
+                        placeholder="Price per hour"
+                        keyboardType={"number-pad"}
+                        value={price}
+                    />
+                   {/* <TextInput
+                        style={globalStyles.text_input}
+                        onChangeText={(text) => setDate(text)}
+                        placeholder="Date"
+                        keyboardType={"number-pad"}
+                        value={date}
+                    />*/}
+                    <CustomDatePicker/>
+                    <Text style={globalStyles.subTitle}>contact info:</Text>
+                    <TextInput
+                        style={globalStyles.text_input}
+                        onChangeText={(text) => setName(text)}
+                        placeholder="Name"
+                    />
+                    <TextInput
+                        style={globalStyles.text_input}
+                        onChangeText={(text) => setPhone(text)}
+                        placeholder="Phone number"
+                        keyboardType={"phone-pad"}
+                        value={phone}
+                    />
+                    <ImagePicker image={image} setImage={setImage}/>
 
-            <Text>Shadowed parking spot</Text>
-            <Checkbox value={shadowed} onValueChange={setShadowed}/>
+                    <Text>Shadowed parking spot</Text>
+                    <Checkbox value={shadowed} onValueChange={setShadowed}/>
 
-            <MyButton style={globalStyles.bt} onPress={onSave} text={'Sava'} processing={processing}/>
+                    <MyButton style={globalStyles.bt} onPress={onSave} text={'Sava'} processing={processing}/>
 
-        </View>
+                </View>
+            </ScrollView>
+        </TouchableWithoutFeedback>
     );
 }

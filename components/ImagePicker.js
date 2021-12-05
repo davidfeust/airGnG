@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: 280,
         height: 210,
+        marginVertical: 10,
     },
     del: {
         position: 'absolute',

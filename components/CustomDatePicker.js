@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {TouchableOpacity, View} from "react-native";
+import {Text, TouchableOpacity, View} from "react-native";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {colors} from "../assets/styles/colors";
 
@@ -48,8 +48,9 @@ export default function CustomDatePicker() {
             ))}
             <TouchableOpacity
                 onPress={addTimeSlot}
-                style={{alignSelf: "center"}}
+                style={{alignSelf: "center", flexDirection: 'row', alignItems: 'center'}}
             >
+                <Text style={{paddingHorizontal: 10}}>Add time slot</Text>
                 <MaterialCommunityIcons
                     name="plus-circle"
                     color={colors.primary}

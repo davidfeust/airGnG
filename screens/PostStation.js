@@ -1,5 +1,14 @@
 import React, {useContext, useState} from "react";
-import {Button, StyleSheet, Text, TextInput, View} from "react-native";
+import {
+    Button,
+    Keyboard,
+    KeyboardAvoidingView, Platform, ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableWithoutFeedback,
+    View
+} from "react-native";
 import {globalStyles} from "../assets/styles/globalStyles";
 import Checkbox from "expo-checkbox";
 import {db} from "../config/firebase";
@@ -58,45 +67,49 @@ export default function PostStation(props) {
     }
 
     return (
-        <View style={globalStyles.container}>
-            <Text style={globalStyles.title}>Station Details:</Text>
-            <TextInput
-                style={globalStyles.text_input}
-                onChangeText={(text) => setAddress(text)}
-                placeholder="Address"
-            />
-            <TextInput
-                style={globalStyles.text_input}
-                onChangeText={(text) => setPrice(text)}
-                placeholder="Price per hour"
-                keyboardType={"number-pad"}
-            />
-            <CustomDatePicker/>
-            <Text style={globalStyles.title}>Contact Details:</Text>
-            <TextInput
-                style={globalStyles.text_input}
-                onChangeText={(text) => setName(text)}
-                placeholder="Name"
-            />
-            <TextInput
-                style={globalStyles.text_input}
-                onChangeText={(text) => setPhone(text)}
-                placeholder="Phone number"
-                keyboardType={"phone-pad"}
-            />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <ScrollView style={{backgroundColor: 'white', flex: 1}}>
+                <View style={[globalStyles.container, {paddingTop: 60}]}>
+                    <Text style={globalStyles.title}>Station Details</Text>
+                    <TextInput
+                        style={globalStyles.text_input}
+                        onChangeText={(text) => setAddress(text)}
+                        placeholder="Address"
+                    />
+                    <TextInput
+                        style={globalStyles.text_input}
+                        onChangeText={(text) => setPrice(text)}
+                        placeholder="Price per hour"
+                        keyboardType={"number-pad"}
+                    />
+                    <CustomDatePicker/>
+                    <Text style={globalStyles.subTitle}>Contact Details</Text>
+                    <TextInput
+                        style={globalStyles.text_input}
+                        onChangeText={(text) => setName(text)}
+                        placeholder="Name"
+                    />
+                    <TextInput
+                        style={globalStyles.text_input}
+                        onChangeText={(text) => setPhone(text)}
+                        placeholder="Phone number"
+                        keyboardType={"phone-pad"}
+                    />
 
-            <ImagePicker image={image} setImage={setImage}/>
+                    <ImagePicker image={image} setImage={setImage}/>
 
-            <View style={globalStyles.flex_container}>
-                <Checkbox
-                    style={globalStyles.checkbox}
-                    value={shadowed}
-                    onValueChange={setShadowed}
-                />
-                <Text style={globalStyles.checkbox_label}>Shadowed parking spot</Text>
-            </View>
-            <MyButton style={globalStyles.bt} onPress={buttonPost} text={'post'} processing={processing}/>
-        </View>
+                    <View style={globalStyles.flex_container}>
+                        <Checkbox
+                            style={globalStyles.checkbox}
+                            value={shadowed}
+                            onValueChange={setShadowed}
+                        />
+                        <Text style={globalStyles.checkbox_label}>Shadowed parking spot</Text>
+                    </View>
+                    <MyButton style={globalStyles.bt} onPress={buttonPost} text={'post'} processing={processing}/>
+                </View>
+            </ScrollView>
+        </TouchableWithoutFeedback>
     );
 }
 
