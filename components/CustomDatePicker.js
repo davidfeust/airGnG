@@ -1,29 +1,43 @@
-import React, { useState } from "react";
-import { View, Button, TouchableOpacity } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { colors } from "../assets/styles/colors";
+import React, {useState} from "react";
+import {TouchableOpacity, View} from "react-native";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
+import {colors} from "../assets/styles/colors";
 
 import TimeSlot from "./TimeSlot";
-import { globalStyles } from "../assets/styles/globalStyles";
 
 export default function CustomDatePicker() {
-    const removeTimeSlot = (toRemove) => {
-        const newVal = timeSlots.filter((ts) => ts != toRemove);
-        console.log(newVal);
+
+    const [timeSlots, setTimeSlots] = useState([{start: null, end: null}]);
+
+    const removeTimeSlot = (key) => {
+        const newVal = timeSlots.filter((ts, idx) => key != idx);
         setTimeSlots(newVal);
     };
-    const [timeSlots, setTimeSlots] = useState([<TimeSlot />]);
 
     const addTimeSlot = () => {
-        setTimeSlots([...timeSlots, <TimeSlot />]);
+        const temp = [...timeSlots];
+        temp.push({start: null, end: null});
+        setTimeSlots(temp);
     };
+
+    const inputHandler = (key, s, e) => {
+        const temp = [...timeSlots];
+        temp[key].start = s;
+        temp[key].end = e;
+        setTimeSlots(temp);
+    }
 
     return (
         <View>
-            {timeSlots.map((ts, idx) => (
-                <View key={idx} style={{ flexDirection: "row" }}>
-                    {ts}
-                    <TouchableOpacity onPress={() => removeTimeSlot(ts)}>
+            {timeSlots.map((ts, key) => (
+                <View key={key} style={{
+                    flexDirection: "row",
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingHorizontal: 20,
+                }}>
+                    <TimeSlot index={key} set={inputHandler} time={timeSlots[key]}/>
+                    <TouchableOpacity onPress={() => removeTimeSlot(key)}>
                         <MaterialCommunityIcons
                             name="minus-circle"
                             color={colors.primary}
@@ -34,7 +48,7 @@ export default function CustomDatePicker() {
             ))}
             <TouchableOpacity
                 onPress={addTimeSlot}
-                style={{ alignSelf: "center" }}
+                style={{alignSelf: "center"}}
             >
                 <MaterialCommunityIcons
                     name="plus-circle"
