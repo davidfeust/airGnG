@@ -80,5 +80,5 @@ export const uploadImage = async (uri, id) => {
 };
 
 export const dateToString = (date) => {
-    return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
 };
