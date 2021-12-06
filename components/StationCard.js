@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
-import { View, Text, StyleSheet, Button, Image, Alert } from "react-native";
-import { Card } from "react-native-elements";
-import { CheckBox } from "react-native-elements/dist/checkbox/CheckBox";
+import React from "react";
+import {StyleSheet, Text} from "react-native";
+import {Card} from "react-native-elements";
+import {dateToString} from '../utils/GlobalFuncitions';
 
 /**
  * this component contains all the station data
@@ -9,29 +9,35 @@ import { CheckBox } from "react-native-elements/dist/checkbox/CheckBox";
  * @returns <div>
  */
 export default function StationCard({
-  owner,
-  address,
-  date,
-  price,
-  image,
-  children,
-  imageStyle,
-    style
-}) {
-  return (
-    <Card containerStyle={style}>
-      <Card.Title>{owner}</Card.Title>
-      <Card.Divider orientation="horizontal" />
-      <Text>{date}</Text>
-      <Text>{address}</Text>
-      <Text>price: {price} nis</Text>
+                                        owner,
+                                        address,
+                                        date,
+                                        price,
+                                        image,
+                                        children,
+                                        imageStyle,
+                                        style
+                                    }) {
 
-      {image != undefined && (
-        <Card.Image style={imageStyle} source={{ uri: image }} />
-      )}
-      {children}
-    </Card>
-  );
+
+    return (
+        <Card containerStyle={style}>
+            <Card.Title>{address}</Card.Title>
+            <Card.Divider orientation="horizontal"/>
+
+            {date && date.constructor === Array ? date.map((slot, index) => (
+                <Text key={index}>{dateToString(slot.start.toDate())} - {dateToString(slot.end.toDate())}</Text>
+            )) : null}
+
+            <Text>{owner}</Text>
+            <Text>price: {price} nis</Text>
+
+            {image !== undefined && (
+                <Card.Image style={imageStyle} source={{uri: image}}/>
+            )}
+            {children}
+        </Card>
+    );
 }
 
 const styles = StyleSheet.create({});

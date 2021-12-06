@@ -1,14 +1,5 @@
 import React, {useContext, useState} from "react";
-import {
-    Button,
-    Keyboard,
-    KeyboardAvoidingView, Platform, ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableWithoutFeedback,
-    View
-} from "react-native";
+import {Keyboard, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View} from "react-native";
 import {globalStyles} from "../assets/styles/globalStyles";
 import Checkbox from "expo-checkbox";
 import {db} from "../config/firebase";
@@ -34,13 +25,18 @@ export default function PostStation(props) {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [shadowed, setShadowed] = useState(false);
-    const [date, setDate] = useState("");
+    const [timeSlots, setTimeSlots] = useState([{start: null, end: null}]);
     const [image, setImage] = useState(null);
     const [processing, setProcessing] = useState(false);
 
     async function buttonPost() {
         setProcessing(true);
         const cords = await addressToCords(address);
+        const filteredDates = timeSlots
+            .filter((slot) => slot.start && slot.end)
+            .map(slot => {
+                return {start: slot.start, end: slot.end}
+            });
 
         addDoc(collection(db, "postedStation"), {
             owner_id: user.uid,
@@ -49,16 +45,22 @@ export default function PostStation(props) {
             shadowed: shadowed,
             name: name,
             phone: phone,
-            date: date,
+            date: filteredDates,
             cords: cords,
         })
             .then(async (docRef) => {
-                const image_url = await uploadImage(image, docRef.id);
-                await updateDoc(docRef, {
-                    image: image_url
-                });
-                props.navigation.pop();
-                setProcessing(false);
+                if (image) {
+                    const image_url = await uploadImage(image, docRef.id);
+                    await updateDoc(docRef, {
+                        image: image_url
+                    }).then(() => {
+                        props.navigation.pop();
+                        setProcessing(false);
+                    });
+                } else {
+                    props.navigation.pop();
+                    setProcessing(false);
+                }
             })
             .catch((e) => {
                 setProcessing(false);
@@ -82,7 +84,9 @@ export default function PostStation(props) {
                         placeholder="Price per hour"
                         keyboardType={"number-pad"}
                     />
-                    <CustomDatePicker/>
+
+                    <CustomDatePicker setTimeSlots={setTimeSlots} timeSlots={timeSlots}/>
+
                     <Text style={globalStyles.subTitle}>Contact Details</Text>
                     <TextInput
                         style={globalStyles.text_input}

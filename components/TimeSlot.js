@@ -1,16 +1,13 @@
 import {MaterialCommunityIcons} from "@expo/vector-icons";
-import React, {useEffect, useRef, useState} from "react";
-import {View, Text, TouchableOpacity, Date} from "react-native";
+import React, {useState} from "react";
+import {Text, TouchableOpacity, View} from "react-native";
 import DatePicker from "react-native-neat-date-picker";
 import {colors} from "../assets/styles/colors";
 import {globalStyles} from "../assets/styles/globalStyles";
+import {dateToString} from '../utils/GlobalFuncitions';
 
 const TimeSlot = ({index, set, time}) => {
     const [showDatePicker, setShowDatePicker] = useState(false);
-
-    const dateToString = (date) => {
-        return date.getDate() + "/" + date.getMonth() + "/" + date.getYear();
-    };
 
     const openDatePicker = () => {
         setShowDatePicker(true);

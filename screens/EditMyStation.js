@@ -1,6 +1,5 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Keyboard, ScrollView, Text, TextInput, TouchableWithoutFeedback, View} from "react-native";
-import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
 import {doc, getDoc, updateDoc} from "firebase/firestore";
 import {db} from "../config/firebase";
 import {globalStyles} from "../assets/styles/globalStyles";
@@ -9,19 +8,16 @@ import Checkbox from "expo-checkbox";
 import {addressToCords, uploadImage} from "../utils/GlobalFuncitions";
 import ImagePicker from "../components/ImagePicker";
 import MyButton from "../components/MyButton";
-import DatePicker from "react-native-neat-date-picker";
 import CustomDatePicker from "../components/CustomDatePicker";
 
 
 export default function EditMyStation({navigation, route}) {
-    const {user} = useContext(AuthenticatedUserContext);
-
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState("");
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [shadowed, setShadowed] = useState(false);
-    const [date, setDate] = useState("");
+    const [timeSlots, setTimeSlots] = useState([]);
     const [image, setImage] = useState(null);
     const [processing, setProcessing] = useState(false);
 
@@ -34,7 +30,15 @@ export default function EditMyStation({navigation, route}) {
         setName(docData.name);
         setPrice(docData.price);
         setShadowed(docData.shadowed);
-        setDate(docData.date);
+        if (docData.date.constructor === Array) {
+            const temp = [...docData.date];
+            // convert timestamp of firebase to Date of JS
+            setTimeSlots(temp.map(slot => (
+                {start: new Date(slot.start.toDate()), end: new Date(slot.end.toDate())}
+            )));
+        } else {
+            setTimeSlots([{start: null, end: null}]);
+        }
         setImage(docData.image);
     }, []);
 
@@ -49,7 +53,7 @@ export default function EditMyStation({navigation, route}) {
             shadowed: shadowed,
             name: name,
             phone: phone,
-            date: date,
+            date: timeSlots,
             image: image_url,
             cords: cords,
         }).then(() => {
@@ -77,19 +81,16 @@ export default function EditMyStation({navigation, route}) {
                         keyboardType={"number-pad"}
                         value={price}
                     />
-                   {/* <TextInput
-                        style={globalStyles.text_input}
-                        onChangeText={(text) => setDate(text)}
-                        placeholder="Date"
-                        keyboardType={"number-pad"}
-                        value={date}
-                    />*/}
-                    <CustomDatePicker/>
+                    {timeSlots &&
+                    <CustomDatePicker setTimeSlots={setTimeSlots} timeSlots={timeSlots}/>
+                    }
+
                     <Text style={globalStyles.subTitle}>contact info:</Text>
                     <TextInput
                         style={globalStyles.text_input}
                         onChangeText={(text) => setName(text)}
                         placeholder="Name"
+                        value={name}
                     />
                     <TextInput
                         style={globalStyles.text_input}

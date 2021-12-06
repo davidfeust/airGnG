@@ -9,6 +9,7 @@ import SearchStation from "./SearchStation";
 import Subscriptions from "./Subscriptions";
 import MyPosts from "./MyPosts";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
+import {colors} from "../assets/styles/colors";
 
 const auth = getAuth();
 
@@ -31,7 +32,10 @@ export default function Home() {
         </View>
     );
     return (
-        <Tab.Navigator screenOptions={{headerShown: false}}>
+        <Tab.Navigator screenOptions={{
+            headerShown: false,
+            tabBarActiveTintColor: colors.secondary
+        }}>
             <Tab.Screen
                 name="HomeTab"
                 component={HomeTab}
