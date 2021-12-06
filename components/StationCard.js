@@ -1,7 +1,7 @@
 import React from "react";
-import {StyleSheet, Text} from "react-native";
-import {Card} from "react-native-elements";
-import {dateToString} from '../utils/GlobalFuncitions';
+import { StyleSheet, Text } from "react-native";
+import { Card } from "react-native-elements";
+import { dateToString } from "../utils/GlobalFuncitions";
 
 /**
  * this component contains all the station data
@@ -9,31 +9,34 @@ import {dateToString} from '../utils/GlobalFuncitions';
  * @returns <div>
  */
 export default function StationCard({
-                                        owner,
-                                        address,
-                                        date,
-                                        price,
-                                        image,
-                                        children,
-                                        imageStyle,
-                                        style
-                                    }) {
-
-
+    owner,
+    address,
+    date,
+    price,
+    image,
+    children,
+    imageStyle,
+    style,
+}) {
     return (
         <Card containerStyle={style}>
             <Card.Title>{address}</Card.Title>
-            <Card.Divider orientation="horizontal"/>
+            <Card.Divider orientation="horizontal" />
 
-            {date && date.constructor === Array ? date.map((slot, index) => (
-                <Text key={index}>{dateToString(slot.start.toDate())} - {dateToString(slot.end.toDate())}</Text>
-            )) : null}
+            {date && date.constructor === Array
+                ? date.map((slot, index) => (
+                      <Text key={index}>
+                          {dateToString(slot.start.toDate())} -{" "}
+                          {dateToString(slot.end.toDate())}
+                      </Text>
+                  ))
+                : null}
 
             <Text>{owner}</Text>
             <Text>price: {price} nis</Text>
 
             {image !== undefined && (
-                <Card.Image style={imageStyle} source={{uri: image}}/>
+                <Card.Image style={imageStyle} source={{ uri: image }} />
             )}
             {children}
         </Card>

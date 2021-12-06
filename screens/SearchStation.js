@@ -8,6 +8,7 @@ import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvide
 import { myOrdersContext } from "../navigation/MyOrdersProvider";
 import { Image } from "react-native-elements";
 import { colors } from "../assets/styles/colors";
+import MiniCard from "../components/MiniCard";
 
 /**
  * create a page with all available stations in the DB,
@@ -118,7 +119,7 @@ export default function SearchStation({ navigation }) {
                     renderItem={({
                         item: { name, address, price, image, date, id },
                     }) => (
-                        <PublicStationCard
+                        <MiniCard
                             owner={name}
                             address={address}
                             price={price}
