@@ -58,7 +58,7 @@ export const globalStyles = StyleSheet.create({
     mini_card: {
         flexDirection: "row",
         width: 300,
-        height: 100,
+
         opacity: 0.8,
         elevation: 10,
         marginHorizontal: 10,
@@ -66,4 +66,13 @@ export const globalStyles = StyleSheet.create({
         borderRadius: 5,
     },
     mini_card_image_style: { width: 200, height: 100, alignItems: "center" },
+
+    maxi_card_style: {
+        flex:1,
+        marginHorizontal: 10,
+        alignItems: "center",
+        backgroundColor:"white",
+        width:300,
+        elevation:10,
+    },
 });

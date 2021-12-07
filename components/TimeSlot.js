@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
         borderRadius: 7,
         borderWidth: 1,
         margin: 5,
-        width: '90%'
+        width: '80%',
+        alignSelf:"center"
     }
 });

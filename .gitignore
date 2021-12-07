@@ -13,3 +13,6 @@ web-build/
 # macOS
 .DS_Store
 /.env
+.idea/vcs.xml
+.gitignore
+.idea/workspace.xml
