@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import {Keyboard, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View} from "react-native";
+import {Keyboard, ScrollView, Text, TextInput, TouchableWithoutFeedback, View} from "react-native";
 import {globalStyles} from "../assets/styles/globalStyles";
 import Checkbox from "expo-checkbox";
 import {db} from "../config/firebase";
@@ -25,7 +25,7 @@ export default function PostStation(props) {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [shadowed, setShadowed] = useState(false);
-    const [timeSlots, setTimeSlots] = useState([{start: null, end: null}]);
+    const [timeSlots, setTimeSlots] = useState([{start: new Date(), end: new Date()}]);
     const [image, setImage] = useState(null);
     const [processing, setProcessing] = useState(false);
 
@@ -85,7 +85,7 @@ export default function PostStation(props) {
                         keyboardType={"number-pad"}
                     />
 
-                    <CustomDatePicker setTimeSlots={setTimeSlots} timeSlots={timeSlots}/>
+                    <CustomDatePicker timeSlots={timeSlots} setTimeSlots={setTimeSlots}/>
 
                     <Text style={globalStyles.subTitle}>Contact Details</Text>
                     <TextInput
@@ -116,5 +116,3 @@ export default function PostStation(props) {
         </TouchableWithoutFeedback>
     );
 }
-
-const styles = StyleSheet.create({});

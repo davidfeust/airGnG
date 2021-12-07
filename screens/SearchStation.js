@@ -55,8 +55,8 @@ export default function SearchStation({ navigation }) {
         const region = {
             latitude: selectedPlace.cords.lat,
             longitude: selectedPlace.cords.lng,
-            latitudeDelta: 0.8,
-            longitudeDelta: 0.8,
+            latitudeDelta: 0.02,
+            longitudeDelta: 0.02,
         };
         map.current.animateToRegion(region);
     }, [selectedId]);

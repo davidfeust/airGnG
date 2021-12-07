@@ -1,10 +1,8 @@
-import React, {createContext, useContext} from "react";
+import React, {useContext} from "react";
 import {Button, StyleSheet, Text, View} from "react-native";
 import {getAuth} from "firebase/auth";
 import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
-import {NavigationContainer} from "@react-navigation/native";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import PostStation from "./PostStation";
 import SearchStation from "./SearchStation";
 import Subscriptions from "./Subscriptions";
 import MyPosts from "./MyPosts";

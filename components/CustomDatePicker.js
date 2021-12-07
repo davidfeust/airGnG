@@ -6,7 +6,6 @@ import TimeSlot from "./TimeSlot";
 
 export default function CustomDatePicker({setTimeSlots, timeSlots}) {
 
-    // const [timeSlots, setTimeSlots] = useState([{start: null, end: null}]);
 
     const removeTimeSlot = (key) => {
         const newVal = timeSlots.filter((ts, idx) => key !== idx);
@@ -15,26 +14,31 @@ export default function CustomDatePicker({setTimeSlots, timeSlots}) {
 
     const addTimeSlot = () => {
         const temp = [...timeSlots];
-        temp.push({start: null, end: null});
+        temp.push({start: new Date(), end: new Date()});
         setTimeSlots(temp);
     };
 
     const inputHandler = (key, s, e) => {
         const temp = [...timeSlots];
-        temp[key].start = s;
-        temp[key].end = e;
+        if (s) {
+            temp[key].start = s;
+        }
+        if (e) {
+            temp[key].end = e;
+        }
         setTimeSlots(temp);
     }
 
-    return <View>
+    return <View style={{width: '100%'}}>
         {timeSlots ? timeSlots.map((ts, key) => (
             <View key={key} style={{
                 flexDirection: "row",
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 paddingHorizontal: 20,
+                width: '100%'
             }}>
-                <TimeSlot index={key} set={inputHandler} time={timeSlots[key]}/>
+                <TimeSlot index={key} start={timeSlots[key].start} end={timeSlots[key].end} set={inputHandler}/>
                 <TouchableOpacity onPress={() => removeTimeSlot(key)}>
                     <MaterialCommunityIcons
                         name="minus-circle"
@@ -44,6 +48,7 @@ export default function CustomDatePicker({setTimeSlots, timeSlots}) {
                 </TouchableOpacity>
             </View>
         )) : null}
+
         <TouchableOpacity
             onPress={addTimeSlot}
             style={{alignSelf: "center", flexDirection: 'row', alignItems: 'center'}}

@@ -4,12 +4,7 @@ import {collection, getDocs} from "firebase/firestore";
 import {db, storage} from "../config/firebase";
 import * as ImagePicker from "expo-image-picker";
 import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
-import React, {useState} from "react";
-import {Text, TouchableOpacity, View} from "react-native";
-import {globalStyles} from "../assets/styles/globalStyles";
-import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {colors} from "../assets/styles/colors";
-import DatePicker from "react-native-neat-date-picker";
+import React from "react";
 
 export const addressToCords = async (address) => {
     try {
@@ -80,5 +75,7 @@ export const uploadImage = async (uri, id) => {
 };
 
 export const dateToString = (date) => {
-    return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
+    const zeroPad = (num, places) => String(num).padStart(places, '0');
+
+    return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " " + zeroPad(date.getHours(), 2) + ":" + zeroPad(date.getMinutes(), 2);
 };

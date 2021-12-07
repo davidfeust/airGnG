@@ -104,7 +104,7 @@ export default function EditMyStation({navigation, route}) {
                     <Text>Shadowed parking spot</Text>
                     <Checkbox value={shadowed} onValueChange={setShadowed}/>
 
-                    <MyButton style={globalStyles.bt} onPress={onSave} text={'Sava'} processing={processing}/>
+                    <MyButton style={globalStyles.bt} onPress={onSave} text={'Save'} processing={processing}/>
 
                 </View>
             </ScrollView>
