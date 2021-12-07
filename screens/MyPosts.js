@@ -1,12 +1,20 @@
-import React, {useContext} from "react";
-import {ActivityIndicator, Alert, ScrollView, StyleSheet, TouchableOpacity, View,} from "react-native";
-import {deleteDoc, doc} from "firebase/firestore";
-import {db} from "../config/firebase";
+import React, { useContext } from "react";
+import {
+    ActivityIndicator,
+    Alert,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity,
+    View,
+} from "react-native";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../config/firebase";
 import MyStationCard from "../components/MyStationCard";
-import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {colors} from "../assets/styles/colors";
-import {publicStationsContext} from "../navigation/PublicStationsProvider";
-import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { colors } from "../assets/styles/colors";
+import { publicStationsContext } from "../navigation/PublicStationsProvider";
+import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
+import { deleteObject, getStorage, ref } from "@firebase/storage";
 
 /**
  * represents the page where a user can see the status of his post.
@@ -14,13 +22,13 @@ import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider"
  * but it might change...
  * @returns <ScrollView>
  */
-export default function MyPosts({navigation}) {
-    const {user} = useContext(AuthenticatedUserContext);
-    const {cards} = useContext(publicStationsContext);
-    const myPosts = cards.filter(({owner_id}) => owner_id === user.uid);
+export default function MyPosts({ navigation }) {
+    const { user } = useContext(AuthenticatedUserContext);
+    const { cards } = useContext(publicStationsContext);
+    const myPosts = cards.filter(({ owner_id }) => owner_id === user.uid);
 
     const onEdit = (id) => {
-        navigation.push("EditMyStation", {id: id}); // push to the navigation EditMyStation() component' so we could go back
+        navigation.push("EditMyStation", { id: id }); // push to the navigation EditMyStation() component' so we could go back
     };
 
     const onDelete = (id) => {
@@ -33,6 +41,10 @@ export default function MyPosts({navigation}) {
                     text: "Yes",
                     onPress: async () => {
                         await deleteDoc(doc(db, "postedStation", id));
+                        const storgae = getStorage();
+                        deleteObject(ref(storgae, id + ".jpg")).catch((e) =>
+                            console.log("no picture")
+                        );
                     },
                 },
                 // The "No" button
@@ -51,7 +63,7 @@ export default function MyPosts({navigation}) {
                 onPress={() => navigation.push("PostStation")}
             >
                 <MaterialCommunityIcons
-                    style={{textAlign: "center"}}
+                    style={{ textAlign: "center" }}
                     name={"plus"}
                     color={"black"}
                     size={26}
@@ -60,7 +72,7 @@ export default function MyPosts({navigation}) {
 
             <ScrollView>
                 {myPosts !== [] ? (
-                    myPosts.map(({name, address, price, image, date, id}) => (
+                    myPosts.map(({ name, address, price, image, date, id }) => (
                         <MyStationCard
                             owner={name}
                             address={address}
@@ -74,7 +86,7 @@ export default function MyPosts({navigation}) {
                         />
                     ))
                 ) : (
-                    <ActivityIndicator size={"large"} color="blue"/>
+                    <ActivityIndicator size={"large"} color="blue" />
                 )}
             </ScrollView>
         </View>
@@ -82,7 +94,7 @@ export default function MyPosts({navigation}) {
 }
 
 const styles = StyleSheet.create({
-    replaceMe: {alignItems: "center"},
+    replaceMe: { alignItems: "center" },
     plus: {
         backgroundColor: colors.primary,
         alignContent: "center",
