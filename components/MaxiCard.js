@@ -70,8 +70,8 @@ export default function MaxiCard({
                 </Text>
                 <Text>{owner}</Text>
                 <Text>{price} nis</Text>
-                
-                {date? date.map((d,index)=>(<TimeSlot start={ d.start.toDate()} end={d.end.toDate()} index={index}/>) ) : null}
+
+                {date? date.map((d,index)=>(<TimeSlot key={index} start={ d.start.toDate()} end={d.end.toDate()} index={index}/>) ) : null}
                 <TouchableOpacity
                     onPress={onOrder}
                     style={{
