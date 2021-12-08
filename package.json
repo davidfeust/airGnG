@@ -14,6 +14,7 @@
     "@expo/vector-icons": "^12.0.5",
     "@firebase/firestore": "^3.4.0",
     "@react-native-async-storage/async-storage": "~1.15.0",
+    "@react-native-community/datetimepicker": "3.5.2",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/stack": "^6.0.11",
@@ -32,13 +33,13 @@
     "react-native-bootstrap-styles": "^4.5.0-r",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "^1.10.3",
+    "react-native-google-places-autocomplete": "^2.4.1",
     "react-native-maps": "0.29.4",
     "react-native-modal": "^13.0.0",
     "react-native-neat-date-picker": "^1.1.2",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-web": "0.17.1",
-    "react-navigation": "^4.4.4",
-    "@react-native-community/datetimepicker": "3.5.2"
+    "react-navigation": "^4.4.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
