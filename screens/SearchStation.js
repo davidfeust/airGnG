@@ -1,5 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Dimensions, FlatList, Platform, StyleSheet, View } from "react-native";
+import {
+    Dimensions,
+    FlatList,
+    Platform,
+    StyleSheet,
+    View,
+    Animated,
+} from "react-native";
 import PublicStationCard from "../components/PublicStationCard";
 import { publicStationsContext } from "../navigation/PublicStationsProvider";
 import MapView, { Marker } from "react-native-maps";
@@ -9,6 +16,8 @@ import { myOrdersContext } from "../navigation/MyOrdersProvider";
 import { Image } from "react-native-elements";
 import { colors } from "../assets/styles/colors";
 import MiniCard from "../components/MiniCard";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import MaxiCard from "../components/MaxiCard";
 
 /**
  * create a page with all available stations in the DB,
@@ -20,6 +29,8 @@ import MiniCard from "../components/MiniCard";
  */
 
 export default function SearchStation({ navigation }) {
+    const stretchAnim = useRef(new Animated.Value(100)).current; // Initial
+    const [showMaxiCard, setShowMaxiCard] = useState(false);
     const { cards } = useContext(publicStationsContext);
     const { myOrders } = useContext(myOrdersContext);
     const [availableCards, setAvailableCards] = useState(
@@ -76,6 +87,17 @@ export default function SearchStation({ navigation }) {
         }
     });
 
+    const onSelectingCard = (e) => {
+        setShowMaxiCard(!showMaxiCard);
+
+        // console.log("card press");
+        // Animated.timing(stretchAnim, {
+        //     toValue: 400,
+        //     duration: 500,
+        //     // isInteraction: true,
+        //     useNativeDriver: false,
+        // }).start();
+    };
     return (
         <View style={styles.container}>
             <MapView
@@ -119,16 +141,34 @@ export default function SearchStation({ navigation }) {
                     renderItem={({
                         item: { name, address, price, image, date, id },
                     }) => (
-                        <MiniCard
-                            owner={name}
-                            address={address}
-                            price={price}
-                            image={image}
-                            date={date}
-                            id={id}
-                            key={id}
-                            style={globalStyles.mini_card}
-                        />
+                        <TouchableOpacity onPress={onSelectingCard}>
+                            {showMaxiCard ? (
+                                <MaxiCard
+                                    owner={name}
+                                    address={address}
+                                    price={price}
+                                    image={image}
+                                    date={date}
+                                    id={id}
+                                    key={id}
+                                    style={globalStyles.maxi_card_style}
+                                />
+                            ) : (
+                                <MiniCard
+                                    owner={name}
+                                    address={address}
+                                    price={price}
+                                    image={image}
+                                    date={date}
+                                    id={id}
+                                    key={id}
+                                    style={[
+                                        { height: 100 },
+                                        globalStyles.mini_card,
+                                    ]}
+                                />
+                            )}
+                        </TouchableOpacity>
                     )}
                     horizontal
                     showsHorizontalScrollIndicator={false}
