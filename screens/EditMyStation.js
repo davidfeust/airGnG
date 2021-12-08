@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Keyboard, ScrollView, Text, TextInput, TouchableWithoutFeedback, View} from "react-native";
 import {doc, getDoc, updateDoc} from "firebase/firestore";
 import {db} from "../config/firebase";
@@ -9,6 +9,7 @@ import {addressToCords, uploadImage} from "../utils/GlobalFuncitions";
 import ImagePicker from "../components/ImagePicker";
 import MyButton from "../components/MyButton";
 import CustomDatePicker from "../components/CustomDatePicker";
+import Autocomplete from "../components/Autocomplete";
 
 
 export default function EditMyStation({navigation, route}) {
@@ -20,6 +21,9 @@ export default function EditMyStation({navigation, route}) {
     const [timeSlots, setTimeSlots] = useState([]);
     const [image, setImage] = useState(null);
     const [processing, setProcessing] = useState(false);
+    const [cords, setCords] = useState(null);
+
+    const googleAddress = useRef();
 
     useEffect(async () => {
         const docRef = doc(db, "postedStation", route.params.id);
@@ -42,13 +46,19 @@ export default function EditMyStation({navigation, route}) {
         setImage(docData.image);
     }, []);
 
+    // we did another useEffect to prevent accessing and showing the unrender address
+    useEffect(() => {
+        googleAddress.current.setAddressText(address);
+    }, [address]);
+
     async function onSave() {
         setProcessing(true);
-        const cords = await addressToCords(address);
+        // const cords = await addressToCords(address);
+        // TODO: Upload image only if changed and remove the old image
         const image_url = await uploadImage(image, route.params.id);
         const postRef = doc(db, "postedStation", route.params.id);
         await updateDoc(postRef, {
-            address: address,
+            address: googleAddress.current.getAddressText(),
             price: price,
             shadowed: shadowed,
             name: name,
@@ -60,54 +70,58 @@ export default function EditMyStation({navigation, route}) {
             setProcessing(false);
             navigation.pop();
         }).catch(() => setProcessing(false));
-
     }
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <ScrollView style={{backgroundColor: 'white', flex: 1}}>
-                <View style={[globalStyles.container, {paddingTop: 60}]}>
-                    <Text style={globalStyles.title}>Edit</Text>
-                    <TextInput
-                        style={globalStyles.text_input}
-                        onChangeText={(text) => setAddress(text)}
-                        placeholder="Address"
-                        value={address}
-                    />
-                    <TextInput
-                        style={globalStyles.text_input}
-                        onChangeText={(text) => setPrice(text)}
-                        placeholder="Price per hour"
-                        keyboardType={"number-pad"}
-                        value={price}
-                    />
-                    {timeSlots &&
-                    <CustomDatePicker setTimeSlots={setTimeSlots} timeSlots={timeSlots}/>
-                    }
+            <View style={[globalStyles.container, {paddingTop: 60}]}>
+                <Text style={globalStyles.title}>Edit</Text>
+                {/*<TextInput*/}
+                {/*    style={globalStyles.text_input}*/}
+                {/*    onChangeText={(text) => setAddress(text)}*/}
+                {/*    placeholder="Address"*/}
+                {/*    value={address}*/}
+                {/*/>*/}
 
-                    <Text style={globalStyles.subTitle}>contact info:</Text>
-                    <TextInput
-                        style={globalStyles.text_input}
-                        onChangeText={(text) => setName(text)}
-                        placeholder="Name"
-                        value={name}
-                    />
-                    <TextInput
-                        style={globalStyles.text_input}
-                        onChangeText={(text) => setPhone(text)}
-                        placeholder="Phone number"
-                        keyboardType={"phone-pad"}
-                        value={phone}
-                    />
-                    <ImagePicker image={image} setImage={setImage}/>
+                <Autocomplete reference={googleAddress} setCords={setCords}/>
+                <ScrollView style={{backgroundColor: 'white'}}>
+                    <View style={globalStyles.container}>
 
-                    <Text>Shadowed parking spot</Text>
-                    <Checkbox value={shadowed} onValueChange={setShadowed}/>
+                        <TextInput
+                            style={globalStyles.text_input}
+                            onChangeText={(text) => setPrice(text)}
+                            placeholder="Price per hour"
+                            keyboardType={"number-pad"}
+                            value={price}
+                        />
+                        {timeSlots &&
+                        <CustomDatePicker setTimeSlots={setTimeSlots} timeSlots={timeSlots}/>
+                        }
 
-                    <MyButton style={globalStyles.bt} onPress={onSave} text={'Save'} processing={processing}/>
+                        <Text style={globalStyles.subTitle}>contact info:</Text>
+                        <TextInput
+                            style={globalStyles.text_input}
+                            onChangeText={(text) => setName(text)}
+                            placeholder="Name"
+                            value={name}
+                        />
+                        <TextInput
+                            style={globalStyles.text_input}
+                            onChangeText={(text) => setPhone(text)}
+                            placeholder="Phone number"
+                            keyboardType={"phone-pad"}
+                            value={phone}
+                        />
+                        <ImagePicker image={image} setImage={setImage}/>
 
-                </View>
-            </ScrollView>
+                        <Text>Shadowed parking spot</Text>
+                        <Checkbox value={shadowed} onValueChange={setShadowed}/>
+
+                        <MyButton style={globalStyles.bt} onPress={onSave} text={'Save'} processing={processing}/>
+
+                    </View>
+                </ScrollView>
+            </View>
         </TouchableWithoutFeedback>
     );
 }

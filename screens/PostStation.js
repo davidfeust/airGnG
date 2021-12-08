@@ -11,6 +11,7 @@ import ImagePicker from "../components/ImagePicker";
 import MyButton from "../components/MyButton";
 import {GooglePlacesAutocomplete} from "react-native-google-places-autocomplete";
 import Constants from "expo-constants";
+import Autocomplete from "../components/Autocomplete";
 
 /**
  * create a page where the user fills a form
@@ -76,56 +77,12 @@ export default function PostStation(props) {
 
     return (
         <TouchableWithoutFeedback
-            // onPress={Keyboard.dismiss}
+            onPress={Keyboard.dismiss}
         >
-            {/*<ScrollView style={{backgroundColor: 'white'}}>*/}
             <View style={[globalStyles.container, {paddingTop: 60}]}>
                 <Text style={globalStyles.title}>Station Details</Text>
-                {/*<TextInput*/}
-                {/*    style={globalStyles.text_input}*/}
-                {/*    onChangeText={(text) => setAddress(text)}*/}
-                {/*    placeholder="Address"*/}
-                {/*/>*/}
 
-                <GooglePlacesAutocomplete
-                    ref={googleAddress}
-                    placeholder={"Address"}
-                    styles={{
-                        container: {
-                            flex: 0,
-                            width: '80%',
-                        },
-                        textInput: {
-                            borderBottomWidth: 1,
-                            borderColor: "gray",
-                            margin: 2,
-                            padding: 5,
-                        },
-
-
-                        listView: {
-                            position: "absolute",
-                            zIndex: 2,
-                            top: 46,
-                            borderBottomWidth: 1,
-                        },
-                        row: {
-                            backgroundColor: 'white'
-                        },
-                    }}
-                    nearbyPlacesAPI={"GooglePlacesSearch"}
-                    debounce={400}
-                    query={{
-                        key: Constants.manifest.extra.googleMapsApi,
-                        language: 'en-he',
-                    }}
-                    onPress={(data, details = null) => {
-                        setCords(details.geometry.location);
-                        console.log(details.geometry.location)
-                        console.log(details.name)
-                    }
-                    } fetchDetails={true}
-                />
+                <Autocomplete reference={googleAddress} setCords={setCords}/>
 
                 <ScrollView keyboardShouldPersistTaps={'handled'}>
                     <View style={globalStyles.container}>

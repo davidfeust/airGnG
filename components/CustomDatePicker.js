@@ -35,7 +35,7 @@ export default function CustomDatePicker({setTimeSlots, timeSlots}) {
                 flexDirection: "row",
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                paddingHorizontal: 20,
+                paddingHorizontal: 40,
                 width: '100%'
             }}>
                 <TimeSlot index={key} start={timeSlots[key].start} end={timeSlots[key].end} set={inputHandler}/>
