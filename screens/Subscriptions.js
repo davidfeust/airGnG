@@ -71,11 +71,11 @@ export default function Subscriptions({navigation}) {
         );
     };
 
-    return (
-        <ScrollView style={{flex: 1, height: '100%'}}>
-            {myOrdersCards.length !== 0 ? (
-                myOrdersCards.map(({name, address, price, date, id, image}) => {
-                    return (
+    if (myOrdersCards.length !== 0) {
+        return (
+            <ScrollView>
+                {myOrdersCards.map(({name, address, price, date, id, image}) =>
+                    (
                         <MyStationCard
                             key={id}
                             id={id}
@@ -86,33 +86,16 @@ export default function Subscriptions({navigation}) {
                             image={image}
                             onDelete={() => onCancel(id)}
                         />
-                    );
-                })
-            ) : (
-                <View
-                    style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: Dimensions.get('window').height - 50,
-                        flex: 1,
-                    }}>
-                    <Text style={globalStyles.subTitle}>No subscription yet</Text>
-                    <MyButton text={'Search Station'} onPress={() => navigation.navigate('SearchStation')}/>
-                </View>
-            )}
-        </ScrollView>
-    );
+                    ))
+                }
+            </ScrollView>
+        );
+    } else {
+        return (
+            <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+                <Text style={globalStyles.subTitle}>No subscription yet</Text>
+                <MyButton text={'Search Station'} onPress={() => navigation.navigate('SearchStation')}/>
+            </View>
+        );
+    }
 }
-
-
-const styles = StyleSheet.create({
-    replaceMe: {alignItems: "center"},
-    plus: {
-        backgroundColor: "blue",
-        borderRadius: 50,
-        height: 50,
-        width: 50,
-        alignContent: "center",
-        justifyContent: "center",
-    },
-});
