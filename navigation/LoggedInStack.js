@@ -17,6 +17,7 @@ export default function LoggedInStack() {
   return (
     <PublicStationsProvider>
       <MyOrdersProvider>
+        {/*headerShown: false - hide the names of the screens (usually in the top of the page)*/}
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="PostStation" component={PostStation} />
