@@ -19,6 +19,7 @@ import MiniCard from "../components/MiniCard";
 import {TouchableOpacity} from "react-native-gesture-handler";
 import MaxiCard from "../components/MaxiCard";
 import Autocomplete from "../components/Autocomplete";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 /**
  * create a page with all available stations in the DB,
@@ -93,9 +94,9 @@ export default function SearchStation({navigation}) {
             // ex - if you will look for israel in the previous you will get just one dot(maybe in the center)
             // but in the new version you will get according to difference in north-east and south-west
             if (viewPort != null) {
-                const {northeast,southwest} = viewPort;
-                region.latitudeDelta = (northeast.lat - southwest.lat)*0.5
-                region.longitudeDelta = (northeast.lng - southwest.lng)*0.5
+                const {northeast, southwest} = viewPort;
+                region.latitudeDelta = (northeast.lat - southwest.lat) * 0.5
+                region.longitudeDelta = (northeast.lng - southwest.lng) * 0.5
             }
             map.current.animateToRegion(region)
         }
@@ -131,8 +132,10 @@ export default function SearchStation({navigation}) {
         <View style={styles.container}>
             {/*/here we warped the Autocomplete component in another view in order to give it a special style */}
             <View style={styles.searchBox}>
-                <Autocomplete reference={googleAddress} setCords={setCords} placeHolder={"Search"} styleTag={"styleSearch"}
+                <Autocomplete reference={googleAddress} setCords={setCords} placeHolder={"Search Here..."}
+                              styleTag={"styleSearch"}
                               setViewPort={setViewPort}/>
+                <MaterialCommunityIcons name={'magnify'} size={22} style={{alignSelf: 'center', marginRight: 20}}/>
             </View>
             <MapView
                 ref={map}

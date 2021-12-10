@@ -93,7 +93,7 @@ export default function Subscriptions({navigation}) {
     } else {
         return (
             <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-                <Text style={globalStyles.subTitle}>No subscription yet</Text>
+                <Text style={globalStyles.subTitle}>No subscription yet...</Text>
                 <MyButton text={'Search Station'} onPress={() => navigation.navigate('SearchStation')}/>
             </View>
         );

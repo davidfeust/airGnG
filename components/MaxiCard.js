@@ -63,7 +63,7 @@ export default function MaxiCard({
                             ? { uri: image }
                             : require("../assets/defaults/default_image.png")
                     }
-                    style={{ width: 200, height: 200, alignSelf: "center" }}
+                    style={{ width: 300, height: 200, alignSelf: "center" }}
                 />
                 <Text style={{ flexWrap: "wrap", color: "red" }}>
                     {address}

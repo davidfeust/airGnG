@@ -1,10 +1,16 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {GooglePlacesAutocomplete} from "react-native-google-places-autocomplete";
 import Constants from "expo-constants";
 
 
-export default function Autocomplete({reference, setCords, placeHolder = "Address",setViewPort=null,styleTag="default" }) {
+export default function Autocomplete({
+                                         reference,
+                                         setCords,
+                                         placeHolder = "Address",
+                                         setViewPort = null,
+                                         styleTag = "default"
+                                     }) {
     const defaultStyle = {
         container: {
             flex: 0,
@@ -32,12 +38,11 @@ export default function Autocomplete({reference, setCords, placeHolder = "Addres
     const styleSearch = {
         container: {
             flex: 0,
-            width: '80%',
+            width: '92%',
         },
         textInput: {
-            borderColor: "gray",
             margin: 2,
-            padding: 0,
+            borderRadius: 15
         },
         listView: {
             zIndex: 4,
@@ -48,8 +53,9 @@ export default function Autocomplete({reference, setCords, placeHolder = "Addres
     }
     // I used styleToUse to implements the right style for the autocomplete component
     let styleToUse = defaultStyle;
-    if(styleTag === "styleSearch"){
-        styleToUse = styleSearch}
+    if (styleTag === "styleSearch") {
+        styleToUse = styleSearch
+    }
 
     return (
         <GooglePlacesAutocomplete
@@ -66,8 +72,9 @@ export default function Autocomplete({reference, setCords, placeHolder = "Addres
             onPress={(data, details = null) => {
                 // console.log(details);
                 setCords(details.geometry.location);
-                if(setViewPort!=null){
-                    setViewPort(details.geometry.viewport)}
+                if (setViewPort != null) {
+                    setViewPort(details.geometry.viewport)
+                }
             }}
             fetchDetails={true}
         />
