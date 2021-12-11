@@ -1,13 +1,25 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
-import { View, Text, Image, Animated } from "react-native";
+import {
+    View,
+    Text,
+    Image,
+    Animated,
+    Alert,
+    TouchableOpacity,
+} from "react-native";
 import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
 import { db } from "../config/firebase";
-import { collection, addDoc  } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import TimeSlot from "./TimeSlot";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors } from "../assets/styles/colors";
-import { globalStyles } from "../assets/styles/globalStyles";
+import CustomDropDown from "./CustomDropDown";
+import {
+    dateToStringNoHours,
+    dateToStringHours,
+    dateToString,
+    dateRange,
+} from "../utils/GlobalFuncitions";
 
 export default function MaxiCard({
     owner,
@@ -18,24 +30,34 @@ export default function MaxiCard({
     id,
     style,
 }) {
+    new Date().getDate;
     const stretchAnim = useRef(new Animated.Value(100)).current; // Initial
     const [cardStyle, setCardStyle] = useState(style);
+    const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
+    const [selectedDateRange, setSelectedDateRange] = useState([]);
+    const [selectedStart, setSelectedStart] = useState(null);
+    const [selectedEnd, setSelectedEnd] = useState(null);
     const card = useRef();
     const { user } = useContext(AuthenticatedUserContext);
     const onOrder = () => {
-        addDoc(collection(db, "subscriptions"), {
-            sub_id: user.uid,
-            date_of_sub: new Date(),
-            reservation: {
-                date_start:
-                    "the subscriber needs to choose a date when he/she orders",
-                date_finish: "same here",
-            },
-            station_id: id,
-            payed: false,
-            sub_car_type:
-                "the user might have an incompetible type of charge for his card",
-        }).catch((e) => console.error("Error adding document: ", e));
+        selectedStart && selectedEnd
+            ? addDoc(collection(db, "subscriptions"), {
+                  sub_id: user.uid,
+                  date_of_sub: new Date(),
+                  reservation: {
+                      date_start: selectedStart,
+                      date_finish: selectedEnd,
+                  },
+                  station_id: id,
+                  payed: false,
+                  sub_car_type:
+                      "the user might have an incompetible type of charge for his card",
+              }).catch((e) => console.error("Error adding document: ", e))
+            : Alert.alert("Erorr", "Please choose a date from the dropdown.", [
+                  {
+                      text: "Close",
+                  },
+              ]);
     };
 
     useEffect(() => {
@@ -45,6 +67,20 @@ export default function MaxiCard({
             useNativeDriver: false,
         }).start();
     }, [stretchAnim]);
+
+    useEffect(() => {
+        setSelectedStart(null);
+        setSelectedEnd(null);
+        if (selectedTimeSlot) {
+            setSelectedDateRange(
+                dateRange(
+                    selectedTimeSlot.start.toDate(),
+                    selectedTimeSlot.end.toDate(),
+                    60
+                )
+            );
+        }
+    }, [selectedTimeSlot]);
 
     return (
         <Animated.View
@@ -71,7 +107,56 @@ export default function MaxiCard({
                 <Text>{owner}</Text>
                 <Text>{price} nis</Text>
 
-                {date? date.map((d,index)=>(<TimeSlot key={index} start={ d.start.toDate()} end={d.end.toDate()} index={index}/>) ) : null}
+                <CustomDropDown
+                    items={date.map((d, index) => ({
+                        label:
+                            dateToStringNoHours(d.start.toDate()) +
+                            "-" +
+                            dateToStringNoHours(d.end.toDate()),
+                        value: d,
+                    }))}
+                    setItems={() => {}}
+                    value={selectedTimeSlot}
+                    setValue={setSelectedTimeSlot}
+                    placeholder="Choose Time Slot"
+                />
+                <View style={{ flex: 1, flexDirection: "row" }}>
+                    {selectedTimeSlot ? (
+                        <CustomDropDown
+                            items={selectedDateRange.map((date) => ({
+                                label: dateToString(date),
+                                value: date,
+                            }))}
+                            setItems={setSelectedDateRange}
+                            value={selectedStart}
+                            setValue={setSelectedStart}
+                            containerStyle={{ width: "50%" }}
+                            placeholder="Choose Starting Hour"
+                        />
+                    ) : null}
+                    {selectedStart ? (
+                        <CustomDropDown
+                            items={selectedDateRange
+                                .filter((date) => date > selectedStart)
+                                .map((date) => ({
+                                    label: dateToString(date),
+                                    value: date,
+                                }))}
+                            setItems={() => {}}
+                            value={selectedEnd}
+                            setValue={setSelectedEnd}
+                            containerStyle={{ width: "50%" }}
+                            placeholder="Choose Ending Hour"
+                        />
+                    ) : null}
+                </View>
+                <Text>
+                    Price:{" "}
+                    {selectedStart && selectedEnd
+                        ? ((selectedEnd - selectedStart) / 36e5) * price
+                        : 0}{" "}
+                    nis
+                </Text>
                 <TouchableOpacity
                     onPress={onOrder}
                     style={{

@@ -1,9 +1,9 @@
 import opencage from "opencage-api-client";
 import Constants from "expo-constants";
-import {collection, getDocs} from "firebase/firestore";
-import {db, storage} from "../config/firebase";
+import { collection, getDocs } from "firebase/firestore";
+import { db, storage } from "../config/firebase";
 import * as ImagePicker from "expo-image-picker";
-import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React from "react";
 
 export const addressToCords = async (address) => {
@@ -26,13 +26,13 @@ export const getFromCol = async (col_name, set_fun) => {
         cards_col.docs.map((doc) => {
             let id = doc.id;
             let data = doc.data();
-            return {id, ...data};
+            return { id, ...data };
         })
     );
 };
 
 export const pickImageLibrary = async (setImage) => {
-    const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
         alert("not permitted");
         return;
@@ -49,7 +49,7 @@ export const pickImageLibrary = async (setImage) => {
     }
 };
 export const pickImageCamera = async (setImage) => {
-    const {status} = await ImagePicker.requestCameraPermissionsAsync();
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
         alert("not permitted");
         return;
@@ -66,7 +66,7 @@ export const pickImageCamera = async (setImage) => {
     }
 };
 
-export const uploadImage = async (uri, id) => {
+export const uploadImage = async (uri: string, id: number) => {
     const response = await fetch(uri);
     const blob = await response.blob();
     const storageRef = await ref(storage, `${id}.jpg`);
@@ -74,8 +74,36 @@ export const uploadImage = async (uri, id) => {
     return await getDownloadURL(storageRef, `${id}.jpg`);
 };
 
-export const dateToString = (date) => {
-    const zeroPad = (num, places) => String(num).padStart(places, '0');
+export const dateToString = (date: Date) => {
+    const zeroPad = (num: number, places: number) =>
+        String(num).padStart(places, "0");
 
-    return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " " + zeroPad(date.getHours(), 2) + ":" + zeroPad(date.getMinutes(), 2);
+    return dateToStringNoHours(date) + dateToStringHours(date);
 };
+export const dateToStringNoHours = (date: Date) => {
+    return (
+        date.getDate() +
+        "/" +
+        (date.getMonth() + 1) +
+        "/" +
+        date.getFullYear() +
+        " "
+    );
+};
+
+export const dateToStringHours = (date: Date) => {
+    const zeroPad = (num, places) => String(num).padStart(places, "0");
+    return zeroPad(date.getHours(), 2) + ":" + zeroPad(date.getMinutes(), 2);
+};
+
+export function dateRange(start: Date, end: Date, intervalInMinutes: number) {
+    var current = new Date(start);
+    const etime = end.getTime();
+    const intervalInMili = intervalInMinutes * 60 * 1000;
+    var res = [];
+    while (current.getTime() + intervalInMili < etime) {
+        res.push(new Date(current));
+        current.setMinutes(current.getMinutes() + intervalInMinutes);
+    }
+    return res;
+}

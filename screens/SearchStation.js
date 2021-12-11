@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
     Dimensions,
     FlatList,
@@ -6,20 +6,20 @@ import {
     StyleSheet,
     View,
     Animated,
+    TouchableOpacity,
 } from "react-native";
 import PublicStationCard from "../components/PublicStationCard";
-import {publicStationsContext} from "../navigation/PublicStationsProvider";
-import MapView, {Marker} from "react-native-maps";
-import {globalStyles} from "../assets/styles/globalStyles";
-import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
-import {myOrdersContext} from "../navigation/MyOrdersProvider";
-import {Image} from "react-native-elements";
-import {colors} from "../assets/styles/colors";
+import { publicStationsContext } from "../navigation/PublicStationsProvider";
+import MapView, { Marker } from "react-native-maps";
+import { globalStyles } from "../assets/styles/globalStyles";
+import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
+import { myOrdersContext } from "../navigation/MyOrdersProvider";
+import { Image } from "react-native-elements";
+import { colors } from "../assets/styles/colors";
 import MiniCard from "../components/MiniCard";
-import {TouchableOpacity} from "react-native-gesture-handler";
 import MaxiCard from "../components/MaxiCard";
 import Autocomplete from "../components/Autocomplete";
-import {MaterialCommunityIcons} from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 /**
  * create a page with all available stations in the DB,
@@ -30,20 +30,19 @@ import {MaterialCommunityIcons} from "@expo/vector-icons";
  * @returns <ScrollView>
  */
 
-export default function SearchStation({navigation}) {
+export default function SearchStation({ navigation }) {
     //for the autocomplete function
     const googleAddress = useRef();
     const [cords, setCords] = useState(null);
     const [viewPort, setViewPort] = useState(null);
 
-
     const stretchAnim = useRef(new Animated.Value(100)).current; // Initial
     const [showMaxiCard, setShowMaxiCard] = useState(false);
-    const {cards} = useContext(publicStationsContext);
-    const {myOrders} = useContext(myOrdersContext);
+    const { cards } = useContext(publicStationsContext);
+    const { myOrders } = useContext(myOrdersContext);
     const [availableCards, setAvailableCards] = useState(
         cards.filter(
-            (card) => !myOrders.some(({station_id}) => station_id === card.id)
+            (card) => !myOrders.some(({ station_id }) => station_id === card.id)
         )
     );
 
@@ -53,7 +52,7 @@ export default function SearchStation({navigation}) {
         setAvailableCards(
             cards.filter(
                 (card) =>
-                    !myOrders.some(({station_id}) => station_id === card.id)
+                    !myOrders.some(({ station_id }) => station_id === card.id)
             )
         );
     };
@@ -68,7 +67,7 @@ export default function SearchStation({navigation}) {
             (card) => card.id === selectedId
         );
 
-        flatList.current.scrollToIndex({index, animated: true});
+        flatList.current.scrollToIndex({ index, animated: true });
 
         const selectedPlace = availableCards[index];
         const region = {
@@ -94,13 +93,13 @@ export default function SearchStation({navigation}) {
             // ex - if you will look for israel in the previous you will get just one dot(maybe in the center)
             // but in the new version you will get according to difference in north-east and south-west
             if (viewPort != null) {
-                const {northeast, southwest} = viewPort;
-                region.latitudeDelta = (northeast.lat - southwest.lat) * 0.5
-                region.longitudeDelta = (northeast.lng - southwest.lng) * 0.5
+                const { northeast, southwest } = viewPort;
+                region.latitudeDelta = (northeast.lat - southwest.lat) * 0.5;
+                region.longitudeDelta = (northeast.lng - southwest.lng) * 0.5;
             }
-            map.current.animateToRegion(region)
+            map.current.animateToRegion(region);
         }
-    }, [cords])
+    }, [cords]);
 
     const map = useRef();
     const flatList = useRef();
@@ -110,7 +109,7 @@ export default function SearchStation({navigation}) {
         waitForInteraction: true,
         minimumViewTime: availableCards.length * 60,
     });
-    const onViewChanged = useRef(({viewableItems}) => {
+    const onViewChanged = useRef(({ viewableItems }) => {
         if (viewableItems.length > 0) {
             const selectedPlace = viewableItems[0].item;
             setSelectedId(selectedPlace.id);
@@ -119,23 +118,29 @@ export default function SearchStation({navigation}) {
 
     const onSelectingCard = (e) => {
         setShowMaxiCard(!showMaxiCard);
-
-        // console.log("card press");
-        // Animated.timing(stretchAnim, {
-        //     toValue: 400,
-        //     duration: 500,
-        //     // isInteraction: true,
-        //     useNativeDriver: false,
-        // }).start();
+        Animated.timing(stretchAnim, {
+            toValue: 400,
+            duration: 500,
+            // isInteraction: true,
+            useNativeDriver: false,
+        }).start();
     };
     return (
         <View style={styles.container}>
             {/*/here we warped the Autocomplete component in another view in order to give it a special style */}
             <View style={styles.searchBox}>
-                <Autocomplete reference={googleAddress} setCords={setCords} placeHolder={"Search Here..."}
-                              styleTag={"styleSearch"}
-                              setViewPort={setViewPort}/>
-                <MaterialCommunityIcons name={'magnify'} size={22} style={{alignSelf: 'center', marginRight: 20}}/>
+                <Autocomplete
+                    reference={googleAddress}
+                    setCords={setCords}
+                    placeHolder={"Search Here..."}
+                    styleTag={"styleSearch"}
+                    setViewPort={setViewPort}
+                />
+                <MaterialCommunityIcons
+                    name={"magnify"}
+                    size={22}
+                    style={{ alignSelf: "center", marginRight: 20 }}
+                />
             </View>
             <MapView
                 ref={map}
@@ -171,13 +176,13 @@ export default function SearchStation({navigation}) {
                     </Marker>
                 ))}
             </MapView>
-            <View style={{position: "absolute", bottom: 15}}>
+            <View style={{ position: "absolute", bottom: 15 }}>
                 <FlatList
                     ref={flatList}
                     data={availableCards}
                     renderItem={({
-                                     item: {name, address, price, image, date, id},
-                                 }) => (
+                        item: { name, address, price, image, date, id },
+                    }) => (
                         <TouchableOpacity onPress={onSelectingCard}>
                             {showMaxiCard ? (
                                 <MaxiCard
@@ -200,7 +205,7 @@ export default function SearchStation({navigation}) {
                                     id={id}
                                     key={id}
                                     style={[
-                                        {height: 100},
+                                        { height: 100 },
                                         globalStyles.mini_card,
                                     ]}
                                 />
@@ -260,16 +265,16 @@ const styles = StyleSheet.create({
     },
     //we use the searchBox style in order to present nicely the search bar oon the map
     searchBox: {
-        position: 'absolute',
-        marginTop: Platform.OS === 'ios' ? 20 : 40,
+        position: "absolute",
+        marginTop: Platform.OS === "ios" ? 20 : 40,
         flexDirection: "row",
-        backgroundColor: '#fff',
-        width: '90%',
-        alignSelf: 'center',
+        backgroundColor: "#fff",
+        width: "90%",
+        alignSelf: "center",
         borderRadius: 15,
         padding: 0,
-        shadowColor: '#ccc',
-        shadowOffset: {width: 0, height: 3},
+        shadowColor: "#ccc",
+        shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.5,
         shadowRadius: 5,
         elevation: 10,
