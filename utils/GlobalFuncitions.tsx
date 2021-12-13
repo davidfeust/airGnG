@@ -5,6 +5,7 @@ import { db, storage } from "../config/firebase";
 import * as ImagePicker from "expo-image-picker";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React from "react";
+import { Linking, Alert, Platform } from 'react-native';
 
 export const addressToCords = async (address) => {
     try {
@@ -90,6 +91,29 @@ export const dateToStringNoHours = (date: Date) => {
         " "
     );
 };
+
+
+export const onCall = phone => {
+  console.log('callNumber ----> ', phone);
+  let phoneNumber = phone;
+  if (Platform.OS !== 'android') {
+    phoneNumber = `telprompt:${phone}`;
+  }
+  else  {
+    phoneNumber = `tel:${phone}`;
+  }
+  Linking.canOpenURL(phoneNumber)
+  .then(supported => {
+    if (!supported) {
+      Alert.alert('Phone number is not available');
+    } else {
+      return Linking.openURL(phoneNumber);
+    }
+  })
+  .catch(err => console.log(err));
+};
+
+
 
 export const dateToStringHours = (date: Date) => {
     const zeroPad = (num, places) => String(num).padStart(places, "0");

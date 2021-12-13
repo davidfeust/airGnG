@@ -40,7 +40,8 @@
     "react-native-neat-date-picker": "^1.1.2",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-web": "0.17.1",
-    "react-navigation": "^4.4.4"
+    "react-navigation": "^4.4.4",
+    "react-phone-number-input": "^3.1.44"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

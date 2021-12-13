@@ -74,7 +74,7 @@ export default function Subscriptions({navigation}) {
     if (myOrdersCards.length !== 0) {
         return (
             <ScrollView>
-                {myOrdersCards.map(({name, address, price, date, id, image}) =>
+                {myOrdersCards.map(({name, address, price, date, id, image,phone}) =>
                     (
                         <MyStationCard
                             key={id}
@@ -85,6 +85,7 @@ export default function Subscriptions({navigation}) {
                             price={price}
                             image={image}
                             onDelete={() => onCancel(id)}
+                            phone={phone}
                         />
                     ))
                 }

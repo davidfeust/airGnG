@@ -13,6 +13,8 @@ import { db } from "../config/firebase";
 import Checkbox from "expo-checkbox";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { globalStyles } from "../assets/styles/globalStyles";
+import { onCall } from "../utils/GlobalFuncitions";
+import MyButton from "./MyButton";
 
 export default function MyStationCard({
   owner,
@@ -24,6 +26,7 @@ export default function MyStationCard({
   id,
   onEdit,
   available,
+  phone,
 }) {
   const [innerAvailable, setInnerAvailable] = useState(available);
 
@@ -55,12 +58,17 @@ export default function MyStationCard({
         <View style={globalStyles.flex_container}>
           {onEdit != null ? (
             <View style={globalStyles.in_bt}>
-              <Button title="edit" onPress={() => onEdit(id)} />
+              <MyButton text="edit" onPress={() => onEdit(id)} />
             </View>
           ) : null}
           {onDelete != null ? (
             <View style={globalStyles.in_bt}>
-              <Button title="delete" onPress={() => onDelete(id)} />
+              <MyButton text="delete" onPress={() => onDelete(id)} />
+            </View>
+          ) : null}
+          {phone != null ? (
+            <View style={globalStyles.in_bt}>
+              <MyButton text="call the man!" onPress={() => onCall(phone)} />
             </View>
           ) : null}
         </View>
