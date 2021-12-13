@@ -181,7 +181,7 @@ export default function SearchStation({ navigation }) {
                     ref={flatList}
                     data={availableCards}
                     renderItem={({
-                        item: { name, address, price, image, date, id },
+                        item: { name, address, price, image, date, id, phone },
                     }) => (
                         <TouchableOpacity onPress={onSelectingCard}>
                             {showMaxiCard ? (
@@ -194,6 +194,7 @@ export default function SearchStation({ navigation }) {
                                     id={id}
                                     key={id}
                                     style={globalStyles.maxi_card_style}
+                                    phone={phone}
                                 />
                             ) : (
                                 <MiniCard

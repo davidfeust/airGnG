@@ -29,6 +29,7 @@ export default function MaxiCard({
     image,
     id,
     style,
+    phone,
 }) {
     new Date().getDate;
     const stretchAnim = useRef(new Animated.Value(100)).current; // Initial
@@ -105,6 +106,8 @@ export default function MaxiCard({
                     {address}
                 </Text>
                 <Text>{owner}</Text>
+                <Text>{phone}</Text>
+                
                 <Text>{price} nis</Text>
 
                 <CustomDropDown
