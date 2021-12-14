@@ -1,9 +1,11 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
     ActivityIndicator,
-    Alert, Dimensions,
+    Alert,
+    Dimensions,
     ScrollView,
-    StyleSheet, Text,
+    StyleSheet,
+    Text,
     TouchableOpacity,
     View,
 } from "react-native";
@@ -15,15 +17,17 @@ import {
     doc,
     getDoc,
     getDocs,
+    updateDoc,
+    arrayRemove,
 } from "firebase/firestore";
-import {db} from "../config/firebase";
-import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
+import { db } from "../config/firebase";
+import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
 import PublicStationCard from "../components/PublicStationCard";
-import {myOrdersContext} from "../navigation/MyOrdersProvider";
-import {publicStationsContext} from "../navigation/PublicStationsProvider";
+import { myOrdersContext } from "../navigation/MyOrdersProvider";
+import { publicStationsContext } from "../navigation/PublicStationsProvider";
 import MyStationCard from "../components/MyStationCard";
-import {colors} from "../assets/styles/colors";
-import {globalStyles} from "../assets/styles/globalStyles";
+import { colors } from "../assets/styles/colors";
+import { globalStyles } from "../assets/styles/globalStyles";
 import MyButton from "../components/MyButton";
 
 /**
@@ -31,13 +35,19 @@ import MyButton from "../components/MyButton";
  * (a subscribed station is a station that the user picked from SearchStation.js)
  * @returns <ScrollView>
  */
-export default function Subscriptions({navigation}) {
-    const {user} = useContext(AuthenticatedUserContext);
-    const {myOrders} = useContext(myOrdersContext);
-    const {cards} = useContext(publicStationsContext); // useState is needed because cards is directy connected to the screen
-    const myOrdersCards = cards.filter(({id}) =>
-        myOrders.some(({station_id}) => station_id === id)
-    );
+export default function Subscriptions({ navigation }) {
+    const { user } = useContext(AuthenticatedUserContext);
+    const { myOrders } = useContext(myOrdersContext);
+    const { cards } = useContext(publicStationsContext); // useState is needed because cards is directy connected to the screen
+    const [myOrdersCards, setMyOrdersCards] = useState([]);
+    useEffect(() => {
+        setMyOrdersCards(
+            cards.filter(({ id }) =>
+                myOrders.some(({ station_id }) => station_id === id)
+            )
+        );
+    }, [myOrders, cards]);
+
     const onCancel = (id) => {
         return Alert.alert(
             "Are your sure?",
@@ -47,19 +57,18 @@ export default function Subscriptions({navigation}) {
                 {
                     text: "Yes",
                     onPress: async () => {
-                        // await getDocs(
-                        //   query(
-                        //     collection(db, "subscriptions"),
-                        //     where("station_id", "==", id)
-                        //   )
-                        // ).then((docs) => docs.forEach((doc) => deleteDoc(doc)));
                         const toDelete = await getDocs(
                             query(
                                 collection(db, "subscriptions"),
                                 where("station_id", "==", id)
                             )
                         );
-                        toDelete.forEach((doc) => deleteDoc(doc.ref));
+                        toDelete.forEach((adoc) => {
+                            deleteDoc(adoc.ref);
+                            updateDoc(doc(db, "users", user.uid), {
+                                orders: arrayRemove(adoc.id),
+                            });
+                        });
                     },
                 },
                 // The "No" button
@@ -74,8 +83,8 @@ export default function Subscriptions({navigation}) {
     if (myOrdersCards.length !== 0) {
         return (
             <ScrollView>
-                {myOrdersCards.map(({name, address, price, date, id, image,phone}) =>
-                    (
+                {myOrdersCards.map(
+                    ({ name, address, price, date, id, image, phone }) => (
                         <MyStationCard
                             key={id}
                             id={id}
@@ -87,15 +96,26 @@ export default function Subscriptions({navigation}) {
                             onDelete={() => onCancel(id)}
                             phone={phone}
                         />
-                    ))
-                }
+                    )
+                )}
             </ScrollView>
         );
     } else {
         return (
-            <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-                <Text style={globalStyles.subTitle}>No subscription yet...</Text>
-                <MyButton text={'Search Station'} onPress={() => navigation.navigate('SearchStation')}/>
+            <View
+                style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flex: 1,
+                }}
+            >
+                <Text style={globalStyles.subTitle}>
+                    No subscription yet...
+                </Text>
+                <MyButton
+                    text={"Search Station"}
+                    onPress={() => navigation.navigate("SearchStation")}
+                />
             </View>
         );
     }

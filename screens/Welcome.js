@@ -1,6 +1,6 @@
 import React from "react";
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {globalStyles} from "../assets/styles/globalStyles";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { globalStyles } from "../assets/styles/globalStyles";
 import MyButton from "../components/MyButton";
 
 /**
@@ -14,8 +14,14 @@ export default function Welcome(props) {
             <Text style={[globalStyles.title, styles.title]}>
                 Welcome to Air GnG!
             </Text>
-            <MyButton onPress={() => props.navigation.push("SignUp")} text={'Sign Un'}/>
-            <MyButton onPress={() => props.navigation.push("SignIn")} text={'Sign In'}/>
+            <MyButton
+                onPress={() => props.navigation.push("SignUp")}
+                text={"Sign Up"}
+            />
+            <MyButton
+                onPress={() => props.navigation.push("SignIn")}
+                text={"Sign In"}
+            />
         </View>
     );
 }

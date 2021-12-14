@@ -9,7 +9,13 @@ import {
 } from "react-native";
 import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
 import { db } from "../config/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import {
+    collection,
+    addDoc,
+    updateDoc,
+    arrayUnion,
+    doc,
+} from "firebase/firestore";
 import TimeSlot from "./TimeSlot";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { colors } from "../assets/styles/colors";
@@ -53,7 +59,13 @@ export default function MaxiCard({
                   payed: false,
                   sub_car_type:
                       "the user might have an incompetible type of charge for his card",
-              }).catch((e) => console.error("Error adding document: ", e))
+              })
+                  .then((docRef) =>
+                      updateDoc(doc(db, "users", user.uid), {
+                          orders: arrayUnion(docRef.id),
+                      })
+                  )
+                  .catch((e) => console.error("Error adding document: ", e))
             : Alert.alert("Erorr", "Please choose a date from the dropdown.", [
                   {
                       text: "Close",
@@ -107,7 +119,7 @@ export default function MaxiCard({
                 </Text>
                 <Text>{owner}</Text>
                 <Text>{phone}</Text>
-                
+
                 <Text>{price} nis</Text>
 
                 <CustomDropDown
