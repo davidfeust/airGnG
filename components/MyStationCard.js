@@ -1,20 +1,12 @@
 import React, {useState} from "react";
-import {
-    Alert,
-    Button,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import {Text, TouchableOpacity, View,} from "react-native";
 import StationCard from "./StationCard";
-import {doc, deleteDoc, updateDoc} from "firebase/firestore";
+import {doc, updateDoc} from "firebase/firestore";
 import {db} from "../config/firebase";
 import Checkbox from "expo-checkbox";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {globalStyles} from "../assets/styles/globalStyles";
 import {onCall} from "../utils/GlobalFuncitions";
-import MyButton from "./MyButton";
 import {colors} from "../assets/styles/colors";
 
 
@@ -60,17 +52,17 @@ export default function MyStationCard({
                 <View style={globalStyles.flex_container}>
 
                     {onEdit != null ? (
-                            <TouchableOpacity
-                                style={{margin: 15}}
-                                onPress={() => onEdit(id)}
-                            >
-                                <MaterialCommunityIcons
-                                    name="pencil"
-                                    size={30}
-                                    color={colors.primary}
-                                />
+                        <TouchableOpacity
+                            style={{margin: 15}}
+                            onPress={() => onEdit(id)}
+                        >
+                            <MaterialCommunityIcons
+                                name="pencil"
+                                size={30}
+                                color={colors.primary}
+                            />
 
-                            </TouchableOpacity>
+                        </TouchableOpacity>
                     ) : null}
 
                     {onDelete != null ? (
@@ -105,5 +97,3 @@ export default function MyStationCard({
         </View>
     );
 }
-
-const styles = StyleSheet.create({});
