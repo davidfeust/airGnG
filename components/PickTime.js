@@ -14,7 +14,6 @@ const PickTime = ({set, time, identifyRange, index, minTime = null}) => {
         if (event.type === 'dismissed') {
             return;
         }
-        console.log(event)
         setShow(Platform.OS === "ios");
         if (mode === "date") {
             const currentDate = selectedDate || time;

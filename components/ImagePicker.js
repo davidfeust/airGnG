@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
     },
     del: {
         position: 'absolute',
-        bottom: 0,
+        bottom: 10,
         right: 0,
-        margin: 5
+        margin: 3,
     }
 });
