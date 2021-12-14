@@ -2,12 +2,12 @@ import React from 'react';
 import {Dimensions, Keyboard, ScrollView, Text, TextInput, TouchableWithoutFeedback, View} from 'react-native';
 import {globalStyles} from "../assets/styles/globalStyles";
 import {Formik} from "formik";
-import Autocomplete from "../components/Autocomplete";
+import Autocomplete from "./Autocomplete";
 import {colors} from "../assets/styles/colors";
-import CustomDatePicker from "../components/CustomDatePicker";
-import ImagePicker from "../components/ImagePicker";
+import CustomDatePicker from "./CustomDatePicker";
+import ImagePicker from "./ImagePicker";
 import Checkbox from "expo-checkbox";
-import MyButton from "../components/MyButton";
+import MyButton from "./MyButton";
 import * as yup from "yup";
 
 

@@ -5,7 +5,7 @@ import {db} from "../config/firebase";
 import {addDoc, collection, updateDoc} from "firebase/firestore";
 import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
 import {getStartAndEndTime, uploadImage} from "../utils/GlobalFuncitions";
-import StationForm from "./StationForm"; // to manage forms. docs: https://formik.org/docs/api/formik
+import StationForm from "../components/StationForm"; // to manage forms. docs: https://formik.org/docs/api/formik
 
 /**
  * create a page where the user fills a form

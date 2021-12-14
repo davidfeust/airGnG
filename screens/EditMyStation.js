@@ -11,7 +11,7 @@ import MyButton from "../components/MyButton";
 import CustomDatePicker from "../components/CustomDatePicker";
 import Autocomplete from "../components/Autocomplete";
 import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
-import StationForm from "./StationForm";
+import StationForm from "../components/StationForm";
 
 export default function EditMyStation({navigation, route}) {
 
