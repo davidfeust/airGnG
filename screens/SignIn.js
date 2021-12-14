@@ -1,31 +1,26 @@
 import React, {useState} from "react";
-import {
-    ActivityIndicator,
-    Button,
-    Keyboard,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    View,
-} from "react-native";
+import {Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View,} from "react-native";
 import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../config/firebase";
 import {globalStyles} from "../assets/styles/globalStyles";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import MyButton from "../components/MyButton";
 import {Formik} from 'formik'; // to manage forms. docs: https://formik.org/docs/api/formik
-import * as yup from 'yup'; // validation of forms
+import * as yup from 'yup'; // validation of forms. docs: https://www.npmjs.com/package/yup
 import {colors} from "../assets/styles/colors";
-
-const schema = yup.object({
-    email: yup.string().email().required(),
-    password: yup.string().required().min(6)
-});
 
 
 export default function SignIn() {
+
+    const formValues = {
+        email: '',
+        password: ''
+    };
+
+    const formSchema = yup.object({
+        email: yup.string().email().required(),
+        password: yup.string().required().min(6)
+    });
 
     const [showPass, setShowPass] = useState(true);
     const [processing, setProcessing] = useState(false);
@@ -45,18 +40,16 @@ export default function SignIn() {
             });
     };
 
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
                 <Text style={[globalStyles.title, styles.title]}>Sing In</Text>
 
                 <Formik
-                    initialValues={{
-                        email: '',
-                        password: ''
-                    }}
+                    initialValues={formValues}
                     onSubmit={values => handleLogin(values.email, values.password)}
-                    validationSchema={schema}
+                    validationSchema={formSchema}
                 >
                     {
                         /**
@@ -120,9 +113,12 @@ export default function SignIn() {
                                         {formikProps.touched.password ? formikProps.errors.password : ''}
                                     </Text>
 
-                                    <MyButton onPress={formikProps.handleSubmit} text={'Login'} style={{marginTop: 60}}
-                                              processing={processing}
-                                              disabled={!(formikProps.isValid && formikProps.dirty)}
+                                    <MyButton
+                                        text={'Login'}
+                                        style={{marginTop: 60}}
+                                        processing={processing}
+                                        onPress={formikProps.handleSubmit}
+                                        disabled={!(formikProps.isValid && formikProps.dirty)}
                                     />
 
                                 </View>
