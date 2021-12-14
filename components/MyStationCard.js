@@ -64,31 +64,29 @@ export default function MyStationCard({
                         </View>
                     ) : null}
                     {onDelete != null ? (
-                        <TouchableOpacity 
-                        style={
-                          {margin:100}
-                          
-                        }
+                        <TouchableOpacity
+                        style={{margin:15}}
                             onPress={() => onDelete(id)}
                         >
-                          <MaterialCommunityIcons 
+                          <MaterialCommunityIcons
                           name="trash-can"
                           size={30}
                           color={colors.primary}
                            />
-                            
+
                         </TouchableOpacity>
                     ) : null}
                     {phone != null ? (
                         <TouchableOpacity
+                            style={{margin:15}}
                             onPress={() => onCall(phone)}
                         >
-                          <MaterialCommunityIcons 
+                          <MaterialCommunityIcons
                           name="phone"
                           size={30}
                           color={colors.primary}
                            />
-                            
+
                         </TouchableOpacity>
                     ) : null}
                 </View>
