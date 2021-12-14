@@ -8,7 +8,7 @@ export default function TimeSlot({index, set, start, end}) {
     return (
         <View style={styles.container}>
             <PickTime index={index} identifyRange={'start'} set={set} time={start}/>
-            <PickTime index={index} identifyRange={'end'} set={set} time={end}/>
+            <PickTime index={index} identifyRange={'end'} set={set} time={end} minTime={start}/>
         </View>
     );
 }

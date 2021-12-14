@@ -5,12 +5,16 @@ import {colors} from "../assets/styles/colors";
 import {dateToString} from "../utils/GlobalFuncitions";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-const PickTime = ({set, time, identifyRange, index}) => {
+const PickTime = ({set, time, identifyRange, index, minTime = null}) => {
 
     const [mode, setMode] = useState("date");
     const [show, setShow] = useState(false);
 
     const onChange = (event, selectedDate) => {
+        if (event.type === 'dismissed') {
+            return;
+        }
+        console.log(event)
         setShow(Platform.OS === "ios");
         if (mode === "date") {
             const currentDate = selectedDate || time;
@@ -83,6 +87,8 @@ const PickTime = ({set, time, identifyRange, index}) => {
                     is24Hour={true}
                     display="default"
                     onChange={onChange}
+                    minimumDate={minTime}
+                    minuteInterval={15}
                 />
             )}
         </View>

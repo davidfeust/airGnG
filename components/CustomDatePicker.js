@@ -3,6 +3,7 @@ import {Text, TouchableOpacity, View} from "react-native";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {colors} from "../assets/styles/colors";
 import TimeSlot from "./TimeSlot";
+import {getStartAndEndTime} from "../utils/GlobalFuncitions";
 
 export default function CustomDatePicker({setTimeSlots, timeSlots}) {
 
@@ -14,16 +15,24 @@ export default function CustomDatePicker({setTimeSlots, timeSlots}) {
 
     const addTimeSlot = () => {
         const temp = [...timeSlots];
-        temp.push({start: new Date(), end: new Date()});
+        temp.push(getStartAndEndTime());
         setTimeSlots(temp);
     };
 
     const inputHandler = (key, s, e) => {
         const temp = [...timeSlots];
         if (s) {
+            if (s > temp[key].end) {
+                alert('Start time must be before end time')
+                return;
+            }
             temp[key].start = s;
         }
         if (e) {
+            if (s > temp[key].end) {
+                alert('End time must be after end time')
+                return;
+            }
             temp[key].end = e;
         }
         setTimeSlots(temp);
@@ -39,10 +48,11 @@ export default function CustomDatePicker({setTimeSlots, timeSlots}) {
                 width: '100%'
             }}>
                 <TimeSlot index={key} start={timeSlots[key].start} end={timeSlots[key].end} set={inputHandler}/>
-                <TouchableOpacity onPress={() => removeTimeSlot(key)}>
+
+                <TouchableOpacity onPress={() => removeTimeSlot(key)} disabled={timeSlots.length === 1}>
                     <MaterialCommunityIcons
                         name="minus-circle"
-                        color={colors.primary}
+                        color={timeSlots.length !== 1 ? colors.primary : colors.invalid}
                         size={30}
                     />
                 </TouchableOpacity>

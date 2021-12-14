@@ -1,11 +1,11 @@
 import opencage from "opencage-api-client";
 import Constants from "expo-constants";
-import { collection, getDocs } from "firebase/firestore";
-import { db, storage } from "../config/firebase";
+import {collection, getDocs} from "firebase/firestore";
+import {db, storage} from "../config/firebase";
 import * as ImagePicker from "expo-image-picker";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
 import React from "react";
-import { Linking, Alert, Platform } from 'react-native';
+import {Linking, Alert, Platform} from 'react-native';
 
 export const addressToCords = async (address) => {
     try {
@@ -27,13 +27,13 @@ export const getFromCol = async (col_name, set_fun) => {
         cards_col.docs.map((doc) => {
             let id = doc.id;
             let data = doc.data();
-            return { id, ...data };
+            return {id, ...data};
         })
     );
 };
 
 export const pickImageLibrary = async (setImage) => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
         alert("not permitted");
         return;
@@ -50,7 +50,7 @@ export const pickImageLibrary = async (setImage) => {
     }
 };
 export const pickImageCamera = async (setImage) => {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    const {status} = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
         alert("not permitted");
         return;
@@ -81,6 +81,7 @@ export const dateToString = (date: Date) => {
 
     return dateToStringNoHours(date) + dateToStringHours(date);
 };
+
 export const dateToStringNoHours = (date: Date) => {
     return (
         date.getDate() +
@@ -92,27 +93,33 @@ export const dateToStringNoHours = (date: Date) => {
     );
 };
 
+export const getStartAndEndTime = () => {
+    const start_date = new Date();
+    const end_date = new Date();
+    start_date.setMinutes(Math.ceil(start_date.getMinutes() / 30) * 30);
+    end_date.setMinutes((Math.ceil(end_date.getMinutes() / 30) * 30) + 60);
+    return new Object({start: start_date, end: end_date});
+}
+
 
 export const onCall = phone => {
-  console.log('callNumber ----> ', phone);
-  let phoneNumber = phone;
-  if (Platform.OS !== 'android') {
-    phoneNumber = `telprompt:${phone}`;
-  }
-  else  {
-    phoneNumber = `tel:${phone}`;
-  }
-  Linking.canOpenURL(phoneNumber)
-  .then(supported => {
-    if (!supported) {
-      Alert.alert('Phone number is not available');
+    console.log('callNumber ----> ', phone);
+    let phoneNumber = phone;
+    if (Platform.OS !== 'android') {
+        phoneNumber = `telprompt:${phone}`;
     } else {
-      return Linking.openURL(phoneNumber);
+        phoneNumber = `tel:${phone}`;
     }
-  })
-  .catch(err => console.log(err));
+    Linking.canOpenURL(phoneNumber)
+        .then(supported => {
+            if (!supported) {
+                Alert.alert('Phone number is not available');
+            } else {
+                return Linking.openURL(phoneNumber);
+            }
+        })
+        .catch(err => console.log(err));
 };
-
 
 
 export const dateToStringHours = (date: Date) => {
