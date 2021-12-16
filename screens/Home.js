@@ -1,6 +1,5 @@
 import React, {useContext} from "react";
-import {Button, StyleSheet, Text, View} from "react-native";
-import {getAuth} from "firebase/auth";
+import {StyleSheet, Text, View} from "react-native";
 import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import SearchStation from "./SearchStation";
@@ -8,8 +7,9 @@ import MyOrders from "./MyOrders";
 import MyStations from "./MyStations";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {colors} from "../assets/styles/colors";
-
-const auth = getAuth();
+import MyButton from "../components/MyButton";
+import {globalStyles} from "../assets/styles/globalStyles";
+import {auth} from '../config/firebase';
 
 export default function Home() {
     const {user} = useContext(AuthenticatedUserContext);
@@ -22,11 +22,12 @@ export default function Home() {
         }
     };
     const Tab = createBottomTabNavigator();
-    const HomeTab = () => (
+    const HomeTab = ({navigation}) => (
         <View style={styles.container}>
-            <Text>Home</Text>
-            <Text>{user.email}</Text>
-            <Button title={"logout"} onPress={handleSignOut}/>
+            <Text style={globalStyles.subTitle}>Hello {user.email}!</Text>
+            <MyButton text={"Logout"} onPress={handleSignOut}/>
+            {/* TODO: add userDetails after SignUP*/}
+            {/*<MyButton text={"Edit your profile"} onPress={() => navigation.push('UserDetails')}/>*/}
         </View>
     );
     return (

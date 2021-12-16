@@ -14,10 +14,7 @@ export default function StationForm({submit, processing, formValues, googleAddre
 
     const width = Dimensions.get('window').width;
 
-    const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
     const formSchema = yup.object({
-        // phone: yup.string().required().matches(phoneRegExp, 'Phone number is not valid'),
-        // name: yup.string().min(2).required(),
         price: yup.number().required(),
         cords: yup.object().nullable()
             .test('notNull', 'address is a required field', (value) => value)
@@ -55,31 +52,6 @@ export default function StationForm({submit, processing, formValues, googleAddre
                                 <Text style={{color: colors.error}}>
                                     {formikProps.touched.price && formikProps.errors.price}
                                 </Text>
-
-                                {/* Name field*/}
-                                {/*<TextInput*/}
-                                {/*    style={globalStyles.text_input}*/}
-                                {/*    placeholder="Name"*/}
-                                {/*    onChangeText={formikProps.handleChange('name')}*/}
-                                {/*    onBlur={formikProps.handleBlur('name')}*/}
-                                {/*    value={formikProps.values.name}*/}
-                                {/*/>*/}
-                                {/*<Text style={{color: colors.error}}>*/}
-                                {/*    {formikProps.touched.name && formikProps.errors.name}*/}
-                                {/*</Text>*/}
-
-                                {/* Phone field*/}
-                                {/*<TextInput*/}
-                                {/*    style={globalStyles.text_input}*/}
-                                {/*    placeholder="Phone number"*/}
-                                {/*    keyboardType={"phone-pad"}*/}
-                                {/*    onChangeText={formikProps.handleChange('phone')}*/}
-                                {/*    onBlur={formikProps.handleBlur('phone')}*/}
-                                {/*    value={formikProps.values.phone}*/}
-                                {/*/>*/}
-                                {/*<Text style={{color: colors.error}}>*/}
-                                {/*    {formikProps.touched.phone && formikProps.errors.phone}*/}
-                                {/*</Text>*/}
 
                                 <ImagePicker image={formikProps.values.image}
                                              setImage={(img) => formikProps.setFieldValue('image', img)}/>

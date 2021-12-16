@@ -8,7 +8,6 @@ LogBox.ignoreLogs(["AsyncStorage"]);
 
 export default function App() {
     return <Routes/>;
-
 }
 
 
