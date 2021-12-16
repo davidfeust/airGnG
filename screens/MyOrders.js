@@ -1,33 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
-import {
-    ActivityIndicator,
-    Alert,
-    Dimensions,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from "react-native";
-import {
-    collection,
-    query,
-    where,
-    deleteDoc,
-    doc,
-    getDoc,
-    getDocs,
-    updateDoc,
-    arrayRemove,
-} from "firebase/firestore";
-import { db } from "../config/firebase";
-import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
-import PublicStationCard from "../components/PublicStationCard";
-import { myOrdersContext } from "../navigation/MyOrdersProvider";
-import { publicStationsContext } from "../navigation/PublicStationsProvider";
+import React, {useContext, useEffect, useState} from "react";
+import {Alert, ScrollView, Text, View,} from "react-native";
+import {collection, deleteDoc, getDocs, query, where,} from "firebase/firestore";
+import {db} from "../config/firebase";
+import {myOrdersContext} from "../navigation/MyOrdersProvider";
+import {publicStationsContext} from "../navigation/PublicStationsProvider";
 import MyStationCard from "../components/MyStationCard";
-import { colors } from "../assets/styles/colors";
-import { globalStyles } from "../assets/styles/globalStyles";
+import {globalStyles} from "../assets/styles/globalStyles";
 import MyButton from "../components/MyButton";
 
 /**
@@ -35,18 +13,17 @@ import MyButton from "../components/MyButton";
  * (a subscribed station is a station that the user picked from SearchStation.js)
  * @returns <ScrollView>
  */
-export default function Subscriptions({ navigation }) {
-    const { user } = useContext(AuthenticatedUserContext);
-    const { myOrders } = useContext(myOrdersContext);
-    const { cards } = useContext(publicStationsContext); // useState is needed because cards is directy connected to the screen
+export default function MyOrders({navigation}) {
+    const {myOrders} = useContext(myOrdersContext);
+    const {stations} = useContext(publicStationsContext); // useState is needed because cards is directy connected to the screen
     const [myOrdersCards, setMyOrdersCards] = useState([]);
     useEffect(() => {
         setMyOrdersCards(
-            cards.filter(({ id }) =>
-                myOrders.some(({ station_id }) => station_id === id)
+            stations.filter(({id}) =>
+                myOrders.some(({station_id}) => station_id === id)
             )
         );
-    }, [myOrders, cards]);
+    }, [myOrders, stations]);
 
     const onCancel = (id) => {
         return Alert.alert(
@@ -59,15 +36,12 @@ export default function Subscriptions({ navigation }) {
                     onPress: async () => {
                         const toDelete = await getDocs(
                             query(
-                                collection(db, "subscriptions"),
+                                collection(db, "orders"),
                                 where("station_id", "==", id)
                             )
                         );
                         toDelete.forEach((adoc) => {
                             deleteDoc(adoc.ref);
-                            updateDoc(doc(db, "users", user.uid), {
-                                orders: arrayRemove(adoc.id),
-                            });
                         });
                     },
                 },
@@ -84,7 +58,7 @@ export default function Subscriptions({ navigation }) {
         return (
             <ScrollView>
                 {myOrdersCards.map(
-                    ({ name, address, price, date, id, image, phone }) => (
+                    ({name, address, price, date, id, image, phone}) => (
                         <MyStationCard
                             key={id}
                             id={id}
@@ -110,7 +84,7 @@ export default function Subscriptions({ navigation }) {
                 }}
             >
                 <Text style={globalStyles.subTitle}>
-                    No subscription yet...
+                    No orders yet...
                 </Text>
                 <MyButton
                     text={"Search Station"}

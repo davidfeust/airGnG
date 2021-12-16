@@ -1,21 +1,14 @@
-import React, { useState } from "react";
-import { auth } from "../config/firebase";
-import {
-    Keyboard,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    View,
-} from "react-native";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { globalStyles } from "../assets/styles/globalStyles";
+import React, {useState} from "react";
+import {auth, db} from "../config/firebase";
+import {Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View,} from "react-native";
+import {createUserWithEmailAndPassword} from "firebase/auth";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
+import {globalStyles} from "../assets/styles/globalStyles";
 import MyButton from "../components/MyButton";
-import { Formik } from "formik";
+import {Formik} from "formik";
 import * as yup from "yup";
-import { colors } from "../assets/styles/colors"; // to manage forms. docs: https://formik.org/docs/api/formik
+import {colors} from "../assets/styles/colors"; // to manage forms. docs: https://formik.org/docs/api/formik
+import {doc, setDoc} from "firebase/firestore";
 
 /**
  * create a page where the user fills a form
@@ -52,7 +45,13 @@ export default function SignUp() {
             .then((userCredential) => {
                 // Signed in
                 const user = userCredential.user;
+                setDoc(doc(db, 'users', user.uid), {
+                    mail: user.email,
+                    name: 'ask for name',
+                    phone: 'ask for phone',
+                }).then(() => console.log('added'))
                 setProcessing(false);
+
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -75,12 +74,12 @@ export default function SignUp() {
                     }
                 >
                     {(formikProps) => (
-                        <View style={{ width: "100%", alignItems: "center" }}>
+                        <View style={{width: "100%", alignItems: "center"}}>
                             {/* Email field */}
                             <TextInput
                                 style={[
                                     globalStyles.text_input,
-                                    { marginTop: 20 },
+                                    {marginTop: 20},
                                 ]}
                                 placeholder="Insert email"
                                 autoCompleteType={"email"}
@@ -89,9 +88,9 @@ export default function SignUp() {
                                 onBlur={formikProps.handleBlur("email")}
                                 value={formikProps.values.email}
                             />
-                            <Text style={{ color: colors.error }}>
+                            <Text style={{color: colors.error}}>
                                 {formikProps.touched.email &&
-                                    formikProps.errors.email}
+                                formikProps.errors.email}
                             </Text>
 
                             {/* Password 1 field */}
@@ -105,7 +104,7 @@ export default function SignUp() {
                                     },
                                 ]}
                             >
-                                <View style={{ flex: 10 }}>
+                                <View style={{flex: 10}}>
                                     <TextInput
                                         placeholder="Insert password"
                                         secureTextEntry={showPass}
@@ -119,7 +118,7 @@ export default function SignUp() {
                                         value={formikProps.values.password}
                                     />
                                 </View>
-                                <View style={{ flex: 1 }}>
+                                <View style={{flex: 1}}>
                                     <TouchableOpacity
                                         onPress={() => setShowPass(!showPass)}
                                     >
@@ -131,9 +130,9 @@ export default function SignUp() {
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            <Text style={{ color: colors.error }}>
+                            <Text style={{color: colors.error}}>
                                 {formikProps.touched.password &&
-                                    formikProps.errors.password}
+                                formikProps.errors.password}
                             </Text>
 
                             {/* Password 2 field */}
@@ -149,14 +148,14 @@ export default function SignUp() {
                                 )}
                                 value={formikProps.values.passwordRepeat}
                             />
-                            <Text style={{ color: colors.error }}>
+                            <Text style={{color: colors.error}}>
                                 {formikProps.touched.passwordRepeat &&
-                                    formikProps.errors.passwordRepeat}
+                                formikProps.errors.passwordRepeat}
                             </Text>
 
                             <MyButton
                                 text={"Sign Up"}
-                                style={{ marginTop: 60 }}
+                                style={{marginTop: 60}}
                                 processing={processing}
                                 onPress={formikProps.handleSubmit}
                                 disabled={

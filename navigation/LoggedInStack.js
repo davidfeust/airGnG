@@ -1,31 +1,31 @@
-import React, { useEffect, useState, createContext, useContext } from "react";
+import React from "react";
 
-import { createStackNavigator } from "@react-navigation/stack";
+import {createStackNavigator} from "@react-navigation/stack";
 import Home from "../screens/Home";
 
-import PostStation from "../screens/PostStation";
+import AddNewStation from "../screens/AddNewStation";
 import EditMyStation from "../screens/EditMyStation";
 import MyStationCard from "../components/MyStationCard";
-import MyPosts from "../screens/MyPosts";
+import MyStations from "../screens/MyStations";
 
-import { PublicStationsProvider } from "./PublicStationsProvider";
-import { MyOrdersProvider, myOrdersContext } from "./MyOrdersProvider";
-import { UsersProvider } from "./UsersProvider";
+import {PublicStationsProvider} from "./PublicStationsProvider";
+import {MyOrdersProvider} from "./MyOrdersProvider";
+import {UsersProvider} from "./UsersProvider";
+import PublishStation from "../screens/PublishStation";
 
 const Stack = createStackNavigator();
 
 export default function LoggedInStack() {
-    const { myOrders } = useContext(myOrdersContext);
     return (
         <PublicStationsProvider>
             <UsersProvider>
                 <MyOrdersProvider>
-                    {/*headerShown: false - hide the names of the screens (usually in the top of the page)*/}
-                    <Stack.Navigator screenOptions={{ headerShown: false }}>
-                        <Stack.Screen name="Home" component={Home} />
+                    {/* headerShown: false - hide the names of the screens (usually in the top of the page)*/}
+                    <Stack.Navigator screenOptions={{headerShown: false}}>
+                        <Stack.Screen name="Home" component={Home}/>
                         <Stack.Screen
-                            name="PostStation"
-                            component={PostStation}
+                            name="AddNewStation"
+                            component={AddNewStation}
                         />
                         <Stack.Screen
                             name="EditMyStation"
@@ -35,7 +35,14 @@ export default function LoggedInStack() {
                             name="MyStationCard"
                             component={MyStationCard}
                         />
-                        <Stack.Screen name="MyPosts" component={MyPosts} />
+                        <Stack.Screen
+                            name="PublishStation"
+                            component={PublishStation}
+                        />
+                        <Stack.Screen
+                            name="MyStations"
+                            component={MyStations}
+                        />
                     </Stack.Navigator>
                 </MyOrdersProvider>
             </UsersProvider>

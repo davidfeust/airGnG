@@ -1,42 +1,23 @@
-import React, { useState } from "react";
-import {
-    Alert,
-    Button,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import React from "react";
+import {TouchableOpacity, View,} from "react-native";
 import StationCard from "./StationCard";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../config/firebase";
-import Checkbox from "expo-checkbox";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { globalStyles } from "../assets/styles/globalStyles";
-import { onCall } from "../utils/GlobalFuncitions";
-import { colors } from "../assets/styles/colors";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
+import {globalStyles} from "../assets/styles/globalStyles";
+import {onCall} from "../utils/GlobalFuncitions";
+import {colors} from "../assets/styles/colors";
 
 export default function MyStationCard({
-    owner,
-    address,
-    date,
-    price,
-    image,
-    onDelete,
-    id,
-    onEdit,
-    available,
-    phone,
-}) {
-    const [innerAvailable, setInnerAvailable] = useState(available);
-
-    const editAvailable = async (value) => {
-        setInnerAvailable(value);
-        const postRef = doc(db, "postedStation", id);
-        await updateDoc(postRef, {
-            available: value,
-        });
-    };
+                                          owner,
+                                          address,
+                                          date,
+                                          price,
+                                          image,
+                                          onDelete,
+                                          id,
+                                          onEdit,
+                                          phone,
+                                          onGoToPublish
+                                      }) {
 
     return (
         <View>
@@ -47,53 +28,64 @@ export default function MyStationCard({
                 image={image}
                 date={date}
             >
-                <View style={globalStyles.flex_container}>
-                    <Checkbox
-                        style={globalStyles.checkbox}
-                        value={innerAvailable}
-                        onValueChange={(value) => editAvailable(value)}
-                    />
-                    <Text style={globalStyles.checkbox_label}>available</Text>
-                </View>
-                <View style={globalStyles.flex_container}>
-                    {onEdit != null ? (
-                        <TouchableOpacity
-                            style={{ margin: 15 }}
-                            onPress={() => onEdit(id)}
-                        >
-                            <MaterialCommunityIcons
-                                name="pencil"
-                                size={30}
-                                color={colors.primary}
-                            />
-                        </TouchableOpacity>
-                    ) : null}
 
-                    {onDelete != null ? (
-                        <TouchableOpacity
-                            style={{ margin: 15 }}
-                            onPress={onDelete}
-                        >
-                            <MaterialCommunityIcons
-                                name="trash-can"
-                                size={30}
-                                color={colors.primary}
-                            />
-                        </TouchableOpacity>
-                    ) : null}
+                <View style={globalStyles.flex_container}>
 
-                    {phone != null ? (
-                        <TouchableOpacity
-                            style={{ margin: 15 }}
-                            onPress={() => onCall(phone)}
-                        >
-                            <MaterialCommunityIcons
-                                name="phone"
-                                size={30}
-                                color={colors.primary}
-                            />
-                        </TouchableOpacity>
-                    ) : null}
+                    {/* EDIT */}
+                    {onEdit &&
+                    <TouchableOpacity
+                        style={{margin: 15}}
+                        onPress={() => onEdit(id)}
+                    >
+                        <MaterialCommunityIcons
+                            name="pencil"
+                            size={30}
+                            color={colors.primary}
+                        />
+                    </TouchableOpacity>
+                    }
+
+                    {/* DELETE */}
+                    {onDelete &&
+                    <TouchableOpacity
+                        style={{margin: 15}}
+                        onPress={() => onDelete(id)}
+                    >
+                        <MaterialCommunityIcons
+                            name="trash-can"
+                            size={30}
+                            color={colors.primary}
+                        />
+                    </TouchableOpacity>
+                    }
+
+                    {/* PHONE */}
+                    {phone &&
+                    <TouchableOpacity
+                        style={{margin: 15}}
+                        onPress={() => onCall(phone)}
+                    >
+                        <MaterialCommunityIcons
+                            name="phone"
+                            size={30}
+                            color={colors.primary}
+                        />
+                    </TouchableOpacity>
+                    }
+
+                    {/* PUBLISH */}
+                    {onGoToPublish && <TouchableOpacity
+                        style={{margin: 15}}
+                        onPress={onGoToPublish}
+                    >
+                        <MaterialCommunityIcons
+                            name="clock"
+                            size={30}
+                            color={colors.primary}
+                        />
+                    </TouchableOpacity>}
+
+
                 </View>
             </StationCard>
         </View>

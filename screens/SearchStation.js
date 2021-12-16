@@ -1,25 +1,14 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import {
-    Dimensions,
-    FlatList,
-    Platform,
-    StyleSheet,
-    View,
-    Animated,
-    TouchableOpacity,
-} from "react-native";
-import PublicStationCard from "../components/PublicStationCard";
-import { publicStationsContext } from "../navigation/PublicStationsProvider";
-import MapView, { Marker } from "react-native-maps";
-import { globalStyles } from "../assets/styles/globalStyles";
-import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
-import { myOrdersContext } from "../navigation/MyOrdersProvider";
-import { Image } from "react-native-elements";
-import { colors } from "../assets/styles/colors";
+import React, {useContext, useEffect, useRef, useState} from "react";
+import {Animated, Dimensions, FlatList, Platform, StyleSheet, TouchableOpacity, View,} from "react-native";
+import {publicStationsContext} from "../navigation/PublicStationsProvider";
+import MapView, {Marker} from "react-native-maps";
+import {globalStyles} from "../assets/styles/globalStyles";
+import {Image} from "react-native-elements";
+import {colors} from "../assets/styles/colors";
 import MiniCard from "../components/MiniCard";
 import MaxiCard from "../components/MaxiCard";
 import Autocomplete from "../components/Autocomplete";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 /**
  * create a page with all available stations in the DB,
@@ -30,7 +19,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
  * @returns <ScrollView>
  */
 
-export default function SearchStation({ navigation }) {
+export default function SearchStation({navigation}) {
     //for the autocomplete function
     const googleAddress = useRef();
     const [cords, setCords] = useState(null);
@@ -38,38 +27,20 @@ export default function SearchStation({ navigation }) {
 
     const stretchAnim = useRef(new Animated.Value(100)).current; // Initial
     const [showMaxiCard, setShowMaxiCard] = useState(false);
-    const { cards } = useContext(publicStationsContext);
-    const { myOrders } = useContext(myOrdersContext);
-    const [availableCards, setAvailableCards] = useState(
-        cards.filter(
-            (card) => !myOrders.some(({ station_id }) => station_id === card.id)
-        )
-    );
-
+    const {stations} = useContext(publicStationsContext);
     const [selectedId, setSelectedId] = useState(null);
-
-    const updateAvailableCards = () => {
-        setAvailableCards(
-            cards.filter(
-                (card) =>
-                    !myOrders.some(({ station_id }) => station_id === card.id)
-            )
-        );
-    };
-
-    useEffect(updateAvailableCards, [myOrders]);
 
     useEffect(() => {
         if (!selectedId || !flatList) {
             return;
         }
-        const index = availableCards.findIndex(
+        const index = stations.findIndex(
             (card) => card.id === selectedId
         );
 
-        flatList.current.scrollToIndex({ index, animated: true });
+        flatList.current.scrollToIndex({index, animated: true});
 
-        const selectedPlace = availableCards[index];
+        const selectedPlace = stations[index];
         const region = {
             latitude: selectedPlace.cords.lat,
             longitude: selectedPlace.cords.lng,
@@ -93,7 +64,7 @@ export default function SearchStation({ navigation }) {
             // ex - if you will look for israel in the previous you will get just one dot(maybe in the center)
             // but in the new version you will get according to difference in north-east and south-west
             if (viewPort != null) {
-                const { northeast, southwest } = viewPort;
+                const {northeast, southwest} = viewPort;
                 region.latitudeDelta = (northeast.lat - southwest.lat) * 0.5;
                 region.longitudeDelta = (northeast.lng - southwest.lng) * 0.5;
             }
@@ -107,9 +78,9 @@ export default function SearchStation({ navigation }) {
     const viewConfig = useRef({
         itemVisiblePercentThreshold: 70,
         waitForInteraction: true,
-        minimumViewTime: availableCards.length * 60,
+        minimumViewTime: stations.length * 60,
     });
-    const onViewChanged = useRef(({ viewableItems }) => {
+    const onViewChanged = useRef(({viewableItems}) => {
         if (viewableItems.length > 0) {
             const selectedPlace = viewableItems[0].item;
             setSelectedId(selectedPlace.id);
@@ -125,6 +96,7 @@ export default function SearchStation({ navigation }) {
             useNativeDriver: false,
         }).start();
     };
+
     return (
         <View style={styles.container}>
             {/*/here we warped the Autocomplete component in another view in order to give it a special style */}
@@ -139,7 +111,7 @@ export default function SearchStation({ navigation }) {
                 <MaterialCommunityIcons
                     name={"magnify"}
                     size={22}
-                    style={{ alignSelf: "center", marginRight: 20 }}
+                    style={{alignSelf: "center", marginRight: 20}}
                 />
             </View>
             <MapView
@@ -152,7 +124,7 @@ export default function SearchStation({ navigation }) {
                 }}
                 style={styles.map}
             >
-                {availableCards.map((card) => (
+                {stations.map((card) => (
                     <Marker
                         key={card.id}
                         title={card.address}
@@ -176,13 +148,13 @@ export default function SearchStation({ navigation }) {
                     </Marker>
                 ))}
             </MapView>
-            <View style={{ position: "absolute", bottom: 15 }}>
+            <View style={{position: "absolute", bottom: 15}}>
                 <FlatList
                     ref={flatList}
-                    data={availableCards}
+                    data={stations}
                     renderItem={({
-                        item: { name, address, price, image, date, id, phone },
-                    }) => (
+                                     item: {name, address, price, image, time_slots, id, phone},
+                                 }) => (
                         <TouchableOpacity onPress={onSelectingCard}>
                             {showMaxiCard ? (
                                 <MaxiCard
@@ -190,7 +162,7 @@ export default function SearchStation({ navigation }) {
                                     address={address}
                                     price={price}
                                     image={image}
-                                    date={date}
+                                    timeSlots={time_slots}
                                     id={id}
                                     key={id}
                                     style={globalStyles.maxi_card_style}
@@ -202,11 +174,10 @@ export default function SearchStation({ navigation }) {
                                     address={address}
                                     price={price}
                                     image={image}
-                                    date={date}
                                     id={id}
                                     key={id}
                                     style={[
-                                        { height: 100 },
+                                        {height: 100},
                                         globalStyles.mini_card,
                                     ]}
                                 />
@@ -275,7 +246,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         padding: 0,
         shadowColor: "#ccc",
-        shadowOffset: { width: 0, height: 3 },
+        shadowOffset: {width: 0, height: 3},
         shadowOpacity: 0.5,
         shadowRadius: 5,
         elevation: 10,

@@ -4,8 +4,8 @@ import {getAuth} from "firebase/auth";
 import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import SearchStation from "./SearchStation";
-import Subscriptions from "./Subscriptions";
-import MyPosts from "./MyPosts";
+import MyOrders from "./MyOrders";
+import MyStations from "./MyStations";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {colors} from "../assets/styles/colors";
 
@@ -59,23 +59,23 @@ export default function Home() {
                 }}
             />
             <Tab.Screen
-                name="MyPosts"
-                component={MyPosts}
+                name="MyStations"
+                component={MyStations}
                 options={{
-                    tabBarLabel: "My Posts",
+                    tabBarLabel: "My Stations",
                     tabBarIcon: ({color, size}) => (
-                        <MaterialCommunityIcons name="post" color={color} size={size}/>
+                        <MaterialCommunityIcons name="ev-station" color={color} size={size}/>
                     ),
                 }}
             />
             <Tab.Screen
-                name="Subscriptions"
-                component={Subscriptions}
+                name="MyOrders"
+                component={MyOrders}
                 options={{
-                    tabBarLabel: "Subscriptions",
+                    tabBarLabel: "My Orders",
                     tabBarIcon: ({color, size}) => (
                         <MaterialCommunityIcons
-                            name="ev-station"
+                            name="post"
                             color={color}
                             size={size}
                         />

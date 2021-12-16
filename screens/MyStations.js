@@ -1,12 +1,5 @@
-import React, {useContext} from "react";
-import {
-    ActivityIndicator,
-    Alert,
-    ScrollView,
-    StyleSheet, Text,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import React, {useContext, useEffect, useState} from "react";
+import {Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from "react-native";
 import {deleteDoc, doc} from "firebase/firestore";
 import {db} from "../config/firebase";
 import MyStationCard from "../components/MyStationCard";
@@ -24,29 +17,33 @@ import MyButton from "../components/MyButton";
  * but it might change...
  * @returns <ScrollView>
  */
-export default function MyPosts({navigation}) {
+export default function MyStations({navigation}) {
     const {user} = useContext(AuthenticatedUserContext);
-    const {cards} = useContext(publicStationsContext);
-    const myPosts = cards.filter(({owner_id}) => owner_id === user.uid);
+    const {stations} = useContext(publicStationsContext);
+    const [myStations, setMyStations] = useState([])
+
+    useEffect(() => {
+        setMyStations(stations.filter(({owner_id}) => owner_id === user.uid));
+    }, [stations])
 
     const onEdit = (id) => {
-        navigation.push("EditMyStation", {id: id}); // push to the navigation EditMyStation() component' so we could go back
+        navigation.push("EditMyStation", {station_id: id}); // push to the navigation EditMyStation() component' so we could go back
     };
 
     const onDelete = (id) => {
         return Alert.alert(
             "Are your sure?",
-            "Are you sure you want to remove this beautiful box?",
+            "By pressing yes you confirm to remove this station permanently",
             [
                 // The "Yes" button
                 {
                     text: "Yes",
                     onPress: async () => {
-                        await deleteDoc(doc(db, "postedStation", id));
+                        await deleteDoc(doc(db, "stations", id));
+
                         const storgae = getStorage();
-                        deleteObject(ref(storgae, id + ".jpg")).catch((e) =>
-                            console.log("no picture")
-                        );
+                        deleteObject(ref(storgae, id + ".jpg")).catch(() => {
+                        })
                     },
                 },
                 // The "No" button
@@ -58,12 +55,12 @@ export default function MyPosts({navigation}) {
         );
     };
 
-    if (myPosts.length !== 0) {
+    if (myStations.length !== 0) {
         return (
             <View>
                 <TouchableOpacity
                     style={styles.plus}
-                    onPress={() => navigation.push("PostStation")}
+                    onPress={() => navigation.push("AddNewStation")}
                 >
                     <MaterialCommunityIcons
                         style={{textAlign: "center"}}
@@ -75,7 +72,7 @@ export default function MyPosts({navigation}) {
 
                 <ScrollView>
                     {
-                        myPosts.map(({name, address, price, image, date, id}) => (
+                        myStations.map(({name, address, price, image, date, id}) => (
                             <MyStationCard
                                 owner={name}
                                 address={address}
@@ -86,6 +83,7 @@ export default function MyPosts({navigation}) {
                                 onDelete={onDelete}
                                 onEdit={onEdit}
                                 key={id}
+                                onGoToPublish={() => navigation.push("PublishStation", {station_id: id})}
                             />
                         ))
                     }
@@ -95,8 +93,8 @@ export default function MyPosts({navigation}) {
     } else {
         return (
             <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-                <Text style={globalStyles.subTitle}>No posts yet...</Text>
-                <MyButton text={'Add Post'} onPress={() => navigation.navigate('PostStation')}/>
+                <Text style={globalStyles.subTitle}>No Stations yet...</Text>
+                <MyButton text={'Add Station'} onPress={() => navigation.navigate('AddNewStation')}/>
             </View>
         );
     }

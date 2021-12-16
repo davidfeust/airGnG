@@ -4,7 +4,7 @@ import {globalStyles} from "../assets/styles/globalStyles";
 import {db} from "../config/firebase";
 import {addDoc, collection, updateDoc} from "firebase/firestore";
 import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
-import {getStartAndEndTime, uploadImage} from "../utils/GlobalFuncitions";
+import {uploadImage} from "../utils/GlobalFuncitions";
 import StationForm from "../components/StationForm"; // to manage forms. docs: https://formik.org/docs/api/formik
 
 /**
@@ -14,7 +14,7 @@ import StationForm from "../components/StationForm"; // to manage forms. docs: h
  * @returns <form>
  */
 
-export default function PostStation(props) {
+export default function AddNewStation(props) {
 
     const {user} = useContext(AuthenticatedUserContext);
     const googleAddress = useRef();
@@ -25,33 +25,25 @@ export default function PostStation(props) {
         name: '',
         price: '',
         shadowed: false,
-        timeSlots: [getStartAndEndTime()],
         image: null,
         cords: null,
     };
 
-    async function onPost(values) {
+    async function onPost({cords, image, price, shadowed}) {
         setProcessing(true);
-        const {cords, image, name, phone, price, shadowed, timeSlots} = values;
-        const filteredDates = timeSlots
-            .filter((slot) => slot.start && slot.end)
-            .map(slot => {
-                return {start: slot.start, end: slot.end}
-            });
 
-        addDoc(collection(db, "postedStation"), {
+        addDoc(collection(db, "stations"), {
             owner_id: user.uid,
             address: googleAddress.current.getAddressText(),
             price: price,
             shadowed: shadowed,
-            name: name,
-            phone: phone,
-            date: filteredDates,
+            time_slots: [],
             cords: cords,
+            creation_date: Date()
         })
             .then(async (docRef) => {
                 if (image) {
-                    const image_url = await uploadImage(image, docRef.id);
+                    const image_url = await uploadImage(image, `images_stations/${docRef.id}.jpg`);
                     await updateDoc(docRef, {
                         image: image_url
                     }).then(() => {

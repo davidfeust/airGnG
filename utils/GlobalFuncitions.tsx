@@ -1,7 +1,7 @@
 import opencage from "opencage-api-client";
 import Constants from "expo-constants";
-import { collection, getDocs } from "firebase/firestore";
-import { db, storage } from "../config/firebase";
+import {collection, getDocs} from "firebase/firestore";
+import {db, storage} from "../config/firebase";
 import * as ImagePicker from "expo-image-picker";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { Linking, Alert, Platform } from "react-native";
@@ -26,13 +26,13 @@ export const getFromCol = async (col_name, set_fun) => {
         cards_col.docs.map((doc) => {
             let id = doc.id;
             let data = doc.data();
-            return { id, ...data };
+            return {id, ...data};
         })
     );
 };
 
 export const pickImageLibrary = async (setImage) => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
         alert("not permitted");
         return;
@@ -49,7 +49,7 @@ export const pickImageLibrary = async (setImage) => {
     }
 };
 export const pickImageCamera = async (setImage) => {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    const {status} = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
         alert("not permitted");
         return;
@@ -66,12 +66,12 @@ export const pickImageCamera = async (setImage) => {
     }
 };
 
-export const uploadImage = async (uri: string, id: number) => {
-    const response = await fetch(uri);
+export const uploadImage = async (path: string, url: string) => {
+    const response = await fetch(path);
     const blob = await response.blob();
-    const storageRef = await ref(storage, `${id}.jpg`);
+    const storageRef = await ref(storage, url);
     await uploadBytes(storageRef, blob);
-    return await getDownloadURL(storageRef, `${id}.jpg`);
+    return await getDownloadURL(storageRef, url);
 };
 
 export const dateToString = (date: Date) => {
@@ -97,7 +97,7 @@ export const getStartAndEndTime = () => {
     const end_date = new Date();
     start_date.setMinutes(Math.ceil(start_date.getMinutes() / 30) * 30);
     end_date.setMinutes(Math.ceil(end_date.getMinutes() / 30) * 30 + 60);
-    return new Object({ start: start_date, end: end_date });
+    return new Object({start: start_date, end: end_date});
 };
 
 export const onCall = (phone) => {

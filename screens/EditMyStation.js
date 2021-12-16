@@ -1,21 +1,15 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
-import {Keyboard, ScrollView, Text, TextInput, TouchableWithoutFeedback, View,} from "react-native";
+import React, {useEffect, useRef, useState} from "react";
+import {Keyboard, Text, TouchableWithoutFeedback, View,} from "react-native";
 import {doc, getDoc, updateDoc} from "firebase/firestore";
-import {db} from "../config/firebase";
+import {db, storage} from "../config/firebase";
 import {globalStyles} from "../assets/styles/globalStyles";
-import Checkbox from "expo-checkbox";
 
 import {getStartAndEndTime, uploadImage} from "../utils/GlobalFuncitions";
-import ImagePicker from "../components/ImagePicker";
-import MyButton from "../components/MyButton";
-import CustomDatePicker from "../components/CustomDatePicker";
-import Autocomplete from "../components/Autocomplete";
-import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
 import StationForm from "../components/StationForm";
+import {deleteObject, ref} from "@firebase/storage";
 
 export default function EditMyStation({navigation, route}) {
 
-    const {user} = useContext(AuthenticatedUserContext);
     const googleAddress = useRef();
     const [processing, setProcessing] = useState(false);
 
@@ -34,24 +28,15 @@ export default function EditMyStation({navigation, route}) {
      * get all the data on the current post and set the values to be the initial values of the form
      */
     useEffect(async () => {
-        const docRef = doc(db, "postedStation", route.params.id);
+        const docRef = doc(db, "stations", route.params.station_id);
         const docSnap = await getDoc(docRef);
         const docData = docSnap.data();
 
-        // convert timestamp of firebase to Date of JS
-        let temp = [...docData.date];
-        temp = temp.map((slot) => ({
-            start: new Date(slot.start.toDate()),
-            end: new Date(slot.end.toDate()),
-        }))
 
         // set initial values of form from DB
         setFormValues({
-            phone: docData.phone,
-            name: docData.name,
             price: docData.price,
             shadowed: docData.shadowed,
-            timeSlots: temp,
             image: docData.image,
             cords: docData.cords,
             address: docData.address
@@ -66,24 +51,33 @@ export default function EditMyStation({navigation, route}) {
 
     async function onSave(values) {
         setProcessing(true);
-        const {cords, image, name, phone, price, shadowed, timeSlots} = values;
+        const {cords, image, price, shadowed} = values;
 
-        let image_url;
+        let image_url = null;
         if (image !== formValues.image) {
-            image_url = await uploadImage(image, route.params.id);
-            // TODO: remove the old image
+            // image changed
+            if (!image) {
+                const imgRef = ref(storage, `images_stations/${route.params.station_id}.jpg`);
+                // Delete the file
+                deleteObject(imgRef).then(() => {
+                    // File deleted successfully
+                }).catch((error) => {
+                    // Uh-oh, an error occurred!
+                    console.error(error);
+                });
+
+            } else {
+                image_url = await uploadImage(image, `images_stations/${route.params.station_id}.jpg`);
+            }
         } else {
             image_url = image;
         }
 
-        const postRef = doc(db, "postedStation", route.params.id);
+        const postRef = doc(db, "stations", route.params.station_id);
         await updateDoc(postRef, {
             address: googleAddress.current.getAddressText(),
             price: price,
             shadowed: shadowed,
-            name: name,
-            phone: phone,
-            date: timeSlots,
             image: image_url,
             cords: cords,
         })
@@ -98,7 +92,8 @@ export default function EditMyStation({navigation, route}) {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={[globalStyles.container, {paddingTop: 60}]}>
                 <Text style={globalStyles.title}>Edit</Text>
-                <StationForm submit={onSave} formValues={formValues} googleAddress={googleAddress} processing={processing}/>
+                <StationForm submit={onSave} formValues={formValues} googleAddress={googleAddress}
+                             processing={processing}/>
             </View>
         </TouchableWithoutFeedback>
     );
