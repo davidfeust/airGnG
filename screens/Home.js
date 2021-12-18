@@ -27,7 +27,7 @@ export default function Home() {
             <Text style={globalStyles.subTitle}>Hello {user.email}!</Text>
             <MyButton text={"Logout"} onPress={handleSignOut}/>
             {/* TODO: add userDetails after SignUP*/}
-            {/*<MyButton text={"Edit your profile"} onPress={() => navigation.push('UserDetails')}/>*/}
+            <MyButton text={"Edit your profile"} onPress={() => navigation.push('UserDetails')}/>
         </View>
     );
     return (

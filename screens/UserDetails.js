@@ -11,7 +11,7 @@ import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider"
 
 export default function UserDetails({navigation}) {
 
-    const {user} = useContext(AuthenticatedUserContext);
+    const {user, setUser} = useContext(AuthenticatedUserContext);
     const [processing, setProcessing] = useState(false);
 
     const formValues = {
@@ -32,6 +32,7 @@ export default function UserDetails({navigation}) {
             phone: phone,
             name: name,
         }).then(() => {
+            setUser({...user, phone, name})
             setProcessing(false);
             navigation.push('Home');
         }).catch(console.error);

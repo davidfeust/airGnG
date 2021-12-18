@@ -10,7 +10,6 @@ import MyStations from "../screens/MyStations";
 
 import {PublicStationsProvider} from "./PublicStationsProvider";
 import {MyOrdersProvider} from "./MyOrdersProvider";
-import {UsersProvider} from "./UsersProvider";
 import PublishStation from "../screens/PublishStation";
 import UserDetails from "../screens/UserDetails";
 
@@ -19,7 +18,6 @@ const Stack = createStackNavigator();
 export default function LoggedInStack() {
     return (
         <PublicStationsProvider>
-            <UsersProvider>
                 <MyOrdersProvider>
                     {/* headerShown: false - hide the names of the screens (usually in the top of the page)*/}
                     <Stack.Navigator screenOptions={{headerShown: false}}>
@@ -51,7 +49,6 @@ export default function LoggedInStack() {
                             component={UserDetails}/>
                     </Stack.Navigator>
                 </MyOrdersProvider>
-            </UsersProvider>
         </PublicStationsProvider>
     );
 }

@@ -7,6 +7,7 @@ import {publicStationsContext} from "../navigation/PublicStationsProvider";
 import MyStationCard from "../components/MyStationCard";
 import {globalStyles} from "../assets/styles/globalStyles";
 import MyButton from "../components/MyButton";
+import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
 
 /**
  * represents all the subscribed stations.
@@ -16,6 +17,7 @@ import MyButton from "../components/MyButton";
 export default function MyOrders({navigation}) {
     const {myOrders} = useContext(myOrdersContext);
     const {stations} = useContext(publicStationsContext); // useState is needed because cards is directy connected to the screen
+    const {user} = useContext(AuthenticatedUserContext);
     const [myOrdersCards, setMyOrdersCards] = useState([]);
     useEffect(() => {
         setMyOrdersCards(
@@ -58,7 +60,7 @@ export default function MyOrders({navigation}) {
         return (
             <ScrollView>
                 {myOrdersCards.map(
-                    ({name, address, price, date, id, image, phone}) => (
+                    ({name, address, price, date, id, image}) => (
                         <MyStationCard
                             key={id}
                             id={id}
@@ -68,7 +70,7 @@ export default function MyOrders({navigation}) {
                             price={price}
                             image={image}
                             onDelete={() => onCancel(id)}
-                            phone={phone}
+                            phone={user.phone}
                         />
                     )
                 )}

@@ -15,8 +15,6 @@ export const MyOrdersProvider = ({children}) => {
                 const snap = await getDocs(q);
                 setMyOrders(snap.docs.map(d => d.data()))
             })
-
-
     };
     useEffect(getMyOrders, []);
 
