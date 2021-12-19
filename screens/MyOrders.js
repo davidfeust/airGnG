@@ -60,11 +60,11 @@ export default function MyOrders({navigation}) {
         return (
             <ScrollView>
                 {myOrdersCards.map(
-                    ({name, address, price, date, id, image}) => (
+                    ({address, price, date, id, image}) => (
                         <MyStationCard
                             key={id}
                             id={id}
-                            owner={name}
+                            owner={user.name}
                             address={address}
                             date={date}
                             price={price}

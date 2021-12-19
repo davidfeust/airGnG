@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {Text, TextInput, View} from 'react-native';
+import {Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {globalStyles} from "../assets/styles/globalStyles";
 import {Formik} from "formik";
 import {colors} from "../assets/styles/colors";
@@ -8,6 +8,7 @@ import MyButton from "../components/MyButton";
 import {doc, updateDoc} from "firebase/firestore";
 import {db} from "../config/firebase";
 import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 export default function UserDetails({navigation}) {
 
@@ -77,11 +78,21 @@ export default function UserDetails({navigation}) {
                             {/* Submit */}
                             <MyButton
                                 text={'Submit'}
-                                style={{marginTop: 140}}
+                                style={{marginTop: 120}}
                                 processing={processing}
                                 onPress={formikProps.handleSubmit}
                                 disabled={!(formikProps.isValid && formikProps.dirty)}
                             />
+
+                            {/* Skip */}
+                            <TouchableOpacity
+                                style={[globalStyles.flex_container, {marginTop: 10}]}
+                                onPress={() => navigation.push('Home')}
+                            >
+                                <Text style={{fontSize: 18, color: colors.secondary}}>Skip for now  </Text>
+                                <MaterialCommunityIcons name={'arrow-right-circle'} color={colors.secondary} size={24}/>
+                            </TouchableOpacity>
+
                         </View>
                     )
                 }

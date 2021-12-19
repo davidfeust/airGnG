@@ -1,5 +1,4 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
 import {GooglePlacesAutocomplete} from "react-native-google-places-autocomplete";
 import Constants from "expo-constants";
 
@@ -70,7 +69,6 @@ export default function Autocomplete({
                 language: 'en-he',
             }}
             onPress={(data, details = null) => {
-                // console.log(details);
                 setCords(details.geometry.location);
                 if (setViewPort != null) {
                     setViewPort(details.geometry.viewport)

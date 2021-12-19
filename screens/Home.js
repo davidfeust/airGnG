@@ -24,7 +24,10 @@ export default function Home() {
     const Tab = createBottomTabNavigator();
     const HomeTab = ({navigation}) => (
         <View style={styles.container}>
-            <Text style={globalStyles.subTitle}>Hello {user.email}!</Text>
+            {user.name ?
+                <Text style={globalStyles.subTitle}>Hello {user.name}!</Text>
+                : <Text style={globalStyles.subTitle}>Hello to you!</Text>
+            }
             <MyButton text={"Logout"} onPress={handleSignOut}/>
             {/* TODO: add userDetails after SignUP*/}
             <MyButton text={"Edit your profile"} onPress={() => navigation.push('UserDetails')}/>

@@ -47,13 +47,11 @@ export default function SignUp() {
                 const user = userCredential.user;
                 setDoc(doc(db, 'users', user.uid), {
                     mail: user.email,
-                    /*name: 'ask for name',
-                    phone: 'ask for phone',*/
-                }).then(() => console.log('added'))
+                    orders: []
+                }).then(() => {})
                 setProcessing(false);
             })
             .catch((error) => {
-                const errorCode = error.code;
                 const errorMessage = error.message;
                 alert(errorMessage);
                 setProcessing(false);

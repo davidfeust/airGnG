@@ -33,7 +33,6 @@ const PickTime = ({set, time, identifyRange, index, minTime = null}) => {
             }
         }
         // date.getDate !== null ? showTimepicker : null;
-        // console.log("selected date:" + selectedDate);
     };
 
     const showMode = (currentMode) => {
@@ -43,10 +42,6 @@ const PickTime = ({set, time, identifyRange, index, minTime = null}) => {
 
     const showDatepicker = () => {
         showMode("date");
-    };
-
-    const showTimepicker = () => {
-        showMode("time");
     };
 
     return (

@@ -1,13 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {ActivityIndicator, Text, View} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import {AuthenticatedUserContext} from './AuthenticatedUserProvider';
-import {getAuth, onAuthStateChanged} from 'firebase/auth';
-import {app} from "../config/firebase";
+import {onAuthStateChanged} from 'firebase/auth';
+import {auth} from "../config/firebase";
 import LoggedInStack from "./LoggedInStack";
 import AuthStack from "./AuthStack";
 
-const auth = getAuth();
 
 export default function RootNavigator() {
     const {user, setUser} = useContext(AuthenticatedUserContext);
@@ -15,15 +14,12 @@ export default function RootNavigator() {
 
     useEffect(() => {
         // onAuthStateChanged returns an unsubscriber
-        const unsubscribeAuthStateChanged = onAuthStateChanged(
-            auth,
-            authenticatedUser => {
+        // unsubscribe auth listener on unmount
+        return onAuthStateChanged(auth, authenticatedUser => {
                 authenticatedUser ? setUser(authenticatedUser) : setUser(null);
                 setIsLoading(false);
             }
         );
-        // unsubscribe auth listener on unmount
-        return unsubscribeAuthStateChanged;
     }, []);
 
     if (isLoading) {
