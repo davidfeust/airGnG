@@ -14,6 +14,8 @@ export default function StationCard({
     date,
     price,
     image,
+    dateStart,
+    dateFinish,
     children,
     imageStyle,
     style,
@@ -21,6 +23,7 @@ export default function StationCard({
     return (
         <Card containerStyle={style}>
             <Card.Title>{address}</Card.Title>
+            <Card.Title>{dateStart}-{dateFinish}</Card.Title>
             <Card.Divider orientation="horizontal" />
 
             {date && date.constructor === Array
@@ -32,7 +35,7 @@ export default function StationCard({
                   ))
                 : null}
 
-            <Text>{owner}</Text>
+            <Text>owner: {owner}</Text>
             <Text>price: {price} nis</Text>
 
             {image !== undefined && (

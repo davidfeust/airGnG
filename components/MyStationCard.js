@@ -16,7 +16,9 @@ export default function MyStationCard({
                                           id,
                                           onEdit,
                                           phone,
-                                          onGoToPublish
+                                          dateStart,
+                                          dateFinish,
+                                          onGoToPublish,
                                       }) {
 
     return (
@@ -27,8 +29,10 @@ export default function MyStationCard({
                 price={price}
                 image={image}
                 date={date}
-            >
-
+                dateStart={dateStart}
+                dateFinish= {dateFinish}
+                >
+                 
                 <View style={globalStyles.flex_container}>
 
                     {/* EDIT */}
@@ -61,7 +65,7 @@ export default function MyStationCard({
                     </TouchableOpacity>
                     }
 
-                    {/* PHONE */}
+                    {/* PHONE // button to call the station owner */}
                     {phone &&
                     <TouchableOpacity
                         style={styles.icon}

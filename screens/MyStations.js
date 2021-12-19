@@ -7,9 +7,11 @@ import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {colors} from "../assets/styles/colors";
 import {publicStationsContext} from "../navigation/PublicStationsProvider";
 import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
+import {OrdersContext} from "../navigation/OrdersProvider";
 import {deleteObject, getStorage, ref} from "@firebase/storage";
 import {globalStyles} from "../assets/styles/globalStyles";
 import MyButton from "../components/MyButton";
+import { MyOrdersProvider } from "../navigation/MyOrdersProvider";
 
 /**
  * represents the page where a user can see the status of his post.
@@ -19,6 +21,7 @@ import MyButton from "../components/MyButton";
  */
 export default function MyStations({navigation}) {
     const {user} = useContext(AuthenticatedUserContext);
+    const {orders} = useContext(OrdersContext);
     const {stations} = useContext(publicStationsContext);
     const [myStations, setMyStations] = useState([])
 
@@ -31,6 +34,9 @@ export default function MyStations({navigation}) {
     };
 
     const onDelete = (id) => {
+console.log(orders);
+// TODO:  add condition that check if someone allrady invited that station and if dose' cancel the deleat action
+// i made a order provider
         return Alert.alert(
             "Are your sure?",
             "By pressing yes you confirm to remove this station permanently",
@@ -74,8 +80,8 @@ export default function MyStations({navigation}) {
                     {
                         myStations.map(({name, address, price, image, date, id}) => (
                             <MyStationCard
-                                owner={name}
-                                address={address}
+                            owner={name}
+                            address={address}
                                 price={price}
                                 image={image}
                                 date={date}
@@ -90,7 +96,8 @@ export default function MyStations({navigation}) {
                 </ScrollView>
             </View>
         );
-    } else {
+    }
+    else {
         return (
             <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
                 <Text style={globalStyles.subTitle}>No Stations yet...</Text>

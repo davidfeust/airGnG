@@ -16,9 +16,10 @@ import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider"
  */
 export default function MyOrders({navigation}) {
     const {myOrders} = useContext(myOrdersContext);
-    const {stations} = useContext(publicStationsContext); // useState is needed because cards is directy connected to the screen
+    const {stations} = useContext(publicStationsContext); 
     const {user} = useContext(AuthenticatedUserContext);
-    const [myOrdersCards, setMyOrdersCards] = useState([]);
+
+    const [myOrdersCards, setMyOrdersCards] = useState([]);// useState is needed because cards is directy connected to the screen
     useEffect(() => {
         setMyOrdersCards(
             stations.filter(({id}) =>
@@ -58,9 +59,10 @@ export default function MyOrders({navigation}) {
 
     if (myOrdersCards.length !== 0) {
         return (
+            
             <ScrollView>
                 {myOrdersCards.map(
-                    ({address, price, date, id, image}) => (
+                    ({address, price, date, id, image, time_slots}) => (
                         <MyStationCard
                             key={id}
                             id={id}
@@ -71,6 +73,8 @@ export default function MyOrders({navigation}) {
                             image={image}
                             onDelete={() => onCancel(id)}
                             phone={user.phone}
+                            dateStart={"s"} // TODO: get the start end time- didnt undarstand how...
+                            dateFinish={"e"}// its allready rendered.
                         />
                     )
                 )}

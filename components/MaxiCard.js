@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
-import {Alert, Animated, Image, Text, TouchableOpacity, View,} from "react-native";
+import {Alert, Animated, Image, ImageBackground, Text, TouchableOpacity, View,} from "react-native";
 import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
 import {db} from "../config/firebase";
 import {addDoc, arrayUnion, collection, doc, updateDoc,} from "firebase/firestore";
@@ -7,7 +7,7 @@ import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {colors} from "../assets/styles/colors";
 import CustomDropDown from "./CustomDropDown";
 import {dateRange, dateToString,} from "../utils/GlobalFuncitions";
-
+import {title,subTitle} from  "../assets/styles/globalStyles"
 export default function MaxiCard({
                                      owner,
                                      address,
@@ -88,24 +88,56 @@ export default function MaxiCard({
             ref={card.current}
         >
             <View>
-                <Image
+                <ImageBackground
+                
                     source={
                         image
                             ? {uri: image}
                             : require("../assets/defaults/default_image.png")
                     }
-                    style={{width: 300, height: 200, alignSelf: "center"}}
-                />
+                    style={{width: 250, height: 150, alignSelf: "center"}}
+                >
+                     {selectedStart && selectedEnd ? 
+                        ( 
+                        <View style={title} >
+                            <TouchableOpacity
+                            onPress={onOrder}
+                            style={{
+                                alignSelf: "center",
+                                flexDirection: "row",
+                                alignItems: "center",
+                                backgroundColor: colors.primary,
+                                borderRadius: 5,
+                            }}
+                        >
+                            <Text style={{paddingHorizontal: 10, color: "white"}}>
+                                order
+                            </Text>
+                            <MaterialCommunityIcons
+                                name="book"
+                                color={"white"}
+                                size={30}
+                                />
+                        </TouchableOpacity>
+                    </View>
+                        ) : null
+                    }
+                    </ImageBackground>
                 <Text style={{flexWrap: "wrap", color: "red"}}>
                     {address}
                 </Text>
-                <Text>{owner}</Text>
-                <Text>{phone}</Text>
+                <Text>{owner}      {phone}      {price} nis</Text>
 
-                <Text>{price} nis</Text>
-
+                <Text>
+                   Total price:{" "}
+                    {selectedStart && selectedEnd
+                        ? ((selectedEnd - selectedStart) / 36e5) * price
+                        : 0}{" "}
+                    nis
+                </Text>
                 {/*Choose a TimeSlot*/}
-                <CustomDropDown
+                <CustomDropDown 
+                    
                     items={timeSlots.map((d, index) => ({
                         label:
                             dateToString(d.start.toDate()) +
@@ -153,32 +185,8 @@ export default function MaxiCard({
                         />
                     ) : null}
                 </View>
-                <Text>
-                    Price:{" "}
-                    {selectedStart && selectedEnd
-                        ? ((selectedEnd - selectedStart) / 36e5) * price
-                        : 0}{" "}
-                    nis
-                </Text>
-                <TouchableOpacity
-                    onPress={onOrder}
-                    style={{
-                        alignSelf: "center",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        backgroundColor: colors.primary,
-                        borderRadius: 5,
-                    }}
-                >
-                    <Text style={{paddingHorizontal: 10, color: "white"}}>
-                        order
-                    </Text>
-                    <MaterialCommunityIcons
-                        name="book"
-                        color={"white"}
-                        size={30}
-                    />
-                </TouchableOpacity>
+                
+               
             </View>
         </Animated.View>
     );
