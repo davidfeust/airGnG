@@ -57,7 +57,7 @@ export default function MyStations({navigation}) {
 
     if (myStations.length !== 0) {
         return (
-            <View>
+            <View style={{flex: 1}}>
                 <TouchableOpacity
                     style={styles.plus}
                     onPress={() => navigation.push("AddNewStation")}
@@ -65,7 +65,7 @@ export default function MyStations({navigation}) {
                     <MaterialCommunityIcons
                         style={{textAlign: "center"}}
                         name={"plus"}
-                        color={"black"}
+                        color={"white"}
                         size={26}
                     />
                 </TouchableOpacity>
@@ -102,15 +102,15 @@ export default function MyStations({navigation}) {
 
 const styles = StyleSheet.create({
     plus: {
-        backgroundColor: colors.primary,
+        backgroundColor: colors.secondary,
         alignContent: "center",
         justifyContent: "center",
-        width: 55,
-        height: 55,
+        width: 60,
+        height: 60,
         borderRadius: 30,
         position: "absolute",
-        bottom: 15,
-        right: 15,
+        bottom: 20,
+        right: 20,
         zIndex: 2,
     },
 });

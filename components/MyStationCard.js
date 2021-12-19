@@ -1,5 +1,5 @@
 import React from "react";
-import {TouchableOpacity, View,} from "react-native";
+import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import StationCard from "./StationCard";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {globalStyles} from "../assets/styles/globalStyles";
@@ -34,7 +34,7 @@ export default function MyStationCard({
                     {/* EDIT */}
                     {onEdit &&
                     <TouchableOpacity
-                        style={{margin: 15}}
+                        style={styles.icon}
                         onPress={() => onEdit(id)}
                     >
                         <MaterialCommunityIcons
@@ -42,13 +42,14 @@ export default function MyStationCard({
                             size={30}
                             color={colors.primary}
                         />
+                        <Text style={styles.explain}>edit</Text>
                     </TouchableOpacity>
                     }
 
                     {/* DELETE */}
                     {onDelete &&
                     <TouchableOpacity
-                        style={{margin: 15}}
+                        style={styles.icon}
                         onPress={() => onDelete(id)}
                     >
                         <MaterialCommunityIcons
@@ -56,13 +57,14 @@ export default function MyStationCard({
                             size={30}
                             color={colors.primary}
                         />
+                        <Text style={styles.explain}>delete</Text>
                     </TouchableOpacity>
                     }
 
                     {/* PHONE */}
                     {phone &&
                     <TouchableOpacity
-                        style={{margin: 15}}
+                        style={styles.icon}
                         onPress={() => onCall(phone)}
                     >
                         <MaterialCommunityIcons
@@ -70,12 +72,13 @@ export default function MyStationCard({
                             size={30}
                             color={colors.primary}
                         />
+                        <Text style={styles.explain}>call the man</Text>
                     </TouchableOpacity>
                     }
 
                     {/* PUBLISH */}
                     {onGoToPublish && <TouchableOpacity
-                        style={{margin: 15}}
+                        style={styles.icon}
                         onPress={onGoToPublish}
                     >
                         <MaterialCommunityIcons
@@ -83,6 +86,7 @@ export default function MyStationCard({
                             size={30}
                             color={colors.primary}
                         />
+                        <Text style={styles.explain}>publish</Text>
                     </TouchableOpacity>}
 
 
@@ -91,3 +95,15 @@ export default function MyStationCard({
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    icon: {
+        margin: 15,
+        alignItems: 'center'
+    },
+    explain: {
+        marginTop: 3,
+        width: 70,
+        textAlign: 'center'
+    }
+});

@@ -1,30 +1,21 @@
-import React, { useContext, useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import React, {useContext, useState} from "react";
+import {View} from "react-native";
 import StationCard from "./StationCard";
-import { CheckBox } from "react-native-elements/dist/checkbox/CheckBox";
-import { globalStyles } from "../assets/styles/globalStyles";
+import {globalStyles} from "../assets/styles/globalStyles";
 import MyButton from "./MyButton";
-import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
-import { db } from "../config/firebase";
-import {
-    collection,
-    addDoc,
-    updateDoc,
-    doc,
-    arrayUnion,
-} from "firebase/firestore";
-import { async } from "@firebase/util";
+import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
 
+// TODO: Check if that component is not necessary
 export default function PublicStationCard({
-    owner,
-    address,
-    date,
-    price,
-    image,
-    id,
-    style,
-}) {
-    const { user } = useContext(AuthenticatedUserContext);
+                                              owner,
+                                              address,
+                                              date,
+                                              price,
+                                              image,
+                                              id,
+                                              style,
+                                          }) {
+    const {user} = useContext(AuthenticatedUserContext);
     const [isAvailable, setIsAvailable] = useState(true);
     const onOrder = async () => {
         const newOrder = {
@@ -57,8 +48,8 @@ export default function PublicStationCard({
           available
         </CheckBox> */}
 
-                <View style={{ alignItems: "center" }}>
-                    <MyButton text="order" onPress={onOrder} />
+                <View style={{alignItems: "center"}}>
+                    <MyButton text="order" onPress={onOrder}/>
                 </View>
             </StationCard>
         </View>

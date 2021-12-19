@@ -65,7 +65,7 @@ export default function AddNewStation(props) {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={[globalStyles.container, {paddingTop: 60}]}>
                 <Text style={globalStyles.title}>Station Details</Text>
-                <StationForm submit={onPost} formValues={formValues} googleAddress={googleAddress}/>
+                <StationForm submit={onPost} formValues={formValues} googleAddress={googleAddress} processing={processing}/>
             </View>
         </TouchableWithoutFeedback>
     );

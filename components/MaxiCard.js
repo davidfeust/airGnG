@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useRef, useState} from "react";
 import {Alert, Animated, Image, Text, TouchableOpacity, View,} from "react-native";
 import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
 import {db} from "../config/firebase";
-import {addDoc, collection,} from "firebase/firestore";
+import {addDoc, arrayUnion, collection, doc, updateDoc,} from "firebase/firestore";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {colors} from "../assets/styles/colors";
 import CustomDropDown from "./CustomDropDown";
@@ -39,9 +39,14 @@ export default function MaxiCard({
                 station_id: id,
                 payed: false,
                 sub_car_type:
-                    "the user might have an incompetible type of charge for his card",
+                    "the user might have an incompatible type of charge for his card",
             })
-
+                .then(orderRef => {
+                    const userRef = doc(db, "users", user.uid);
+                    updateDoc(userRef, {
+                        orders: arrayUnion(orderRef.id)
+                    }).then(() => {})
+                })
                 .catch((e) => console.error("Error adding document: ", e))
             : Alert.alert("Error", "Please choose a date from the dropdown.", [
                 {
