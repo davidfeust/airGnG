@@ -13,6 +13,8 @@ import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
 import {Text, View} from "react-native";
 import {globalStyles} from "../assets/styles/globalStyles";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
+import CustomButton from "../components/CustomButton";
+import {auth} from "../config/firebase";
 
 const Stack = createStackNavigator();
 
@@ -31,6 +33,16 @@ export default function LoggedInStack() {
                 <MaterialCommunityIcons name={'block-helper'} size={100} style={{marginTop: 30}}/>
                 <Text style={[globalStyles.subTitle, {marginTop: 30}]}>for more information please email
                     info@airgng.com </Text>
+
+                <CustomButton style={{marginTop: 30}} text={"Logout"} onPress={
+                    async () => {
+                    try {
+                    await auth.signOut();
+                } catch (error) {
+                    console.log(error);
+                }
+                }}/>
+
             </View>
         );
     }
