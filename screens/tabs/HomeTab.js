@@ -8,7 +8,6 @@ import {auth} from "../../config/firebase";
 
 export default function HomeTab({navigation}) {
     const {user} = useContext(AuthenticatedUserContext);
-
     const handleSignOut = async () => {
         try {
             await auth.signOut();
@@ -23,8 +22,10 @@ export default function HomeTab({navigation}) {
                 : <Text style={globalStyles.subTitle}>Hello to you!</Text>
             }
             <CustomButton text={"Logout"} onPress={handleSignOut}/>
-            {/* TODO: add userDetails after SignUP*/}
             <CustomButton text={"Edit your profile"} onPress={() => navigation.push('UserDetailsScreen')}/>
+            {user.admin &&
+            <Text style={{color: "red", fontSize:28}}>You have an admin privilege</Text>
+            }
         </View>
     );
 }

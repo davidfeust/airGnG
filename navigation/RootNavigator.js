@@ -46,4 +46,5 @@ export default function RootNavigator() {
             {user ? <LoggedInStack/> : <AuthStack/>}
         </NavigationContainer>
     );
+
 }

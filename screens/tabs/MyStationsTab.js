@@ -25,7 +25,12 @@ export default function MyStationsTab({navigation}) {
     const [myStations, setMyStations] = useState([])
 
     useEffect(() => {
-        setMyStations(stations.filter(({owner_id}) => owner_id === user.uid));
+        //give the admin user all the stations  
+        if (user.admin) {
+            setMyStations(stations)
+        } else {
+            setMyStations(stations.filter(({owner_id}) => owner_id === user.uid));
+        }
     }, [stations])
 
     const onEdit = (id) => {

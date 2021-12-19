@@ -10,6 +10,9 @@ import MyStationsTab from "../screens/tabs/MyStationsTab";
 import PublishStationScreen from "../screens/PublishStationScreen";
 import UserDetailsScreen from "../screens/UserDetailsScreen";
 import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
+import {Text, View} from "react-native";
+import {globalStyles} from "../assets/styles/globalStyles";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 const Stack = createStackNavigator();
 
@@ -20,6 +23,17 @@ export default function LoggedInStack() {
     const now = new Date();
     const isNewUser = now - created < 5000; // if creation time is less then current time, show
 
+    //user blocked view
+    if (user.blocked) {
+        return (
+            <View style={[globalStyles.container, {marginTop: 100}]}>
+                <Text style={globalStyles.title}>You are blocked!</Text>
+                <MaterialCommunityIcons name={'block-helper'} size={100} style={{marginTop: 30}}/>
+                <Text style={[globalStyles.subTitle, {marginTop: 30}]}>for more information please email
+                    info@airgng.com </Text>
+            </View>
+        );
+    }
     return (
         <Stack.Navigator screenOptions={{headerShown: false}}>
             {/* headerShown: false - hide the names of the screens (usually in the top of the page)*/}

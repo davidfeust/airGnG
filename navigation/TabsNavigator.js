@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext} from "react";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import SearchStationTab from "../screens/tabs/SearchStationTab";
 import MyOrdersTab from "../screens/tabs/MyOrdersTab";
@@ -6,10 +6,13 @@ import MyStationsTab from "../screens/tabs/MyStationsTab";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {colors} from "../assets/styles/colors";
 import HomeTab from "../screens/tabs/HomeTab";
+import UsersManagerTab from "../screens/tabs/UsersManagerTab";
+import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
 
 export default function TabsNavigator() {
 
     const Tab = createBottomTabNavigator();
+    const {user} = useContext(AuthenticatedUserContext);
 
 
     return (
@@ -51,20 +54,37 @@ export default function TabsNavigator() {
                     ),
                 }}
             />
-            <Tab.Screen
-                name="MyOrders"
-                component={MyOrdersTab}
-                options={{
-                    tabBarLabel: "My Orders",
-                    tabBarIcon: ({color, size}) => (
-                        <MaterialCommunityIcons
-                            name="post"
-                            color={color}
-                            size={size}
-                        />
-                    ),
-                }}
-            />
+            {user.admin ?
+                <Tab.Screen
+                    name="UsersManagerTab"
+                    component={UsersManagerTab}
+                    options={{
+                        tabBarLabel: "Users Manager",
+                        tabBarIcon: ({color, size}) => (
+                            <MaterialCommunityIcons
+                                name="account-edit"
+                                color={color}
+                                size={size}
+                            />
+                        ),
+                    }}
+                />
+                :
+                <Tab.Screen
+                    name="MyOrders"
+                    component={MyOrdersTab}
+                    options={{
+                        tabBarLabel: "My Orders",
+                        tabBarIcon: ({color, size}) => (
+                            <MaterialCommunityIcons
+                                name="post"
+                                color={color}
+                                size={size}
+                            />
+                        ),
+                    }}
+                />
+            }
         </Tab.Navigator>
     );
 }
