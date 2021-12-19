@@ -33,8 +33,8 @@ export default function LoggedInStack() {
                 <MaterialCommunityIcons name={'block-helper'} size={100} style={{marginTop: 30}}/>
                 <Text style={[globalStyles.subTitle, {marginTop: 30}]}>for more information please email
                     info@airgng.com </Text>
-
-                <CustomButton style={{marginTop: 30}} text={"Logout"} onPress={
+                {/*maybe delete the logout-for inconvenient way to enter again the app */}
+                <CustomButton style={{marginTop: 50}} text={"Logout"} onPress={
                     async () => {
                     try {
                     await auth.signOut();
