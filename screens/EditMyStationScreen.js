@@ -8,7 +8,7 @@ import {getStartAndEndTime, uploadImage} from "../utils/GlobalFuncitions";
 import StationForm from "../components/StationForm";
 import {deleteObject, ref} from "@firebase/storage";
 
-export default function EditMyStation({navigation, route}) {
+export default function EditMyStationScreen({navigation, route}) {
 
     const googleAddress = useRef();
     const [processing, setProcessing] = useState(false);

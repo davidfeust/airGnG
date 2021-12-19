@@ -3,7 +3,6 @@ import {AuthenticatedUserProvider} from "./AuthenticatedUserProvider";
 import RootNavigator from "../navigation/RootNavigator";
 import {PublicStationsProvider} from "./PublicStationsProvider";
 import {MyOrdersProvider} from "./MyOrdersProvider";
-import {OrdersProvider} from "./OrdersProvider";
 
 /**
  * Wrap all providers here
@@ -15,7 +14,7 @@ export default function WrapProviders() {
             <PublicStationsProvider>
                 <MyOrdersProvider>
                     {/*<OrdersProvider>*/}
-                        <RootNavigator/>
+                    <RootNavigator/>
                     {/*</OrdersProvider>*/}
                 </MyOrdersProvider>
             </PublicStationsProvider>

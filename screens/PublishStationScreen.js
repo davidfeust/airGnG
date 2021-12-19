@@ -7,7 +7,7 @@ import MyButton from "../components/MyButton";
 import {db} from '../config/firebase';
 import {doc, getDoc, updateDoc} from "firebase/firestore";
 
-export default function PublishStation({route, navigation}) {
+export default function PublishStationScreen({route, navigation}) {
     const [timeSlots, setTimeSlots] = useState([]);
     const [processing, setProcessing] = useState(false);
 

@@ -11,7 +11,7 @@ export const OrdersProvider = ({children}) => {
     const getOrders = async () => {
         const unsubOrders = onSnapshot(collection(db, "orders"),
             async () => {
-                const q = query(collection(db, 'orders'), where('station_id', '==', collection(db,'stations').filter((station)=>station.owner_id == user.id)))
+                const q = query(collection(db, 'orders'), where('station_id', '==', collection(db, 'stations').filter((station) => station.owner_id == user.id)))
                 const snap = await getDocs(q);
                 setOrders(snap.docs.map(d => d.data()))
             })

@@ -1,22 +1,22 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Alert, ScrollView, Text, View,} from "react-native";
-import {arrayRemove, collection, deleteDoc, doc, getDocs, query, updateDoc, where,} from "firebase/firestore";
-import {db} from "../config/firebase";
-import {myOrdersContext} from "../providers/MyOrdersProvider";
-import {publicStationsContext} from "../providers/PublicStationsProvider";
-import MyStationCard from "../components/MyStationCard";
-import {globalStyles} from "../assets/styles/globalStyles";
-import MyButton from "../components/MyButton";
-import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
+import {collection, deleteDoc, getDocs, query, where,} from "firebase/firestore";
+import {db} from "../../config/firebase";
+import {myOrdersContext} from "../../providers/MyOrdersProvider";
+import {publicStationsContext} from "../../providers/PublicStationsProvider";
+import MyStationCard from "../../components/MyStationCard";
+import {globalStyles} from "../../assets/styles/globalStyles";
+import MyButton from "../../components/MyButton";
+import {AuthenticatedUserContext} from "../../providers/AuthenticatedUserProvider";
 
 /**
  * represents all the subscribed stations.
- * (a subscribed station is a station that the user picked from SearchStation.js)
+ * (a subscribed station is a station that the user picked from SearchStationTab.js)
  * @returns <ScrollView>
  */
-export default function MyOrders({navigation}) {
+export default function MyOrdersTab({navigation}) {
     const {myOrders} = useContext(myOrdersContext);
-    const {stations} = useContext(publicStationsContext); 
+    const {stations} = useContext(publicStationsContext);
     const {user} = useContext(AuthenticatedUserContext);
 
     const [myOrdersCards, setMyOrdersCards] = useState([]);// useState is needed because cards is directy connected to the screen
@@ -70,7 +70,7 @@ export default function MyOrders({navigation}) {
 
     if (myOrdersCards.length !== 0) {
         return (
-            
+
             <ScrollView>
                 {myOrdersCards.map(
                     ({address, price, date, id, image, time_slots}) => (
@@ -105,7 +105,7 @@ export default function MyOrders({navigation}) {
                 </Text>
                 <MyButton
                     text={"Search Station"}
-                    onPress={() => navigation.navigate("SearchStation")}
+                    onPress={() => navigation.navigate("SearchStationTab")}
                 />
             </View>
         );

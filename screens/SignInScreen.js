@@ -10,7 +10,7 @@ import * as yup from 'yup'; // validation of forms. docs: https://www.npmjs.com/
 import {colors} from "../assets/styles/colors";
 
 
-export default function SignIn() {
+export default function SignInScreen() {
 
     const formValues = {
         email: '',

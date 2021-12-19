@@ -10,7 +10,7 @@ import {db} from "../config/firebase";
 import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 
-export default function UserDetails({navigation}) {
+export default function UserDetailsScreen({navigation}) {
 
     const {user, setUser} = useContext(AuthenticatedUserContext);
     const [processing, setProcessing] = useState(false);
@@ -35,7 +35,7 @@ export default function UserDetails({navigation}) {
         }).then(() => {
             setUser({...user, phone, name})
             setProcessing(false);
-            navigation.push('Home');
+            navigation.push('TabsNavigator');
         }).catch(console.error);
     };
 
@@ -87,9 +87,9 @@ export default function UserDetails({navigation}) {
                             {/* Skip */}
                             <TouchableOpacity
                                 style={[globalStyles.flex_container, {marginTop: 10}]}
-                                onPress={() => navigation.push('Home')}
+                                onPress={() => navigation.push('TabsNavigator')}
                             >
-                                <Text style={{fontSize: 18, color: colors.secondary}}>Skip for now  </Text>
+                                <Text style={{fontSize: 18, color: colors.secondary}}>Skip for now </Text>
                                 <MaterialCommunityIcons name={'arrow-right-circle'} color={colors.secondary} size={24}/>
                             </TouchableOpacity>
 

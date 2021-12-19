@@ -1,13 +1,13 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {Animated, Dimensions, FlatList, Platform, StyleSheet, TouchableOpacity, View,} from "react-native";
-import {publicStationsContext} from "../providers/PublicStationsProvider";
+import {publicStationsContext} from "../../providers/PublicStationsProvider";
 import MapView, {Marker} from "react-native-maps";
-import {globalStyles} from "../assets/styles/globalStyles";
+import {globalStyles} from "../../assets/styles/globalStyles";
 import {Image} from "react-native-elements";
-import {colors} from "../assets/styles/colors";
-import MiniCard from "../components/MiniCard";
-import MaxiCard from "../components/MaxiCard";
-import Autocomplete from "../components/Autocomplete";
+import {colors} from "../../assets/styles/colors";
+import MiniCard from "../../components/MiniCard";
+import MaxiCard from "../../components/MaxiCard";
+import Autocomplete from "../../components/Autocomplete";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 /**
@@ -19,7 +19,7 @@ import {MaterialCommunityIcons} from "@expo/vector-icons";
  * @returns <ScrollView>
  */
 
-export default function SearchStation({navigation}) {
+export default function SearchStationTab({navigation}) {
     //for the autocomplete function
     const googleAddress = useRef();
     const [cords, setCords] = useState(null);
@@ -137,7 +137,7 @@ export default function SearchStation({navigation}) {
                         // image={require("../assets/markers/basic_marker.png")}
                     >
                         <Image
-                            source={require("../assets/markers/basic_marker.png")}
+                            source={require("../../assets/markers/basic_marker.png")}
                             style={
                                 card.id === selectedId
                                     ? styles.selectedMarker

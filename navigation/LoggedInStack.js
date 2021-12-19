@@ -1,19 +1,15 @@
 import React, {useContext} from "react";
 
 import {createStackNavigator} from "@react-navigation/stack";
-import Home from "../screens/Home";
+import TabsNavigator from "./TabsNavigator";
 
-import AddNewStation from "../screens/AddNewStation";
-import EditMyStation from "../screens/EditMyStation";
+import AddNewStationScreen from "../screens/AddNewStationScreen";
+import EditMyStationScreen from "../screens/EditMyStationScreen";
 import MyStationCard from "../components/MyStationCard";
-import MyStations from "../screens/MyStations";
-
-import {PublicStationsProvider} from "../providers/PublicStationsProvider";
-import {MyOrdersProvider} from "../providers/MyOrdersProvider";
-import PublishStation from "../screens/PublishStation";
-import UserDetails from "../screens/UserDetails";
+import MyStationsTab from "../screens/tabs/MyStationsTab";
+import PublishStationScreen from "../screens/PublishStationScreen";
+import UserDetailsScreen from "../screens/UserDetailsScreen";
 import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
-import {OrdersProvider} from "../providers/OrdersProvider";
 
 const Stack = createStackNavigator();
 
@@ -29,36 +25,36 @@ export default function LoggedInStack() {
             {/* headerShown: false - hide the names of the screens (usually in the top of the page)*/}
             {isNewUser && (
                 <Stack.Screen
-                    name="UserDetails"
-                    component={UserDetails}
+                    name="UserDetailsScreen"
+                    component={UserDetailsScreen}
                 />
             )}
 
-            <Stack.Screen name="Home" component={Home}/>
+            <Stack.Screen name="TabsNavigator" component={TabsNavigator}/>
             <Stack.Screen
-                name="AddNewStation"
-                component={AddNewStation}
+                name="AddNewStationScreen"
+                component={AddNewStationScreen}
             />
             <Stack.Screen
-                name="EditMyStation"
-                component={EditMyStation}
+                name="EditMyStationScreen"
+                component={EditMyStationScreen}
             />
             <Stack.Screen
                 name="MyStationCard"
                 component={MyStationCard}
             />
             <Stack.Screen
-                name="PublishStation"
-                component={PublishStation}
+                name="PublishStationScreen"
+                component={PublishStationScreen}
             />
             <Stack.Screen
-                name="MyStations"
-                component={MyStations}
+                name="MyStationsTab"
+                component={MyStationsTab}
             />
             {!isNewUser && (
                 <Stack.Screen
-                    name="UserDetails"
-                    component={UserDetails}
+                    name="UserDetailsScreen"
+                    component={UserDetailsScreen}
                 />
             )}
         </Stack.Navigator>

@@ -1,17 +1,16 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from "react-native";
 import {deleteDoc, doc} from "firebase/firestore";
-import {db} from "../config/firebase";
-import MyStationCard from "../components/MyStationCard";
+import {db} from "../../config/firebase";
+import MyStationCard from "../../components/MyStationCard";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {colors} from "../assets/styles/colors";
-import {publicStationsContext} from "../providers/PublicStationsProvider";
-import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
-import {OrdersContext} from "../providers/OrdersProvider";
+import {colors} from "../../assets/styles/colors";
+import {publicStationsContext} from "../../providers/PublicStationsProvider";
+import {AuthenticatedUserContext} from "../../providers/AuthenticatedUserProvider";
+import {OrdersContext} from "../../providers/OrdersProvider";
 import {deleteObject, getStorage, ref} from "@firebase/storage";
-import {globalStyles} from "../assets/styles/globalStyles";
-import MyButton from "../components/MyButton";
-import { MyOrdersProvider } from "../providers/MyOrdersProvider";
+import {globalStyles} from "../../assets/styles/globalStyles";
+import MyButton from "../../components/MyButton";
 
 /**
  * represents the page where a user can see the status of his post.
@@ -19,7 +18,7 @@ import { MyOrdersProvider } from "../providers/MyOrdersProvider";
  * but it might change...
  * @returns <ScrollView>
  */
-export default function MyStations({navigation}) {
+export default function MyStationsTab({navigation}) {
     const {user} = useContext(AuthenticatedUserContext);
     const {orders} = useContext(OrdersContext);
     const {stations} = useContext(publicStationsContext);
@@ -30,11 +29,11 @@ export default function MyStations({navigation}) {
     }, [stations])
 
     const onEdit = (id) => {
-        navigation.push("EditMyStation", {station_id: id}); // push to the navigation EditMyStation() component' so we could go back
+        navigation.push("EditMyStationScreen", {station_id: id}); // push to the navigation EditMyStationScreen() component' so we could go back
     };
 
     const onDelete = (id) => {
-console.log(orders);
+        console.log(orders);
 // TODO:  add condition that check if someone allrady invited that station and if dose' cancel the deleat action
 // i made a order provider
         return Alert.alert(
@@ -66,7 +65,7 @@ console.log(orders);
             <View style={{flex: 1}}>
                 <TouchableOpacity
                     style={styles.plus}
-                    onPress={() => navigation.push("AddNewStation")}
+                    onPress={() => navigation.push("AddNewStationScreen")}
                 >
                     <MaterialCommunityIcons
                         style={{textAlign: "center"}}
@@ -80,8 +79,8 @@ console.log(orders);
                     {
                         myStations.map(({name, address, price, image, date, id}) => (
                             <MyStationCard
-                            owner={name}
-                            address={address}
+                                owner={name}
+                                address={address}
                                 price={price}
                                 image={image}
                                 date={date}
@@ -89,19 +88,18 @@ console.log(orders);
                                 onDelete={onDelete}
                                 onEdit={onEdit}
                                 key={id}
-                                onGoToPublish={() => navigation.push("PublishStation", {station_id: id})}
+                                onGoToPublish={() => navigation.push("PublishStationScreen", {station_id: id})}
                             />
                         ))
                     }
                 </ScrollView>
             </View>
         );
-    }
-    else {
+    } else {
         return (
             <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
                 <Text style={globalStyles.subTitle}>No Stations yet...</Text>
-                <MyButton text={'Add Station'} onPress={() => navigation.navigate('AddNewStation')}/>
+                <MyButton text={'Add Station'} onPress={() => navigation.navigate('AddNewStationScreen')}/>
             </View>
         );
     }

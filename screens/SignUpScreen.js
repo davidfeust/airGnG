@@ -19,7 +19,7 @@ import {doc, setDoc} from "firebase/firestore";
  * @returns <form>
  */
 
-export default function SignUp() {
+export default function SignUpScreen() {
     const [showPass, setShowPass] = useState(true);
     const [processing, setProcessing] = useState(false);
 
@@ -48,7 +48,8 @@ export default function SignUp() {
                 setDoc(doc(db, 'users', user.uid), {
                     mail: user.email,
                     orders: []
-                }).then(() => {})
+                }).then(() => {
+                })
                 setProcessing(false);
             })
             .catch((error) => {

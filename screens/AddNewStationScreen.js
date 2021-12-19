@@ -14,7 +14,7 @@ import StationForm from "../components/StationForm"; // to manage forms. docs: h
  * @returns <form>
  */
 
-export default function AddNewStation(props) {
+export default function AddNewStationScreen(props) {
 
     const {user} = useContext(AuthenticatedUserContext);
     const googleAddress = useRef();
@@ -65,7 +65,8 @@ export default function AddNewStation(props) {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={[globalStyles.container, {paddingTop: 60}]}>
                 <Text style={globalStyles.title}>Station Details</Text>
-                <StationForm submit={onPost} formValues={formValues} googleAddress={googleAddress} processing={processing}/>
+                <StationForm submit={onPost} formValues={formValues} googleAddress={googleAddress}
+                             processing={processing}/>
             </View>
         </TouchableWithoutFeedback>
     );

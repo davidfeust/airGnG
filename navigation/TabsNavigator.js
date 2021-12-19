@@ -1,38 +1,17 @@
-import React, {useContext} from "react";
-import {StyleSheet, Text, View} from "react-native";
-import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
+import React from "react";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import SearchStation from "./SearchStation";
-import MyOrders from "./MyOrders";
-import MyStations from "./MyStations";
+import SearchStationTab from "../screens/tabs/SearchStationTab";
+import MyOrdersTab from "../screens/tabs/MyOrdersTab";
+import MyStationsTab from "../screens/tabs/MyStationsTab";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {colors} from "../assets/styles/colors";
-import MyButton from "../components/MyButton";
-import {globalStyles} from "../assets/styles/globalStyles";
-import {auth} from '../config/firebase';
+import HomeTab from "../screens/tabs/HomeTab";
 
-export default function Home() {
-    const {user} = useContext(AuthenticatedUserContext);
+export default function TabsNavigator() {
 
-    const handleSignOut = async () => {
-        try {
-            await auth.signOut();
-        } catch (error) {
-            console.log(error);
-        }
-    };
     const Tab = createBottomTabNavigator();
-    const HomeTab = ({navigation}) => (
-        <View style={styles.container}>
-            {user.name ?
-                <Text style={globalStyles.subTitle}>Hello {user.name}!</Text>
-                : <Text style={globalStyles.subTitle}>Hello to you!</Text>
-            }
-            <MyButton text={"Logout"} onPress={handleSignOut}/>
-            {/* TODO: add userDetails after SignUP*/}
-            <MyButton text={"Edit your profile"} onPress={() => navigation.push('UserDetails')}/>
-        </View>
-    );
+
+
     return (
         <Tab.Navigator screenOptions={{
             headerShown: false,
@@ -42,7 +21,7 @@ export default function Home() {
                 name="HomeTab"
                 component={HomeTab}
                 options={{
-                    tabBarLabel: "Home",
+                    tabBarLabel: "TabsNavigator",
                     tabBarIcon: ({color, size}) => (
                         <MaterialCommunityIcons name="home" color={color} size={size}/>
                     ),
@@ -50,7 +29,7 @@ export default function Home() {
             />
             <Tab.Screen
                 name="SearchStation"
-                component={SearchStation}
+                component={SearchStationTab}
                 options={{
                     tabBarLabel: "Search Station",
                     tabBarIcon: ({color, size}) => (
@@ -64,7 +43,7 @@ export default function Home() {
             />
             <Tab.Screen
                 name="MyStations"
-                component={MyStations}
+                component={MyStationsTab}
                 options={{
                     tabBarLabel: "My Stations",
                     tabBarIcon: ({color, size}) => (
@@ -74,7 +53,7 @@ export default function Home() {
             />
             <Tab.Screen
                 name="MyOrders"
-                component={MyOrders}
+                component={MyOrdersTab}
                 options={{
                     tabBarLabel: "My Orders",
                     tabBarIcon: ({color, size}) => (
@@ -89,12 +68,3 @@ export default function Home() {
         </Tab.Navigator>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-});
