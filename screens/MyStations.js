@@ -5,13 +5,13 @@ import {db} from "../config/firebase";
 import MyStationCard from "../components/MyStationCard";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {colors} from "../assets/styles/colors";
-import {publicStationsContext} from "../navigation/PublicStationsProvider";
-import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
-import {OrdersContext} from "../navigation/OrdersProvider";
+import {publicStationsContext} from "../providers/PublicStationsProvider";
+import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
+import {OrdersContext} from "../providers/OrdersProvider";
 import {deleteObject, getStorage, ref} from "@firebase/storage";
 import {globalStyles} from "../assets/styles/globalStyles";
 import MyButton from "../components/MyButton";
-import { MyOrdersProvider } from "../navigation/MyOrdersProvider";
+import { MyOrdersProvider } from "../providers/MyOrdersProvider";
 
 /**
  * represents the page where a user can see the status of his post.

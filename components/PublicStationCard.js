@@ -3,7 +3,7 @@ import {View} from "react-native";
 import StationCard from "./StationCard";
 import {globalStyles} from "../assets/styles/globalStyles";
 import MyButton from "./MyButton";
-import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
+import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
 
 // TODO: Check if that component is not necessary
 export default function PublicStationCard({

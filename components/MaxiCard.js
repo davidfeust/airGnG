@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {Alert, Animated, Image, ImageBackground, Text, TouchableOpacity, View,} from "react-native";
-import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
+import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
 import {db} from "../config/firebase";
 import {addDoc, arrayUnion, collection, doc, updateDoc,} from "firebase/firestore";
 import {MaterialCommunityIcons} from "@expo/vector-icons";

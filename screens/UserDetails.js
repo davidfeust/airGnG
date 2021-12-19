@@ -7,7 +7,7 @@ import * as yup from "yup";
 import MyButton from "../components/MyButton";
 import {doc, updateDoc} from "firebase/firestore";
 import {db} from "../config/firebase";
-import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
+import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 export default function UserDetails({navigation}) {

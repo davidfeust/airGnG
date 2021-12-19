@@ -3,7 +3,7 @@ import {Keyboard, Text, TouchableWithoutFeedback, View} from "react-native";
 import {globalStyles} from "../assets/styles/globalStyles";
 import {db} from "../config/firebase";
 import {addDoc, collection, updateDoc} from "firebase/firestore";
-import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
+import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
 import {uploadImage} from "../utils/GlobalFuncitions";
 import StationForm from "../components/StationForm"; // to manage forms. docs: https://formik.org/docs/api/formik
 

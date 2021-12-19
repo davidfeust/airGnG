@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import {StyleSheet, Text, View} from "react-native";
-import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
+import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import SearchStation from "./SearchStation";
 import MyOrders from "./MyOrders";

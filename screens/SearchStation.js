@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {Animated, Dimensions, FlatList, Platform, StyleSheet, TouchableOpacity, View,} from "react-native";
-import {publicStationsContext} from "../navigation/PublicStationsProvider";
+import {publicStationsContext} from "../providers/PublicStationsProvider";
 import MapView, {Marker} from "react-native-maps";
 import {globalStyles} from "../assets/styles/globalStyles";
 import {Image} from "react-native-elements";

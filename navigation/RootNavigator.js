@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {ActivityIndicator, View} from 'react-native';
-import {AuthenticatedUserContext} from './AuthenticatedUserProvider';
+import {AuthenticatedUserContext} from '../providers/AuthenticatedUserProvider';
 import {onAuthStateChanged} from 'firebase/auth';
 import {auth, db} from "../config/firebase";
 import LoggedInStack from "./LoggedInStack";

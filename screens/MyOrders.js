@@ -1,13 +1,13 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Alert, ScrollView, Text, View,} from "react-native";
-import {collection, deleteDoc, getDocs, query, where,} from "firebase/firestore";
+import {arrayRemove, collection, deleteDoc, doc, getDocs, query, updateDoc, where,} from "firebase/firestore";
 import {db} from "../config/firebase";
-import {myOrdersContext} from "../navigation/MyOrdersProvider";
-import {publicStationsContext} from "../navigation/PublicStationsProvider";
+import {myOrdersContext} from "../providers/MyOrdersProvider";
+import {publicStationsContext} from "../providers/PublicStationsProvider";
 import MyStationCard from "../components/MyStationCard";
 import {globalStyles} from "../assets/styles/globalStyles";
 import MyButton from "../components/MyButton";
-import {AuthenticatedUserContext} from "../navigation/AuthenticatedUserProvider";
+import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
 
 /**
  * represents all the subscribed stations.
@@ -28,7 +28,7 @@ export default function MyOrders({navigation}) {
         );
     }, [myOrders, stations]);
 
-    const onCancel = (id) => {
+    const onCancel = (station_id) => {
         return Alert.alert(
             "Are your sure?",
             "Are you sure you want to cancel the submit?",
@@ -40,9 +40,20 @@ export default function MyOrders({navigation}) {
                         const toDelete = await getDocs(
                             query(
                                 collection(db, "orders"),
-                                where("station_id", "==", id)
+                                where("station_id", "==", station_id)
                             )
-                        );
+                        )
+                        // TODO erase the order from the users.orders using the order id
+                        //
+                        //     .then(async value => {
+                        //     const orderId = value.docs.pop().id;
+                        //     const userDoc = doc(db, 'users', user.uid);
+                        //     console.log(orderId)
+                        //     await updateDoc(userDoc, {
+                        //         orders: arrayRemove(orderId)
+                        //     });
+                        // })
+
                         toDelete.forEach((adoc) => {
                             deleteDoc(adoc.ref);
                         });
