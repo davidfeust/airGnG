@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {ScrollView, Text, View} from 'react-native';
-import CustomDatePicker from "../components/CustomDatePicker";
+import CustomDateManager from "../components/CustomDateManager";
 import {globalStyles} from "../assets/styles/globalStyles";
 import {getStartAndEndTime} from "../utils/GlobalFuncitions";
-import MyButton from "../components/MyButton";
+import CustomButton from "../components/CustomButton";
 import {db} from '../config/firebase';
 import {doc, getDoc, updateDoc} from "firebase/firestore";
 
@@ -49,12 +49,12 @@ export default function PublishStationScreen({route, navigation}) {
 
                     <Text style={globalStyles.title}>Publish This Station</Text>
                     {/* Time slots */}
-                    <CustomDatePicker
+                    <CustomDateManager
                         timeSlots={timeSlots}
                         setTimeSlots={setTimeSlots}
                     />
 
-                    <MyButton text={'Publish'} onPress={onPublish} processing={processing}/>
+                    <CustomButton text={'Publish'} onPress={onPublish} processing={processing}/>
                 </View>
             </ScrollView>
         </View>

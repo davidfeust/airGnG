@@ -7,7 +7,7 @@ import {Image} from "react-native-elements";
 import {colors} from "../../assets/styles/colors";
 import MiniCard from "../../components/MiniCard";
 import MaxiCard from "../../components/MaxiCard";
-import Autocomplete from "../../components/Autocomplete";
+import AddressAutocomplete from "../../components/AddressAutocomplete";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 /**
@@ -99,9 +99,9 @@ export default function SearchStationTab({navigation}) {
 
     return (
         <View style={styles.container}>
-            {/*/here we warped the Autocomplete component in another view in order to give it a special style */}
+            {/*/here we warped the AddressAutocomplete component in another view in order to give it a special style */}
             <View style={styles.searchBox}>
-                <Autocomplete
+                <AddressAutocomplete
                     reference={googleAddress}
                     setCords={setCords}
                     placeHolder={"Search Here..."}

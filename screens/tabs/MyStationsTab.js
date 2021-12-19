@@ -10,7 +10,7 @@ import {AuthenticatedUserContext} from "../../providers/AuthenticatedUserProvide
 import {OrdersContext} from "../../providers/OrdersProvider";
 import {deleteObject, getStorage, ref} from "@firebase/storage";
 import {globalStyles} from "../../assets/styles/globalStyles";
-import MyButton from "../../components/MyButton";
+import CustomButton from "../../components/CustomButton";
 
 /**
  * represents the page where a user can see the status of his post.
@@ -99,7 +99,7 @@ export default function MyStationsTab({navigation}) {
         return (
             <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
                 <Text style={globalStyles.subTitle}>No Stations yet...</Text>
-                <MyButton text={'Add Station'} onPress={() => navigation.navigate('AddNewStationScreen')}/>
+                <CustomButton text={'Add Station'} onPress={() => navigation.navigate('AddNewStationScreen')}/>
             </View>
         );
     }

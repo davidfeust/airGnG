@@ -1,10 +1,10 @@
 import React from "react";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import StationCard from "./StationCard";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {globalStyles} from "../assets/styles/globalStyles";
-import {onCall} from "../utils/GlobalFuncitions";
+import {dateToString, onCall} from "../utils/GlobalFuncitions";
 import {colors} from "../assets/styles/colors";
+import {Card} from "react-native-elements";
 
 export default function MyStationCard({
                                           owner,
@@ -23,16 +23,29 @@ export default function MyStationCard({
 
     return (
         <View>
-            <StationCard
-                owner={owner}
-                address={address}
-                price={price}
-                image={image}
-                date={date}
-                dateStart={dateStart}
-                dateFinish= {dateFinish}
-                >
-                 
+
+            <Card>
+                <Card.Title>{address}</Card.Title>
+                <Card.Title>{dateStart}-{dateFinish}</Card.Title>
+                <Card.Divider orientation="horizontal"/>
+
+                {date &&
+                date.map((slot, index) => (
+                    <Text key={index}>
+                        {dateToString(slot.start.toDate())} -{" "}
+                        {dateToString(slot.end.toDate())}
+                    </Text>
+                ))
+                }
+
+                <Text>owner: {owner}</Text>
+                <Text>price: {price} nis</Text>
+
+                {image !== undefined && (
+                    <Card.Image source={{uri: image}}/>
+                )}
+                {/*{children}*/}
+
                 <View style={globalStyles.flex_container}>
 
                     {/* EDIT */}
@@ -95,7 +108,8 @@ export default function MyStationCard({
 
 
                 </View>
-            </StationCard>
+            </Card>
+
         </View>
     );
 }

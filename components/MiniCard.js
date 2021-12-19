@@ -35,7 +35,7 @@ export default function MiniCard({
                 }}
             >
                 <Text style={{flexWrap: "wrap"}}>{address}</Text>
-                <Text>{owner}         {price} nis</Text>
+                <Text>{owner} {price} nis</Text>
                 <Text></Text>
 
             </View>

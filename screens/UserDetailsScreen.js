@@ -4,7 +4,7 @@ import {globalStyles} from "../assets/styles/globalStyles";
 import {Formik} from "formik";
 import {colors} from "../assets/styles/colors";
 import * as yup from "yup";
-import MyButton from "../components/MyButton";
+import CustomButton from "../components/CustomButton";
 import {doc, updateDoc} from "firebase/firestore";
 import {db} from "../config/firebase";
 import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
@@ -76,7 +76,7 @@ export default function UserDetailsScreen({navigation}) {
                             </Text>
 
                             {/* Submit */}
-                            <MyButton
+                            <CustomButton
                                 text={'Submit'}
                                 style={{marginTop: 120}}
                                 processing={processing}

@@ -3,13 +3,13 @@ import {GooglePlacesAutocomplete} from "react-native-google-places-autocomplete"
 import Constants from "expo-constants";
 
 
-export default function Autocomplete({
-                                         reference,
-                                         setCords,
-                                         placeHolder = "Address",
-                                         setViewPort = null,
-                                         styleTag = "default"
-                                     }) {
+export default function AddressAutocomplete({
+                                                reference,
+                                                setCords,
+                                                placeHolder = "Address",
+                                                setViewPort = null,
+                                                styleTag = "default"
+                                            }) {
     const defaultStyle = {
         container: {
             flex: 0,

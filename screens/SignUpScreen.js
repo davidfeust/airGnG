@@ -4,7 +4,7 @@ import {Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithou
 import {createUserWithEmailAndPassword} from "firebase/auth";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {globalStyles} from "../assets/styles/globalStyles";
-import MyButton from "../components/MyButton";
+import CustomButton from "../components/CustomButton";
 import {Formik} from "formik";
 import * as yup from "yup";
 import {colors} from "../assets/styles/colors"; // to manage forms. docs: https://formik.org/docs/api/formik
@@ -151,7 +151,7 @@ export default function SignUpScreen() {
                                 formikProps.errors.passwordRepeat}
                             </Text>
 
-                            <MyButton
+                            <CustomButton
                                 text={"Sign Up"}
                                 style={{marginTop: 60}}
                                 processing={processing}

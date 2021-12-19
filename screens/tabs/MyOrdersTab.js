@@ -6,7 +6,7 @@ import {myOrdersContext} from "../../providers/MyOrdersProvider";
 import {publicStationsContext} from "../../providers/PublicStationsProvider";
 import MyStationCard from "../../components/MyStationCard";
 import {globalStyles} from "../../assets/styles/globalStyles";
-import MyButton from "../../components/MyButton";
+import CustomButton from "../../components/CustomButton";
 import {AuthenticatedUserContext} from "../../providers/AuthenticatedUserProvider";
 
 /**
@@ -103,7 +103,7 @@ export default function MyOrdersTab({navigation}) {
                 <Text style={globalStyles.subTitle}>
                     No orders yet...
                 </Text>
-                <MyButton
+                <CustomButton
                     text={"Search Station"}
                     onPress={() => navigation.navigate("SearchStationTab")}
                 />

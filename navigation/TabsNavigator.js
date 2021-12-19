@@ -21,7 +21,7 @@ export default function TabsNavigator() {
                 name="HomeTab"
                 component={HomeTab}
                 options={{
-                    tabBarLabel: "TabsNavigator",
+                    tabBarLabel: "Home",
                     tabBarIcon: ({color, size}) => (
                         <MaterialCommunityIcons name="home" color={color} size={size}/>
                     ),

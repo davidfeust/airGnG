@@ -2,11 +2,11 @@ import React from 'react';
 import {Dimensions, Keyboard, ScrollView, Text, TextInput, TouchableWithoutFeedback, View} from 'react-native';
 import {globalStyles} from "../assets/styles/globalStyles";
 import {Formik} from "formik";
-import Autocomplete from "./Autocomplete";
+import AddressAutocomplete from "./AddressAutocomplete";
 import {colors} from "../assets/styles/colors";
 import ImagePicker from "./ImagePicker";
 import Checkbox from "expo-checkbox";
-import MyButton from "./MyButton";
+import CustomButton from "./CustomButton";
 import * as yup from "yup";
 
 
@@ -29,7 +29,7 @@ export default function StationForm({submit, processing, formValues, googleAddre
             validationSchema={formSchema}>
             {(formikProps) => (
                 <View style={{width: '100%', alignItems: "center"}}>
-                    <Autocomplete
+                    <AddressAutocomplete
                         reference={googleAddress}
                         setCords={(newVal) => formikProps.setFieldValue('cords', newVal)}/>
                     <Text style={{color: colors.error}}>
@@ -64,11 +64,11 @@ export default function StationForm({submit, processing, formValues, googleAddre
                                         onValueChange={nextValue => formikProps.setFieldValue('shadowed', nextValue)}
                                     />
                                     <Text style={globalStyles.checkbox_label}>Shadowed parking
-                                                                              spot</Text>
+                                        spot</Text>
                                 </View>
 
                                 {/* Submit */}
-                                <MyButton
+                                <CustomButton
                                     text={'post'}
                                     processing={processing}
                                     onPress={formikProps.handleSubmit}

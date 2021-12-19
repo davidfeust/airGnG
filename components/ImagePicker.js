@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {globalStyles} from "../assets/styles/globalStyles";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {pickImageCamera, pickImageLibrary} from "../utils/GlobalFuncitions";
 

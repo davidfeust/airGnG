@@ -1,7 +1,6 @@
-import React, {useState} from "react";
-import {ActivityIndicator, StyleSheet, View} from "react-native";
+import React from "react";
+import {ActivityIndicator, Text, TouchableOpacity} from "react-native";
 import {globalStyles} from "../assets/styles/globalStyles";
-import {Text, TouchableOpacity} from "react-native";
 import {colors} from "../assets/styles/colors";
 
 /**
@@ -14,7 +13,7 @@ import {colors} from "../assets/styles/colors";
  * @returns {JSX.Element} - the button
  * @constructor
  */
-export default function MyButton({onPress, text, processing = false, style, disabled = false}) {
+export default function CustomButton({onPress, text, processing = false, style, disabled = false}) {
     return (
         <TouchableOpacity
             style={[globalStyles.bt, style, {backgroundColor: disabled ? colors.invalid : colors.primary}]}

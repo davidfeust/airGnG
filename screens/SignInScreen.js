@@ -4,7 +4,7 @@ import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../config/firebase";
 import {globalStyles} from "../assets/styles/globalStyles";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
-import MyButton from "../components/MyButton";
+import CustomButton from "../components/CustomButton";
 import {Formik} from 'formik'; // to manage forms. docs: https://formik.org/docs/api/formik
 import * as yup from 'yup'; // validation of forms. docs: https://www.npmjs.com/package/yup
 import {colors} from "../assets/styles/colors";
@@ -113,7 +113,7 @@ export default function SignInScreen() {
                                         {formikProps.touched.password ? formikProps.errors.password : ''}
                                     </Text>
 
-                                    <MyButton
+                                    <CustomButton
                                         text={'Login'}
                                         style={{marginTop: 60}}
                                         processing={processing}

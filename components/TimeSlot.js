@@ -19,6 +19,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         margin: 5,
         width: '80%',
-        alignSelf:"center"
+        alignSelf: "center"
     }
 });

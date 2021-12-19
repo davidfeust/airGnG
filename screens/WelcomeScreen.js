@@ -1,7 +1,7 @@
 import React from "react";
 import {StyleSheet, Text, View} from "react-native";
 import {globalStyles} from "../assets/styles/globalStyles";
-import MyButton from "../components/MyButton";
+import CustomButton from "../components/CustomButton";
 
 /**
  * create a WelcomeScreen page where the user can sing in or sing up
@@ -14,11 +14,11 @@ export default function WelcomeScreen(props) {
             <Text style={[globalStyles.title, styles.title]}>
                 Welcome to Air GnG!
             </Text>
-            <MyButton
+            <CustomButton
                 onPress={() => props.navigation.push("SignUpScreen")}
                 text={"Sign Up"}
             />
-            <MyButton
+            <CustomButton
                 onPress={() => props.navigation.push("SignInScreen")}
                 text={"Sign In"}
             />

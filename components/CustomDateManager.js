@@ -5,7 +5,7 @@ import {colors} from "../assets/styles/colors";
 import TimeSlot from "./TimeSlot";
 import {getStartAndEndTime} from "../utils/GlobalFuncitions";
 
-export default function CustomDatePicker({setTimeSlots, timeSlots}) {
+export default function CustomDateManager({setTimeSlots, timeSlots}) {
 
 
     const removeTimeSlot = (key) => {
