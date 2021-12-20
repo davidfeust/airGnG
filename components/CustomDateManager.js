@@ -23,15 +23,19 @@ export default function CustomDateManager({setTimeSlots, timeSlots}) {
         const temp = [...timeSlots];
         if (s) {
             if (s > temp[key].end) {
-                alert('Start time must be before end time')
-                return;
+                // start time is after end time
+                var newEnd = new Date(s);
+                newEnd.setHours(s.getHours() + 1)
+                temp[key].end = newEnd;
             }
             temp[key].start = s;
         }
         if (e) {
-            if (s > temp[key].end) {
-                alert('End time must be after end time')
-                return;
+            if (temp[key].start > e) {
+                // end time is before start time
+                var newStart = new Date(e);
+                newStart.setHours(e.getHours() - 1)
+                temp[key].start = newStart;
             }
             temp[key].end = e;
         }
