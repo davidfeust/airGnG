@@ -3,8 +3,8 @@ import Constants from "expo-constants";
 import {collection, getDocs} from "firebase/firestore";
 import {db, storage} from "../config/firebase";
 import * as ImagePicker from "expo-image-picker";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { Linking, Alert, Platform } from "react-native";
+import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
+import {Alert, Linking, Platform} from "react-native";
 
 export const addressToCords = async (address) => {
     try {
@@ -22,13 +22,13 @@ export const addressToCords = async (address) => {
 export const getFromCol = async (col_name, set_fun) => {
     const col = collection(db, col_name);
     const cards_col = await getDocs(col);
-    set_fun(
-        cards_col.docs.map((doc) => {
-            let id = doc.id;
-            let data = doc.data();
-            return {id, ...data};
-        })
-    );
+    const map = cards_col.docs.map((doc) => {
+        let id = doc.id;
+        let data = doc.data();
+        return {id, ...data};
+    });
+    set_fun(map);
+    return map;
 };
 
 export const pickImageLibrary = async (setImage) => {

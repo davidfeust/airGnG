@@ -1,90 +1,77 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Alert, FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {getFromCol} from "../../utils/GlobalFuncitions";
 import {collection, doc, onSnapshot, updateDoc} from "firebase/firestore";
 import {db} from "../../config/firebase";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {colors} from "../../assets/styles/colors";
+import {SearchBar} from "react-native-elements";
 
 
 export default function UsersManagerTab() {
 
-    function onBlock(uid) {
-        return Alert.alert(
-            "Are your sure?",
-            "By pressing yes you confirm to block this user",
-            [
-                // The "Yes" button
-                {
-                    text: "Yes",
-                    onPress: async () => {
-
-                        const userRef = doc(db, "users", uid);
-                        await updateDoc(userRef, {
-                            blocked: true
-                        })
-
-                            .then(() => {
-                                console.log('Successfully blocked user');
-                            })
-                            .catch((error) => {
-                                console.log('Error blocking user:', error);
-                            });
-                    },
-                },
-                // The "No" button
-                // Does nothing but dismiss the dialog when tapped
-                {
-                    text: "No",
-                },
-            ]
-        );
-    }
-
-    function onUnBlock(uid) {
-        return Alert.alert(
-            "Are your sure?",
-            "By pressing yes you confirm to Unblock this user",
-            [
-                // The "Yes" button
-                {
-                    text: "Yes",
-                    onPress: async () => {
-
-                        const userRef = doc(db, "users", uid);
-                        await updateDoc(userRef, {
-                            blocked: false
-                        })
-
-                            .then(() => {
-                                console.log('Successfully unblocked user');
-                            })
-                            .catch((error) => {
-                                console.log('Error unblocking user:', error);
-                            });
-                    },
-                },
-                // The "No" button
-                // Does nothing but dismiss the dialog when tapped
-                {
-                    text: "No",
-                },
-            ]
-        );
-    }
-
-
-    const [usersList, setUsersList] = useState(null);
+    const [usersList, setUsersList] = useState([]);
+    const [arrayHolder, setArrayHolder] = useState([]);
+    const [search, setSearch] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         // listener of firebase DB, call getFromCol() in case the data has changed
         const unsubUsers = onSnapshot(
             collection(db, "users"),
             () => {
-                getFromCol("users", setUsersList);
+                getFromCol("users", setUsersList)
+                    .then((res) => {
+                        setArrayHolder(res);
+                        setIsLoading(false);
+                    });
             }
         );
     }, []);
+
+    const blockChanged = (uid, toBlock) => {
+        return Alert.alert(
+            "Are your sure?",
+            'By pressing yes you confirm to' + (!toBlock ? 'un' : '') + ' block this user',
+            [
+                // The "Yes" button
+                {
+                    text: "Yes",
+                    onPress: async () => {
+                        const userRef = doc(db, "users", uid);
+                        await updateDoc(userRef, {
+                            blocked: toBlock
+                        })
+                            .then(() => {
+                            })
+                            .catch((error) => {
+                                console.log('Error blocking / un-blocking user:', error);
+                            });
+                    },
+                },
+                // The "No" button
+                // Does nothing but dismiss the dialog when tapped
+                {
+                    text: "No",
+                },
+            ]
+        );
+    }
+
+    const searchFilterFunction = (text) => {
+        //passing the inserted text in textinput
+        const newData = arrayHolder.filter(function (item) {
+            //applying filter for the inserted text in search bar
+            const mailText = item.mail ? item.mail.toUpperCase() : ''.toUpperCase();
+            const nameText = item.name ? item.name.toUpperCase() : ''.toUpperCase();
+            const itemData = mailText + nameText;
+            const textData = text.toUpperCase();
+            return itemData.indexOf(textData) > -1;
+        });
+        setUsersList(newData);
+        setSearch(text);
+    }
+
 
     const renderRow = ({item: {id, mail, name, blocked = false}}) => {
         return (
@@ -101,13 +88,11 @@ export default function UsersManagerTab() {
                     style={styles.icon}
                     onPress={() => {
                         if (blocked) {
-                            onUnBlock(id)
+                            blockChanged(id, false);
                         } else {
-                            onBlock(id)
+                            blockChanged(id, true);
                         }
-                    }
-
-                    }
+                    }}
                 >
                     <MaterialCommunityIcons
                         name={blocked ? 'check-bold' : "block-helper"}
@@ -115,17 +100,37 @@ export default function UsersManagerTab() {
                         color={colors.primary}
                     />
                 </TouchableOpacity>
-
-
             </View>
 
         );
     };
+
+
+    if (isLoading) {
+        // Loading View while data is loading
+        return (
+            <View style={{flex: 1, paddingTop: 20}}>
+                <ActivityIndicator/>
+            </View>
+        );
+    }
     return (
         <SafeAreaView style={{marginTop: 10}}>
+            <SearchBar
+                round
+                searchIcon={{size: 24}}
+                onChangeText={text => searchFilterFunction(text)}
+                onClear={() => searchFilterFunction('')}
+                placeholder="Search User Here..."
+                value={search}
+                inputContainerStyle={{backgroundColor: 'white', borderWidth: 1}}
+
+            />
             {usersList &&
-            <FlatList data={usersList} renderItem={renderRow}/>
-            }
+            <FlatList data={usersList}
+                      renderItem={renderRow}
+                      enableEmptySections={true}
+            />}
         </SafeAreaView>
     );
 }
