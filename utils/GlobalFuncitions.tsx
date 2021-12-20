@@ -101,7 +101,6 @@ export const getStartAndEndTime = () => {
 };
 
 export const onCall = (phone) => {
-    console.log("callNumber ----> ", phone);
     let phoneNumber = phone;
     if (Platform.OS !== "android") {
         phoneNumber = `telprompt:${phone}`;

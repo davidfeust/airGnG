@@ -24,7 +24,7 @@ export default function HomeTab({navigation}) {
             <CustomButton text={"Logout"} onPress={handleSignOut}/>
             <CustomButton text={"Edit your profile"} onPress={() => navigation.push('UserDetailsScreen')}/>
             {user.admin &&
-            <Text style={{color: "red", fontSize:28}}>You have an admin privilege</Text>
+            <Text style={{color: "red", fontSize:24}}>You have an admin privilege</Text>
             }
         </View>
     );

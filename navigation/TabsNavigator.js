@@ -45,9 +45,11 @@ export default function TabsNavigator() {
                 }}
             />
             <Tab.Screen
-                name="MyStations"
+                name="My Stations"
                 component={MyStationsTab}
                 options={{
+                    headerShown: true,
+                    headerStatusBarHeight: 35,
                     tabBarLabel: "My Stations",
                     tabBarIcon: ({color, size}) => (
                         <MaterialCommunityIcons name="ev-station" color={color} size={size}/>
@@ -56,9 +58,11 @@ export default function TabsNavigator() {
             />
             {user.admin ?
                 <Tab.Screen
-                    name="UsersManagerTab"
+                    name="Users Manager"
                     component={UsersManagerTab}
                     options={{
+                        headerShown: true,
+                        headerStatusBarHeight: 35,
                         tabBarLabel: "Users Manager",
                         tabBarIcon: ({color, size}) => (
                             <MaterialCommunityIcons
@@ -71,9 +75,11 @@ export default function TabsNavigator() {
                 />
                 :
                 <Tab.Screen
-                    name="MyOrders"
+                    name="My Orders"
                     component={MyOrdersTab}
                     options={{
+                        headerShown: true,
+                        headerStatusBarHeight: 35,
                         tabBarLabel: "My Orders",
                         tabBarIcon: ({color, size}) => (
                             <MaterialCommunityIcons

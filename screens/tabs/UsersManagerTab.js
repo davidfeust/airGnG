@@ -8,6 +8,7 @@ import {colors} from "../../assets/styles/colors";
 
 
 export default function UsersManagerTab() {
+
     function onBlock(uid) {
         return Alert.alert(
             "Are your sure?",
@@ -88,11 +89,13 @@ export default function UsersManagerTab() {
     const renderRow = ({item: {id, mail, name, blocked = false}}) => {
         return (
             <View style={styles.row}>
-                <View>
-                    <Text>{mail}</Text>
-                    <Text>{name}</Text>
+                <View style={{flexDirection: 'row'}}>
+                    <MaterialCommunityIcons name={'account'} size={30} style={styles.icon}/>
+                    <View>
+                        <Text>{name}</Text>
+                        <Text style={{fontWeight: 'bold', fontSize: 16}}>{mail}</Text>
+                    </View>
                 </View>
-
                 {/* block user icon */}
                 <TouchableOpacity
                     style={styles.icon}
@@ -107,7 +110,7 @@ export default function UsersManagerTab() {
                     }
                 >
                     <MaterialCommunityIcons
-                        name={ blocked ? 'check-bold' : "block-helper"}
+                        name={blocked ? 'check-bold' : "block-helper"}
                         size={22}
                         color={colors.primary}
                     />
@@ -119,7 +122,7 @@ export default function UsersManagerTab() {
         );
     };
     return (
-        <SafeAreaView style={{marginTop: 50}}>
+        <SafeAreaView style={{marginTop: 10}}>
             {usersList &&
             <FlatList data={usersList} renderItem={renderRow}/>
             }
@@ -139,6 +142,8 @@ const styles = StyleSheet.create({
         marginVertical: 5
     },
     icon: {
-        marginHorizontal: 7
+        marginHorizontal: 7,
+        justifyContent: 'center',
+        alignSelf: 'center',
     }
 });
