@@ -26,6 +26,8 @@ export const MyOrdersProvider = ({ children }) => {
     //     }
     // );
     const updateMyOrders = async () => {
+        console.log("hi");
+
         const ordersIds = await getDoc(doc(db, "users", user.uid)).then(
             (d) => d.data().orders
         );
@@ -41,7 +43,12 @@ export const MyOrdersProvider = ({ children }) => {
             setMyOrders([]);
         }
     };
-    const unsubMyOrders = onSnapshot(collection(db, "orders"), updateMyOrders);
+    useEffect(() => {
+        const unsubMyOrders = onSnapshot(
+            collection(db, "orders"),
+            updateMyOrders
+        );
+    }, []);
 
     return (
         <myOrdersContext.Provider value={{ myOrders, updateMyOrders }}>

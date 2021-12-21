@@ -45,11 +45,13 @@ export default function SearchStationTab({ navigation }) {
         if (!selectedId || !flatList) {
             return;
         }
-        const index = stations.findIndex((card) => card.id === selectedId);
+        const index = publishedStations.findIndex(
+            (card) => card.id === selectedId
+        );
 
         flatList.current.scrollToIndex({ index, animated: true });
 
-        const selectedPlace = stations[index];
+        const selectedPlace = publishedStations[index];
         const region = {
             latitude: selectedPlace.cords.lat,
             longitude: selectedPlace.cords.lng,
@@ -93,7 +95,7 @@ export default function SearchStationTab({ navigation }) {
     const viewConfig = useRef({
         itemVisiblePercentThreshold: 70,
         waitForInteraction: true,
-        minimumViewTime: stations.length * 60,
+        minimumViewTime: publishedStations.length * 60,
     });
     const onViewChanged = useRef(({ viewableItems }) => {
         if (viewableItems.length > 0) {
