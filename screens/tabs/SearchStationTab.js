@@ -1,14 +1,23 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
-import {Animated, Dimensions, FlatList, Platform, StyleSheet, TouchableOpacity, View,} from "react-native";
-import {publicStationsContext} from "../../providers/PublicStationsProvider";
-import MapView, {Marker} from "react-native-maps";
-import {globalStyles} from "../../assets/styles/globalStyles";
-import {Image} from "react-native-elements";
-import {colors} from "../../assets/styles/colors";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import {
+    Animated,
+    Dimensions,
+    FlatList,
+    Platform,
+    StyleSheet,
+    TouchableOpacity,
+    View,
+} from "react-native";
+import { publicStationsContext } from "../../providers/PublicStationsProvider";
+import MapView, { Marker } from "react-native-maps";
+import { globalStyles } from "../../assets/styles/globalStyles";
+import { Image } from "react-native-elements";
+import { colors } from "../../assets/styles/colors";
 import MiniCard from "../../components/MiniCard";
 import MaxiCard from "../../components/MaxiCard";
 import AddressAutocomplete from "../../components/AddressAutocomplete";
-import {MaterialCommunityIcons} from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AuthenticatedUserContext } from "../../providers/AuthenticatedUserProvider";
 
 /**
  * create a page with all available stations in the DB,
@@ -19,7 +28,7 @@ import {MaterialCommunityIcons} from "@expo/vector-icons";
  * @returns <ScrollView>
  */
 
-export default function SearchStationTab({navigation}) {
+export default function SearchStationTab({ navigation }) {
     //for the autocomplete function
     const googleAddress = useRef();
     const [cords, setCords] = useState(null);
@@ -27,18 +36,18 @@ export default function SearchStationTab({navigation}) {
 
     const stretchAnim = useRef(new Animated.Value(100)).current; // Initial
     const [showMaxiCard, setShowMaxiCard] = useState(false);
-    const {stations} = useContext(publicStationsContext);
+    const { stations } = useContext(publicStationsContext);
     const [selectedId, setSelectedId] = useState(null);
+    const [publishedStations, setPublishedStations] = useState(stations);
+    const { user } = useContext(AuthenticatedUserContext);
 
     useEffect(() => {
         if (!selectedId || !flatList) {
             return;
         }
-        const index = stations.findIndex(
-            (card) => card.id === selectedId
-        );
+        const index = stations.findIndex((card) => card.id === selectedId);
 
-        flatList.current.scrollToIndex({index, animated: true});
+        flatList.current.scrollToIndex({ index, animated: true });
 
         const selectedPlace = stations[index];
         const region = {
@@ -64,13 +73,19 @@ export default function SearchStationTab({navigation}) {
             // ex - if you will look for israel in the previous you will get just one dot(maybe in the center)
             // but in the new version you will get according to difference in north-east and south-west
             if (viewPort != null) {
-                const {northeast, southwest} = viewPort;
+                const { northeast, southwest } = viewPort;
                 region.latitudeDelta = (northeast.lat - southwest.lat) * 0.5;
                 region.longitudeDelta = (northeast.lng - southwest.lng) * 0.5;
             }
             map.current.animateToRegion(region);
         }
     }, [cords]);
+
+    useEffect(() => {
+        setPublishedStations(
+            stations.filter((s) => s.published && s.owner_id !== user.uid)
+        );
+    }, [stations]);
 
     const map = useRef();
     const flatList = useRef();
@@ -80,7 +95,7 @@ export default function SearchStationTab({navigation}) {
         waitForInteraction: true,
         minimumViewTime: stations.length * 60,
     });
-    const onViewChanged = useRef(({viewableItems}) => {
+    const onViewChanged = useRef(({ viewableItems }) => {
         if (viewableItems.length > 0) {
             const selectedPlace = viewableItems[0].item;
             setSelectedId(selectedPlace.id);
@@ -111,7 +126,7 @@ export default function SearchStationTab({navigation}) {
                 <MaterialCommunityIcons
                     name={"magnify"}
                     size={22}
-                    style={{alignSelf: "center", marginRight: 20}}
+                    style={{ alignSelf: "center", marginRight: 20 }}
                 />
             </View>
             <MapView
@@ -124,7 +139,7 @@ export default function SearchStationTab({navigation}) {
                 }}
                 style={styles.map}
             >
-                {stations.map((card) => (
+                {publishedStations.map((card) => (
                     <Marker
                         key={card.id}
                         title={card.address}
@@ -148,17 +163,25 @@ export default function SearchStationTab({navigation}) {
                     </Marker>
                 ))}
             </MapView>
-            <View style={{position: "absolute", bottom: 15}}>
+            <View style={{ position: "absolute", bottom: 15 }}>
                 <FlatList
                     ref={flatList}
-                    data={stations}
+                    data={publishedStations}
                     renderItem={({
-                                     item: {name, address, price, image, time_slots, id, phone},
-                                 }) => (
+                        item: {
+                            owner_id,
+                            address,
+                            price,
+                            image,
+                            time_slots,
+                            id,
+                            phone,
+                        },
+                    }) => (
                         <TouchableOpacity onPress={onSelectingCard}>
                             {showMaxiCard ? (
                                 <MaxiCard
-                                    owner={name}
+                                    owner_id={owner_id}
                                     address={address}
                                     price={price}
                                     image={image}
@@ -170,14 +193,14 @@ export default function SearchStationTab({navigation}) {
                                 />
                             ) : (
                                 <MiniCard
-                                    owner={name}
+                                    owner={owner_id}
                                     address={address}
                                     price={price}
                                     image={image}
                                     id={id}
                                     key={id}
                                     style={[
-                                        {height: 100},
+                                        { height: 100 },
                                         globalStyles.mini_card,
                                     ]}
                                 />
@@ -246,7 +269,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         padding: 0,
         shadowColor: "#ccc",
-        shadowOffset: {width: 0, height: 3},
+        shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.5,
         shadowRadius: 5,
         elevation: 10,

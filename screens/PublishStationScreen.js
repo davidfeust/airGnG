@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import React, { useEffect, useState } from "react";
+import { ScrollView, Text, View } from "react-native";
 import CustomDateManager from "../components/CustomDateManager";
-import {globalStyles} from "../assets/styles/globalStyles";
-import {getStartAndEndTime} from "../utils/GlobalFuncitions";
+import { globalStyles } from "../assets/styles/globalStyles";
+import { getStartAndEndTime } from "../utils/GlobalFuncitions";
 import CustomButton from "../components/CustomButton";
-import {db} from '../config/firebase';
-import {doc, getDoc, updateDoc} from "firebase/firestore";
+import { db } from "../config/firebase";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 
-export default function PublishStationScreen({route, navigation}) {
+export default function PublishStationScreen({ route, navigation }) {
     const [timeSlots, setTimeSlots] = useState([]);
     const [processing, setProcessing] = useState(false);
 
@@ -21,9 +21,9 @@ export default function PublishStationScreen({route, navigation}) {
         temp = temp.map((slot) => ({
             start: new Date(slot.start.toDate()),
             end: new Date(slot.end.toDate()),
-        }))
+        }));
         if (temp.length === 0) {
-            temp.push(getStartAndEndTime())
+            temp.push(getStartAndEndTime());
         }
         setTimeSlots(temp);
     }, []);
@@ -33,7 +33,8 @@ export default function PublishStationScreen({route, navigation}) {
 
         const stationRef = doc(db, "stations", route.params.station_id);
         await updateDoc(stationRef, {
-            time_slots: timeSlots
+            time_slots: timeSlots,
+            published: true,
         })
             .then(() => {
                 setProcessing(false);
@@ -43,10 +44,9 @@ export default function PublishStationScreen({route, navigation}) {
     };
 
     return (
-        <View style={[globalStyles.container,]}>
+        <View style={[globalStyles.container]}>
             <ScrollView>
-                <View style={[globalStyles.container, {paddingVertical: 70}]}>
-
+                <View style={[globalStyles.container, { paddingVertical: 70 }]}>
                     <Text style={globalStyles.title}>Publish This Station</Text>
                     {/* Time slots */}
                     <CustomDateManager
@@ -54,10 +54,13 @@ export default function PublishStationScreen({route, navigation}) {
                         setTimeSlots={setTimeSlots}
                     />
 
-                    <CustomButton text={'Publish'} onPress={onPublish} processing={processing}/>
+                    <CustomButton
+                        text={"Publish"}
+                        onPress={onPublish}
+                        processing={processing}
+                    />
                 </View>
             </ScrollView>
         </View>
-
     );
 }

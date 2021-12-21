@@ -1,14 +1,14 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker"; // docs: https://www.npmjs.com/package/react-native-dropdown-picker
 
 function CustomDropDown({
-                            items,
-                            setItems,
-                            value,
-                            setValue,
-                            placeholder,
-                            containerStyle,
-                        }) {
+    items,
+    setItems,
+    value,
+    setValue,
+    placeholder,
+    containerStyle,
+}) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -20,7 +20,7 @@ function CustomDropDown({
             setValue={setValue}
             setItems={setItems}
             placeholder={placeholder}
-            containerStyle={[{alignSelf: "flex-start"}, containerStyle]}
+            containerStyle={[{ alignSelf: "flex-start" }, containerStyle]}
         />
     );
 }

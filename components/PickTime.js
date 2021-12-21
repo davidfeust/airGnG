@@ -1,23 +1,22 @@
-import {MaterialCommunityIcons} from "@expo/vector-icons";
-import React, {useState} from "react";
-import {Platform, Text, TouchableOpacity, View} from "react-native";
-import {colors} from "../assets/styles/colors";
-import {dateToString} from "../utils/GlobalFuncitions";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { Platform, Text, TouchableOpacity, View } from "react-native";
+import { colors } from "../assets/styles/colors";
+import { dateToString } from "../utils/GlobalFuncitions";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-const PickTime = ({set, time, identifyRange, index, minTime = null}) => {
-
+const PickTime = ({ set, time, identifyRange, index, minTime = null }) => {
     const [mode, setMode] = useState("date");
     const [show, setShow] = useState(false);
 
     const onChange = (event, selectedDate) => {
-        if (event.type === 'dismissed') {
+        if (event.type === "dismissed") {
             return;
         }
         setShow(Platform.OS === "ios");
         if (mode === "date") {
             const currentDate = selectedDate || time;
-            if (identifyRange === 'start') {
+            if (identifyRange === "start") {
                 set(index, currentDate, null);
             } else {
                 set(index, null, currentDate);
@@ -26,13 +25,12 @@ const PickTime = ({set, time, identifyRange, index, minTime = null}) => {
             setShow(Platform.OS !== "ios");
         } else {
             const currentDate = selectedDate || time;
-            if (identifyRange === 'start') {
+            if (identifyRange === "start") {
                 set(index, currentDate, null);
             } else {
                 set(index, null, currentDate);
             }
         }
-        // date.getDate !== null ? showTimepicker : null;
     };
 
     const showMode = (currentMode) => {
@@ -46,13 +44,15 @@ const PickTime = ({set, time, identifyRange, index, minTime = null}) => {
 
     return (
         <View>
-            <View style={{
-                width: '100%',
-                alignItems: "center",
-                paddingHorizontal: 10,
-                paddingVertical: 4,
-                justifyContent: 'center'
-            }}>
+            <View
+                style={{
+                    width: "100%",
+                    alignItems: "center",
+                    paddingHorizontal: 10,
+                    paddingVertical: 4,
+                    justifyContent: "center",
+                }}
+            >
                 <View
                     style={{
                         flexDirection: "row",
@@ -60,20 +60,22 @@ const PickTime = ({set, time, identifyRange, index, minTime = null}) => {
                         width: "100%",
                     }}
                 >
-                    <Text style={{alignSelf: 'center'}}>
-                        {identifyRange}:{'\t\t'} {time ? dateToString(time) : ''}
+                    <Text style={{ alignSelf: "center" }}>
+                        {identifyRange}:{"\t\t"}{" "}
+                        {time ? dateToString(time) : ""}
                     </Text>
-                    <TouchableOpacity onPress={showDatepicker}>
-                        <MaterialCommunityIcons
-                            name="calendar"
-                            color={colors.primary}
-                            size={30}
-                        />
-                    </TouchableOpacity>
+                    {set && (
+                        <TouchableOpacity onPress={showDatepicker}>
+                            <MaterialCommunityIcons
+                                name="calendar"
+                                color={colors.primary}
+                                size={30}
+                            />
+                        </TouchableOpacity>
+                    )}
                 </View>
-
             </View>
-            {show && (
+            {show && set && (
                 <DateTimePicker
                     testID="dateTimePicker"
                     value={time}
