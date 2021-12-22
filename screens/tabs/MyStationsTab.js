@@ -25,7 +25,7 @@ export default function MyStationsTab({navigation}) {
     const [myStations, setMyStations] = useState([])
 
     useEffect(() => {
-        //give the admin user all the stations  
+        //give the admin user all the stations
         if (user.admin) {
             setMyStations(stations)
         } else {
@@ -112,7 +112,7 @@ export default function MyStationsTab({navigation}) {
 
 const styles = StyleSheet.create({
     plus: {
-        backgroundColor: colors.secondary,
+        backgroundColor: colors.primary,
         alignContent: "center",
         justifyContent: "center",
         width: 60,
@@ -122,5 +122,6 @@ const styles = StyleSheet.create({
         bottom: 20,
         right: 20,
         zIndex: 2,
+        elevation: 5
     },
 });
