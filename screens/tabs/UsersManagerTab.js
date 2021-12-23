@@ -22,7 +22,9 @@ export default function UsersManagerTab() {
             () => {
                 getFromCol("users", setUsersList)
                     .then((res) => {
-                        setArrayHolder(res);
+                        const filter = res.filter((item) => item['admin'] === undefined);
+                        setUsersList(filter);
+                        setArrayHolder(filter);
                         setIsLoading(false);
                     });
             }
@@ -115,7 +117,7 @@ export default function UsersManagerTab() {
         );
     }
     return (
-        <SafeAreaView style={{marginTop: 10}}>
+        <SafeAreaView style={{marginTop: 10, marginBottom: 65}}>
             <SearchBar
                 round
                 searchIcon={{size: 24}}

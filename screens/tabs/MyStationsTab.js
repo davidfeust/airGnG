@@ -39,8 +39,8 @@ export default function MyStationsTab({navigation}) {
 
     const onDelete = (id) => {
         console.log(orders);
-// TODO:  add condition that check if someone allrady invited that station and if dose' cancel the deleat action
-// i made a order provider
+        // TODO:  add condition that check if someone allrady invited that station and if dose' cancel the deleat action
+        // i made a order provider
         return Alert.alert(
             "Are your sure?",
             "By pressing yes you confirm to remove this station permanently",
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         width: 60,
         height: 60,
-        borderRadius: 30,
+        borderRadius: 15,
         position: "absolute",
         bottom: 20,
         right: 20,

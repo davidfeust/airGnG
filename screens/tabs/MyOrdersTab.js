@@ -1,22 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Alert, ScrollView, Text, View } from "react-native";
-import {
-    arrayRemove,
-    collection,
-    deleteDoc,
-    doc,
-    getDocs,
-    query,
-    updateDoc,
-    where,
-} from "firebase/firestore";
-import { db } from "../../config/firebase";
-import { myOrdersContext } from "../../providers/MyOrdersProvider";
-import { publicStationsContext } from "../../providers/PublicStationsProvider";
-import MyStationCard from "../../components/MyStationCard";
-import { globalStyles } from "../../assets/styles/globalStyles";
+import React, {useContext, useState} from "react";
+import {Alert, ScrollView, Text, View} from "react-native";
+import {arrayRemove, deleteDoc, doc, updateDoc,} from "firebase/firestore";
+import {db} from "../../config/firebase";
+import {myOrdersContext} from "../../providers/MyOrdersProvider";
+import {publicStationsContext} from "../../providers/PublicStationsProvider";
+import {globalStyles} from "../../assets/styles/globalStyles";
 import CustomButton from "../../components/CustomButton";
-import { AuthenticatedUserContext } from "../../providers/AuthenticatedUserProvider";
+import {AuthenticatedUserContext} from "../../providers/AuthenticatedUserProvider";
 import MyOrderCard from "../../components/MyOrderCard";
 
 /**
@@ -24,10 +14,9 @@ import MyOrderCard from "../../components/MyOrderCard";
  * (a subscribed station is a station that the user picked from SearchStationTab.js)
  * @returns <ScrollView>
  */
-export default function MyOrdersTab({ navigation }) {
-    const { myOrders, updateMyOrders } = useContext(myOrdersContext);
-    const { stations } = useContext(publicStationsContext);
-    const { user } = useContext(AuthenticatedUserContext);
+export default function MyOrdersTab({navigation}) {
+    const {myOrders, updateMyOrders} = useContext(myOrdersContext);
+    const {user} = useContext(AuthenticatedUserContext);
 
     const [myOrdersCards, setMyOrdersCards] = useState([]); // useState is needed because cards is directy connected to the screen
 
@@ -62,14 +51,14 @@ export default function MyOrdersTab({ navigation }) {
             <ScrollView>
                 {myOrders.map(
                     ({
-                        date_of_sub,
-                        payed,
-                        reservation,
-                        station_id,
-                        sub_car_type,
-                        sub_id,
-                        id,
-                    }) => (
+                         date_of_sub,
+                         payed,
+                         reservation,
+                         station_id,
+                         sub_car_type,
+                         sub_id,
+                         id,
+                     }) => (
                         <MyOrderCard
                             date_of_sub={date_of_sub}
                             payed={payed}
