@@ -39,10 +39,11 @@ export default function CustomDateManager({setTimeSlots, timeSlots}) {
             }
             temp[key].end = e;
         }
+        temp[key].ordered = false; // add to know if the owner can cancle the time/station
         setTimeSlots(temp);
     }
 
-    return <View style={{width: '100%'}}>
+    return <View style={{width: '100%' }}>
         {timeSlots ? timeSlots.map((ts, key) => (
             <View key={key} style={{
                 flexDirection: "row",
