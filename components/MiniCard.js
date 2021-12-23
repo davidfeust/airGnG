@@ -32,11 +32,12 @@ export default function MiniCard({
                     flexDirection: "column",
                     marginLeft: 10,
                     flex: 1,
+                    padding: 10
                 }}
             >
                 <Text style={{flexWrap: "wrap"}}>{address}</Text>
-                <Text>{owner} {price} nis</Text>
-                <Text></Text>
+                <Text>{price} NIS</Text>
+                <Text/>
 
             </View>
 

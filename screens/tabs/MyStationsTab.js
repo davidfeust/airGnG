@@ -25,7 +25,7 @@ export default function MyStationsTab({navigation}) {
     const [myStations, setMyStations] = useState([])
 
     useEffect(() => {
-        //give the admin user all the stations  
+        //give the admin user all the stations
         if (user.admin) {
             setMyStations(stations)
         } else {
@@ -39,8 +39,8 @@ export default function MyStationsTab({navigation}) {
 
     const onDelete = (id) => {
         console.log(orders);
-// TODO:  add condition that check if someone allrady invited that station and if dose' cancel the deleat action
-// i made a order provider
+        // TODO:  add condition that check if someone allrady invited that station and if dose' cancel the deleat action
+        // i made a order provider
         return Alert.alert(
             "Are your sure?",
             "By pressing yes you confirm to remove this station permanently",
@@ -112,15 +112,16 @@ export default function MyStationsTab({navigation}) {
 
 const styles = StyleSheet.create({
     plus: {
-        backgroundColor: colors.secondary,
+        backgroundColor: colors.primary,
         alignContent: "center",
         justifyContent: "center",
         width: 60,
         height: 60,
-        borderRadius: 30,
+        borderRadius: 15,
         position: "absolute",
         bottom: 20,
         right: 20,
         zIndex: 2,
+        elevation: 5
     },
 });

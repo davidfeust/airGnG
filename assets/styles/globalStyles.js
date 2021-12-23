@@ -29,6 +29,7 @@ export const globalStyles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         margin: 10,
+        elevation: 10,
     },
     in_bt: {
         color: "white",

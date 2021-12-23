@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {globalStyles} from "../assets/styles/globalStyles";
 import {Formik} from "formik";
@@ -14,11 +14,18 @@ export default function UserDetailsScreen({navigation}) {
 
     const {user, setUser} = useContext(AuthenticatedUserContext);
     const [processing, setProcessing] = useState(false);
-
-    const formValues = {
+    const [formValues, setFormValues] = useState({
         name: '',
         phone: '',
-    };
+    });
+
+    useEffect(() => {
+        setFormValues({
+            name: user.name,
+            phone: user.phone
+        })
+    }, [])
+
 
     const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
     const formSchema = yup.object({
@@ -46,6 +53,7 @@ export default function UserDetailsScreen({navigation}) {
                 initialValues={formValues}
                 onSubmit={values => onSave(values)}
                 validationSchema={formSchema}
+                enableReinitialize
             >
                 {
                     (formikProps) => (
