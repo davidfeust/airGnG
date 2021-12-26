@@ -9,35 +9,35 @@ export const MyOrdersProvider = ({children}) => {
     const {user} = useContext(AuthenticatedUserContext);
     const [myOrders, setMyOrders] = useState([]);
 
+
     const updateMyOrders = async () => {
         if (!user) {
             return;
         }
         getDoc(doc(db, "users", user.uid)).then(
             (d) => {
-                const ordersIds = d.data().orders
-                if (ordersIds.length > 0) {
+                if (d.data().orders.length > 0) {
                     const q = query(
                         collection(db, "orders"),
-                        where(documentId(), "in", ordersIds)
+                        where(documentId(), "in", d.data().orders)
                     );
                     getDocs(q).then((ds) => setMyOrders(ds.docs.map((d) => ({id: d.id, ...d.data()})))
                     ).catch(err => {
-                        console.error('###', err);
+                        console.error(err);
                     })
                 } else {
                     setMyOrders([]);
                 }
             }
         ).catch(err => {
-            console.error('***', err);
+            console.error(err);
             throw err;
         });
+
 
     };
 
     useEffect(() => {
-        console.log('$%')
         const unsubMyOrders = onSnapshot(
             collection(db, "orders"),
             updateMyOrders

@@ -1,14 +1,13 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
-import {Alert, Animated, ImageBackground, Text, TouchableOpacity, View,} from "react-native";
+import {Alert, Animated, ImageBackground, Text, View,} from "react-native";
 import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
 import {db} from "../config/firebase";
-import {addDoc, arrayUnion, collection, doc, updateDoc,} from "firebase/firestore";
-import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {colors} from "../assets/styles/colors";
+import {addDoc, arrayUnion, collection, doc, getDocs, query, updateDoc, where,} from "firebase/firestore";
 import CustomDropDown from "./CustomDropDown";
 import {dateRange, dateToString} from "../utils/GlobalFuncitions";
 import {myOrdersContext} from "../providers/MyOrdersProvider";
 import {Divider} from "react-native-elements";
+import CustomButton from "./CustomButton";
 
 export default function MaxiCard({
                                      owner_id,
@@ -29,10 +28,12 @@ export default function MaxiCard({
     const {user} = useContext(AuthenticatedUserContext);
     const {myOrders} = useContext(myOrdersContext);
     const [relatedOrders, setRelatedOrders] = useState([]);
+    const [processing, setProcessing] = useState(false);
 
     const onOrder = () => {
-        selectedStart && selectedEnd
-            ? addDoc(collection(db, "orders"), {
+        if (selectedStart && selectedEnd) {
+            setProcessing(true);
+            addDoc(collection(db, "orders"), {
                 sub_id: user.uid,
                 date_of_sub: new Date(),
                 reservation: {
@@ -49,14 +50,21 @@ export default function MaxiCard({
                     updateDoc(userRef, {
                         orders: arrayUnion(orderRef.id),
                     }).then(() => {
+                        setProcessing(false);
+                        //    TODO: navigate to myOrders
                     });
                 })
-                .catch((e) => console.error("Error adding document: ", e))
-            : Alert.alert("Error", "Please choose a date from the dropdown.", [
+                .catch((e) => {
+                    console.error("Error adding document: ", e);
+                    setProcessing(false);
+                });
+        } else {
+            Alert.alert("Error", "Please choose a date from the dropdown.", [
                 {
                     text: "Close",
                 },
             ]);
+        }
     };
 
     useEffect(() => {
@@ -76,20 +84,40 @@ export default function MaxiCard({
                     selectedTimeSlot.start.toDate(),
                     selectedTimeSlot.end.toDate(),
                     15
-                )
+                ).filter(dateItem =>
+                    !relatedOrders.some(
+                        ({start, end}) =>
+                            start <= dateItem && end > dateItem
+                    ))
             );
+
         }
+
     }, [selectedTimeSlot]);
 
     useEffect(() => {
-        setRelatedOrders(
-            myOrders
-                .filter((order) => order.station_id === id)
-                .map((order) => ({
-                    start: order.reservation.date_start.toDate(),
-                    end: order.reservation.date_finish.toDate(),
+        setSelectedDateRange(selectedDateRange.filter(
+            dateItem => !relatedOrders.some(
+                ({start, end}) =>
+                    // selected start is between old reservation slot
+                    (start <= selectedStart && end > selectedStart) ||
+                    // OR: date resembles wrapping slot encapsulating old timeslot already ordered by user
+                    (start >= selectedStart && dateItem >= end)
+            )
+        ))
+    }, [selectedStart])
+
+
+    useEffect(() => {
+        const q = query(collection(db, 'orders'), where('station_id', '==', id));
+        getDocs(q).then(snap => {
+            setRelatedOrders(
+                snap.docs.map((order) => ({
+                    start: order.data().reservation.date_start.toDate(),
+                    end: order.data().reservation.date_finish.toDate(),
                 }))
-        );
+            );
+        })
     }, [myOrders]);
 
     return (
@@ -112,11 +140,11 @@ export default function MaxiCard({
                     style={{width: 250, height: 150, alignSelf: "center"}}
                 />
 
-                <Text style={{flexWrap: "wrap", color: "red"}}>
+                <Text style={{flexWrap: "wrap", color: 'black', fontWeight: 'bold'}}>
                     {address}
                 </Text>
                 <Text>
-                    {phone} {price} nis
+                    {phone} {price} nis per hour
                 </Text>
 
                 {/*Choose a TimeSlot*/}
@@ -142,30 +170,13 @@ export default function MaxiCard({
                         <CustomDropDown
                             itemkey='key'
 
-                            items={selectedDateRange.map((date, index) => {
-                                if (
-                                    relatedOrders.some(
-                                        ({start, end}) =>
-                                            start <= date && end > date
-                                    )
-                                )
-                                    return {
-                                        label: dateToString(date),
-                                        value: date,
-                                        key: index,
+                            items={selectedDateRange.map((date, index) => ({
+                                label: dateToString(date),
+                                value: date,
+                                key: index,
 
-                                        containerStyle: {
-                                            backgroundColor: colors.invalid,
-                                        },
-                                        disabled: true,
-                                    };
-                                return {
-                                    label: dateToString(date),
-                                    value: date,
-                                    key: index,
+                            }))}
 
-                                };
-                            })}
                             setItems={setSelectedDateRange}
                             value={selectedStart}
                             setValue={setSelectedStart}
@@ -181,31 +192,14 @@ export default function MaxiCard({
                             items={selectedDateRange
                                 .filter((date) => date > selectedStart)
                                 .map((date, index) =>
-                                    relatedOrders.some(
-                                        ({start, end}) =>
-                                            (start <= selectedStart &&
-                                                end > selectedStart) ||
-                                            (start >= selectedStart &&
-                                                date >= end)
-                                    )
-                                        ? {
-                                            label: dateToString(date),
-                                            value: date,
-                                            key: index,
-
-                                            containerStyle: {
-                                                backgroundColor:
-                                                colors.invalid,
-                                            },
-                                            disabled: true,
-                                        }
-                                        : {
+                                    (
+                                        {
                                             label: dateToString(date),
                                             value: date,
                                             key: index,
 
                                         }
-                                )}
+                                    ))}
                             setItems={() => {
                             }}
                             value={selectedEnd}
@@ -216,34 +210,18 @@ export default function MaxiCard({
                     ) : null}
                 </View>
                 <Divider orientation="horizontal"/>
-                {selectedStart && selectedEnd ? (
-                    <View>
-                        <TouchableOpacity
-                            onPress={onOrder}
-                            style={{
-                                alignSelf: "center",
-                                flexDirection: "row",
-                                alignItems: "center",
-                                backgroundColor: colors.primary,
-                                borderRadius: 5,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    paddingHorizontal: 10,
-                                    color: "white",
-                                }}
-                            >
-                                order
-                            </Text>
-                            <MaterialCommunityIcons
-                                name="book"
-                                color={"white"}
-                                size={30}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                ) : null}
+
+                <View style={{alignItems: 'center'}}>
+                    <CustomButton text={"Order"} onPress={onOrder} disabled={!(selectedStart && selectedEnd)}
+                                  processing={processing}/>
+                </View>
+
+                {/*<MaterialCommunityIcons*/}
+                {/*    name="book"*/}
+                {/*    color={"blue"}*/}
+                {/*    size={30}*/}
+                {/*/>*/}
+
             </View>
         </Animated.View>
     );
