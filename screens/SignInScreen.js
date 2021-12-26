@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
     Keyboard,
     StyleSheet,
@@ -12,15 +12,15 @@ import {
     signInWithEmailAndPassword,
     sendPasswordResetEmail,
 } from "firebase/auth";
-import { auth } from "../config/firebase";
-import { globalStyles } from "../assets/styles/globalStyles";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {auth} from "../config/firebase";
+import {globalStyles} from "../assets/styles/globalStyles";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 import CustomButton from "../components/CustomButton";
-import { Formik } from "formik"; // to manage forms. docs: https://formik.org/docs/api/formik
+import {Formik} from "formik"; // to manage forms. docs: https://formik.org/docs/api/formik
 import * as yup from "yup"; // validation of forms. docs: https://www.npmjs.com/package/yup
-import { colors } from "../assets/styles/colors";
+import {colors} from "../assets/styles/colors";
 
-export default function SignInScreen(props) {
+export default function SignInScreen() {
     const formValues = {
         email: "",
         password: "",
@@ -38,8 +38,7 @@ export default function SignInScreen(props) {
         setProcessing(true);
         await signInWithEmailAndPassword(auth, email, password)
             //after 'then' function we will change the processing value in order to show the indicator
-            .then((userCredentials) => {
-                const user = userCredentials.user;
+            .then(() => {
                 setProcessing(false);
             })
             .catch((error) => {
@@ -47,13 +46,13 @@ export default function SignInScreen(props) {
                 setProcessing(false);
             });
     };
-    const forgotPassword = (Email, formikProps) => {
+    const forgotPassword = (Email) => {
         sendPasswordResetEmail(auth, Email, null)
             .then(() => {
                 alert(
                     "reset email sent to " +
-                        Email +
-                        "\nPlease check your email..."
+                    Email +
+                    "\nPlease check your email..."
                 );
                 console.log("reset email sent to " + Email);
             })
@@ -83,7 +82,7 @@ export default function SignInScreen(props) {
                          * @param formikProps
                          * @returns {JSX.Element}
                          */
-                        (formikProps) => {
+                            (formikProps) => {
                             return (
                                 <View
                                     style={{
@@ -103,9 +102,9 @@ export default function SignInScreen(props) {
                                         autoCompleteType={"email"}
                                         keyboardType={"email-address"}
                                     />
-                                    <Text style={{ color: colors.error }}>
+                                    <Text style={{color: colors.error}}>
                                         {formikProps.touched.email &&
-                                            formikProps.errors.email}
+                                        formikProps.errors.email}
                                     </Text>
 
                                     {/* View for password field to include eye button inside the field */}
@@ -119,7 +118,7 @@ export default function SignInScreen(props) {
                                             },
                                         ]}
                                     >
-                                        <View style={{ flex: 10 }}>
+                                        <View style={{flex: 10}}>
                                             <TextInput
                                                 onChangeText={formikProps.handleChange(
                                                     "password"
@@ -135,7 +134,7 @@ export default function SignInScreen(props) {
                                                 )}
                                             />
                                         </View>
-                                        <View style={{ flex: 1 }}>
+                                        <View style={{flex: 1}}>
                                             <TouchableOpacity
                                                 onPress={() =>
                                                     setShowPass(!showPass)
@@ -153,31 +152,26 @@ export default function SignInScreen(props) {
                                             </TouchableOpacity>
                                         </View>
                                     </View>
-                                    <Text style={{ color: "crimson" }}>
+                                    <Text style={{color: "crimson"}}>
                                         {formikProps.touched.password
                                             ? formikProps.errors.password
                                             : ""}
                                     </Text>
-                                    <Text style={{ color: "darkblue" }}>
-                                        forgot your password?
-                                    </Text>
-                                    
-                                    <CustomButton
-                                     text={"reset password!"}
-                                     style={{ marginTop: 10 }}
-                                     processing={processing}
-                                    
-                                    onPress={() => {
-                                            forgotPassword(
-                                                formikProps.values.email,
-                                                formikProps
-                                            );
+
+                                    <TouchableOpacity
+                                        style={{marginTop: 30}}
+                                        onPress={() => {
+                                            forgotPassword(formikProps.values.email);
                                         }}
                                     >
-                                    </CustomButton>
+                                        <Text style={{color: "darkblue", fontSize: 16}}>
+                                            Forgot your password? Reset now!
+                                        </Text>
+                                    </TouchableOpacity>
+
                                     <CustomButton
                                         text={"Login"}
-                                        style={{ marginTop: 60 }}
+                                        style={{marginTop: 50}}
                                         processing={processing}
                                         onPress={formikProps.handleSubmit}
                                         disabled={
