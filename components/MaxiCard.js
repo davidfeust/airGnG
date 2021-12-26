@@ -27,7 +27,7 @@ export default function MaxiCard({
     const [selectedEnd, setSelectedEnd] = useState(null);
     const card = useRef();
     const {user} = useContext(AuthenticatedUserContext);
-    const {myOrders, updateMyOrders} = useContext(myOrdersContext);
+    const {myOrders} = useContext(myOrdersContext);
     const [relatedOrders, setRelatedOrders] = useState([]);
 
     const onOrder = () => {
@@ -50,7 +50,6 @@ export default function MaxiCard({
                         orders: arrayUnion(orderRef.id),
                     }).then(() => {
                     });
-                    updateMyOrders();
                 })
                 .catch((e) => console.error("Error adding document: ", e))
             : Alert.alert("Error", "Please choose a date from the dropdown.", [
@@ -122,13 +121,14 @@ export default function MaxiCard({
 
                 {/*Choose a TimeSlot*/}
                 <CustomDropDown
+                    itemkey='key'
                     items={timeSlots.map((d, index) => ({
                         label:
                             dateToString(d.start.toDate()) +
                             "-" +
                             dateToString(d.end.toDate()),
                         value: d,
-                        key: Math.random().toString(),
+                        key: index,
                     }))}
                     setItems={() => {
                     }}
@@ -140,7 +140,9 @@ export default function MaxiCard({
                     {/*Choose a Starting time*/}
                     {selectedTimeSlot ? (
                         <CustomDropDown
-                            items={selectedDateRange.map((date) => {
+                            itemkey='key'
+
+                            items={selectedDateRange.map((date, index) => {
                                 if (
                                     relatedOrders.some(
                                         ({start, end}) =>
@@ -150,6 +152,8 @@ export default function MaxiCard({
                                     return {
                                         label: dateToString(date),
                                         value: date,
+                                        key: index,
+
                                         containerStyle: {
                                             backgroundColor: colors.invalid,
                                         },
@@ -158,6 +162,8 @@ export default function MaxiCard({
                                 return {
                                     label: dateToString(date),
                                     value: date,
+                                    key: index,
+
                                 };
                             })}
                             setItems={setSelectedDateRange}
@@ -170,9 +176,11 @@ export default function MaxiCard({
                     {/*Choose an Ending time*/}
                     {selectedStart ? (
                         <CustomDropDown
+                            itemkey='key'
+
                             items={selectedDateRange
                                 .filter((date) => date > selectedStart)
-                                .map((date) =>
+                                .map((date, index) =>
                                     relatedOrders.some(
                                         ({start, end}) =>
                                             (start <= selectedStart &&
@@ -183,6 +191,8 @@ export default function MaxiCard({
                                         ? {
                                             label: dateToString(date),
                                             value: date,
+                                            key: index,
+
                                             containerStyle: {
                                                 backgroundColor:
                                                 colors.invalid,
@@ -192,6 +202,8 @@ export default function MaxiCard({
                                         : {
                                             label: dateToString(date),
                                             value: date,
+                                            key: index,
+
                                         }
                                 )}
                             setItems={() => {

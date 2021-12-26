@@ -1,27 +1,27 @@
-import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { globalStyles } from "../assets/styles/globalStyles";
-import { dateToString, onCall } from "../utils/GlobalFuncitions";
-import { colors } from "../assets/styles/colors";
-import { Card } from "react-native-elements";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../config/firebase";
+import React, {useContext, useEffect, useState} from "react";
+import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
+import {globalStyles} from "../assets/styles/globalStyles";
+import {dateToString, onCall} from "../utils/GlobalFuncitions";
+import {colors} from "../assets/styles/colors";
+import {Card} from "react-native-elements";
+import {doc, getDoc} from "firebase/firestore";
+import {db} from "../config/firebase";
 import TimeSlot from "./TimeSlot";
-import { AuthenticatedUserContext } from "../providers/AuthenticatedUserProvider";
+import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
 
 export default function MyOrderCard({
-    date_of_sub,
-    payed,
-    reservation, // = { start_date:{firebase date type...} , finish_date:{firebase date type...}}
-    station_id,
-    sub_car_type,
-    sub_id,
-    order_id,
-    onCancel,
-}) {
+                                        date_of_sub,
+                                        payed,
+                                        reservation, // = { start_date:{firebase date type...} , finish_date:{firebase date type...}}
+                                        station_id,
+                                        sub_car_type,
+                                        sub_id,
+                                        order_id,
+                                        onCancel,
+                                    }) {
     //the order user details
-    const { user } = useContext(AuthenticatedUserContext);
+    const {user} = useContext(AuthenticatedUserContext);
 
     // stores the order's station details
     const [stationOrdered, setStationOrdered] = useState(null);
@@ -39,9 +39,9 @@ export default function MyOrderCard({
     useEffect(() => {
         // update owner details from db
         stationOrdered &&
-            getDoc(doc(db, "users", stationOrdered.owner_id)).then((d) => {
-                setStationOwner(d.data());
-            });
+        getDoc(doc(db, "users", stationOrdered.owner_id)).then((d) => {
+            setStationOwner(d.data());
+        });
     }, [stationOrdered]);
 
     return (
@@ -71,7 +71,7 @@ export default function MyOrderCard({
                         )}
                     </View>
 
-                    <Card.Divider orientation="horizontal" />
+                    <Card.Divider orientation="horizontal"/>
 
                     {/* reservation details */}
                     <TimeSlot
@@ -87,9 +87,9 @@ export default function MyOrderCard({
                     <Text>
                         price:{" "}
                         {((reservation.date_finish.toDate() -
-                            reservation.date_start.toDate()) /
+                                reservation.date_start.toDate()) /
                             36e5) *
-                            stationOrdered.price}{" "}
+                        stationOrdered.price}{" "}
                         nis
                     </Text>
 
@@ -98,7 +98,7 @@ export default function MyOrderCard({
 
                     {/* image */}
                     {stationOrdered.image !== undefined && (
-                        <Card.Image source={{ uri: stationOrdered.image }} />
+                        <Card.Image source={{uri: stationOrdered.image}}/>
                     )}
 
                     {/* buttons */}
@@ -118,8 +118,8 @@ export default function MyOrderCard({
                             </TouchableOpacity>
                         )}
 
-                        {/* PHONE // button to call the station owner */}
-                        {stationOwner.phone && (
+                        {/* PHONE button to call the station owner */}
+                        {stationOwner.phone ? (
                             <TouchableOpacity
                                 style={styles.icon}
                                 onPress={() => onCall(stationOwner.phone)}
@@ -133,7 +133,7 @@ export default function MyOrderCard({
                                     call the owner
                                 </Text>
                             </TouchableOpacity>
-                        )}
+                        ) : null}
                     </View>
                 </Card>
             )}

@@ -8,6 +8,7 @@ function CustomDropDown({
     setValue,
     placeholder,
     containerStyle,
+    itemkey
 }) {
     const [open, setOpen] = useState(false);
 
@@ -21,6 +22,7 @@ function CustomDropDown({
             setItems={setItems}
             placeholder={placeholder}
             containerStyle={[{ alignSelf: "flex-start" }, containerStyle]}
+            itemKey={itemkey}
         />
     );
 }

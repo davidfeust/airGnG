@@ -1,9 +1,8 @@
-import React, {useContext, useState} from "react";
+import React, {useContext} from "react";
 import {Alert, ScrollView, Text, View} from "react-native";
 import {arrayRemove, deleteDoc, doc, updateDoc,} from "firebase/firestore";
 import {db} from "../../config/firebase";
 import {myOrdersContext} from "../../providers/MyOrdersProvider";
-import {publicStationsContext} from "../../providers/PublicStationsProvider";
 import {globalStyles} from "../../assets/styles/globalStyles";
 import CustomButton from "../../components/CustomButton";
 import {AuthenticatedUserContext} from "../../providers/AuthenticatedUserProvider";
@@ -15,10 +14,8 @@ import MyOrderCard from "../../components/MyOrderCard";
  * @returns <ScrollView>
  */
 export default function MyOrdersTab({navigation}) {
-    const {myOrders, updateMyOrders} = useContext(myOrdersContext);
+    const {myOrders} = useContext(myOrdersContext);
     const {user} = useContext(AuthenticatedUserContext);
-
-    const [myOrdersCards, setMyOrdersCards] = useState([]); // useState is needed because cards is directy connected to the screen
 
     const onCancel = (order_id) => {
         return Alert.alert(
@@ -35,7 +32,7 @@ export default function MyOrdersTab({navigation}) {
                         updateDoc(doc(db, "users", user.uid), {
                             orders: arrayRemove(order_id),
                         });
-                        updateMyOrders();
+                        // updateMyOrders();
                     },
                 },
                 // The "No" button
@@ -74,21 +71,21 @@ export default function MyOrdersTab({navigation}) {
                 )}
             </ScrollView>
         );
-    } else {
-        return (
-            <View
-                style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    flex: 1,
-                }}
-            >
-                <Text style={globalStyles.subTitle}>No orders yet...</Text>
-                <CustomButton
-                    text={"Search Station"}
-                    onPress={() => navigation.navigate("SearchStationTab")}
-                />
-            </View>
-        );
     }
+    return (
+        <View
+            style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flex: 1,
+            }}
+        >
+            <Text style={globalStyles.subTitle}>No orders yet...</Text>
+            <CustomButton
+                text={"Search Station"}
+                onPress={() => navigation.navigate("SearchStationTab")}
+            />
+        </View>
+    );
+
 }

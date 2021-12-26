@@ -8,41 +8,36 @@ export const myOrdersContext = createContext([]);
 export const MyOrdersProvider = ({children}) => {
     const {user} = useContext(AuthenticatedUserContext);
     const [myOrders, setMyOrders] = useState([]);
-    const [userFromCollection, setUserFromCollection] = useState();
 
-    // const unsubUserFromCollection = onSnapshot(
-    //     doc(db, "users", user.uid),
-    //     (snap) => {
-    //         setUserFromCollection(snap.data());
-    //     }
-    // );
     const updateMyOrders = async () => {
         if (!user) {
             return;
         }
-        const ordersIds = await getDoc(doc(db, "users", user.uid)).then(
-            (d) => d.data().orders
+        getDoc(doc(db, "users", user.uid)).then(
+            (d) => {
+                const ordersIds = d.data().orders
+                if (ordersIds.length > 0) {
+                    const q = query(
+                        collection(db, "orders"),
+                        where(documentId(), "in", ordersIds)
+                    );
+                    getDocs(q).then((ds) => setMyOrders(ds.docs.map((d) => ({id: d.id, ...d.data()})))
+                    ).catch(err => {
+                        console.error('###', err);
+                    })
+                } else {
+                    setMyOrders([]);
+                }
+            }
         ).catch(err => {
             console.error('***', err);
             throw err;
         });
-        if (ordersIds.length > 0) {
-            const q = query(
-                collection(db, "orders"),
-                where(documentId(), "in", ordersIds)
-            );
-            getDocs(q).then((ds) =>
-                setMyOrders(ds.docs.map((d) => ({id: d.id, ...d.data()})))
-            ).catch(err => {
-                console.error('###', err);
-                throw err;
-            });
-        } else {
-            setMyOrders([]);
-        }
+
     };
 
     useEffect(() => {
+        console.log('$%')
         const unsubMyOrders = onSnapshot(
             collection(db, "orders"),
             updateMyOrders

@@ -13,9 +13,7 @@ export default function WrapProviders() {
         <AuthenticatedUserProvider>
             <PublicStationsProvider>
                 <MyOrdersProvider>
-                    {/*<OrdersProvider>*/}
                     <RootNavigator/>
-                    {/*</OrdersProvider>*/}
                 </MyOrdersProvider>
             </PublicStationsProvider>
         </AuthenticatedUserProvider>

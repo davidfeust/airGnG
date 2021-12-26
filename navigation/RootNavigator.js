@@ -1,18 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { ActivityIndicator, View } from "react-native";
-import { AuthenticatedUserContext } from "../providers/AuthenticatedUserProvider";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "../config/firebase";
+import React, {useContext, useEffect, useState} from "react";
+import {NavigationContainer} from "@react-navigation/native";
+import {ActivityIndicator, View} from "react-native";
+import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
+import {onAuthStateChanged} from "firebase/auth";
+import {auth, db} from "../config/firebase";
 import LoggedInStack from "./LoggedInStack";
 import AuthStack from "./AuthStack";
-import { doc, getDoc } from "firebase/firestore";
-import { myOrdersContext } from "../providers/MyOrdersProvider";
+import {doc, getDoc} from "firebase/firestore";
 
 export default function RootNavigator() {
-    const { user, setUser } = useContext(AuthenticatedUserContext);
+    const {user, setUser} = useContext(AuthenticatedUserContext);
     const [isLoading, setIsLoading] = useState(true);
-    const { updateMyOrders } = useContext(myOrdersContext);
 
     useEffect(() => {
         // onAuthStateChanged returns an unsubscriber
@@ -23,11 +21,11 @@ export default function RootNavigator() {
                 const docRef = doc(db, "users", authenticatedUser.uid);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
-                    setUser({ ...authenticatedUser, ...docSnap.data() });
+                    setUser({...authenticatedUser, ...docSnap.data()});
                 } else {
                     setUser(authenticatedUser);
                 }
-                updateMyOrders();
+                // updateMyOrders();
             } else {
                 setUser(null);
             }
@@ -44,13 +42,13 @@ export default function RootNavigator() {
                     alignItems: "center",
                 }}
             >
-                <ActivityIndicator size="large" />
+                <ActivityIndicator size="large"/>
             </View>
         );
     }
     return (
         <NavigationContainer>
-            {user ? <LoggedInStack /> : <AuthStack />}
+            {user ? <LoggedInStack/> : <AuthStack/>}
         </NavigationContainer>
     );
 }
