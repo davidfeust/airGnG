@@ -42,7 +42,7 @@ export default function ReservationCard({
     return (
         <View>
             {stationOrdered && subDetails && (
-                <Card>
+                <Card containerStyle={{borderRadius: 15}}>
                     {/* order date */}
                     <Card.Title>
                         ordered on: {dateToString(date_of_sub.toDate())}

@@ -47,7 +47,7 @@ export default function MyOrderCard({
     return (
         <View>
             {stationOrdered && stationOwner && (
-                <Card>
+                <Card containerStyle={{borderRadius: 15}}>
                     {/* address */}
                     <Card.Title>address: {stationOrdered.address}</Card.Title>
                     {/* order date */}
