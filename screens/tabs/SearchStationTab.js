@@ -7,6 +7,7 @@ import {
     StyleSheet,
     TouchableOpacity,
     View,
+    Text,
 } from "react-native";
 import { publicStationsContext } from "../../providers/PublicStationsProvider";
 import MapView, { Marker } from "react-native-maps";
@@ -18,6 +19,8 @@ import MaxiCard from "../../components/MaxiCard";
 import AddressAutocomplete from "../../components/AddressAutocomplete";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AuthenticatedUserContext } from "../../providers/AuthenticatedUserProvider";
+import SlidingUpPanel from "rn-sliding-up-panel";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 /**
  * create a page with all available stations in the DB,
@@ -34,12 +37,12 @@ export default function SearchStationTab({ navigation }) {
     const [cords, setCords] = useState(null);
     const [viewPort, setViewPort] = useState(null);
 
-    const stretchAnim = useRef(new Animated.Value(100)).current; // Initial
     const [showMaxiCard, setShowMaxiCard] = useState(false);
     const { stations } = useContext(publicStationsContext);
     const [selectedId, setSelectedId] = useState(null);
     const [publishedStations, setPublishedStations] = useState(stations);
     const { user } = useContext(AuthenticatedUserContext);
+    const slideUpPanel = useRef();
 
     useEffect(() => {
         if (!selectedId || !flatList) {
@@ -53,7 +56,7 @@ export default function SearchStationTab({ navigation }) {
 
         const selectedPlace = publishedStations[index];
         const region = {
-            latitude: selectedPlace.cords.lat,
+            latitude: selectedPlace.cords.lat - 0.005,
             longitude: selectedPlace.cords.lng,
             latitudeDelta: 0.02,
             longitudeDelta: 0.02,
@@ -89,6 +92,10 @@ export default function SearchStationTab({ navigation }) {
         );
     }, [stations]);
 
+    useEffect(() => {
+        slideUpPanel.current.show();
+    }, []);
+
     const map = useRef();
     const flatList = useRef();
 
@@ -105,13 +112,7 @@ export default function SearchStationTab({ navigation }) {
     });
 
     const onSelectingCard = (e) => {
-        setShowMaxiCard(!showMaxiCard);
-        Animated.timing(stretchAnim, {
-            toValue: 400,
-            duration: 500,
-            // isInteraction: true,
-            useNativeDriver: false,
-        }).start();
+        slideUpPanel.current.show();
     };
 
     return (
@@ -165,8 +166,15 @@ export default function SearchStationTab({ navigation }) {
                     </Marker>
                 ))}
             </MapView>
-            <View style={{ position: "absolute", bottom: 15 }}>
+
+            <SlidingUpPanel
+                draggableRange={{ top: 450, bottom: 100 }}
+                ref={(c) => (slideUpPanel.current = c)}
+                backdropOpacity={0.3}
+            >
                 <FlatList
+                    style={{ position: "absolute" }}
+                    keyExtractor={(item) => item.id}
                     ref={flatList}
                     data={publishedStations}
                     renderItem={({
@@ -180,8 +188,8 @@ export default function SearchStationTab({ navigation }) {
                             phone,
                         },
                     }) => (
-                        <TouchableOpacity onPress={onSelectingCard}>
-                            {showMaxiCard ? (
+                        <TouchableWithoutFeedback onPress={onSelectingCard}>
+                            <View style={styles.slide}>
                                 <MaxiCard
                                     owner_id={owner_id}
                                     address={address}
@@ -193,21 +201,8 @@ export default function SearchStationTab({ navigation }) {
                                     style={globalStyles.maxi_card_style}
                                     phone={phone}
                                 />
-                            ) : (
-                                <MiniCard
-                                    owner={owner_id}
-                                    address={address}
-                                    price={price}
-                                    image={image}
-                                    id={id}
-                                    key={id}
-                                    style={[
-                                        { height: 100 },
-                                        globalStyles.mini_card,
-                                    ]}
-                                />
-                            )}
-                        </TouchableOpacity>
+                            </View>
+                        </TouchableWithoutFeedback>
                     )}
                     horizontal
                     showsHorizontalScrollIndicator={false}
@@ -234,7 +229,8 @@ export default function SearchStationTab({ navigation }) {
                         index,
                     })}
                 />
-            </View>
+                {/* </View> */}
+            </SlidingUpPanel>
         </View>
     );
 }
@@ -276,5 +272,15 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         elevation: 10,
         zIndex: 3,
+    },
+    slide: {
+        flex: 1,
+        borderRadius: 15,
+        width: globalStyles.maxi_card_style.width,
+        backgroundColor: "white",
+        alignItems: "center",
+        justifyContent: "center",
+        margin: 10,
+        elevation: 10,
     },
 });

@@ -1,5 +1,5 @@
-import {StyleSheet} from "react-native";
-import {colors} from "./colors";
+import { StyleSheet } from "react-native";
+import { colors } from "./colors";
 
 export const globalStyles = StyleSheet.create({
     container: {
@@ -65,14 +65,13 @@ export const globalStyles = StyleSheet.create({
         backgroundColor: "white",
         borderRadius: 5,
     },
-    mini_card_image_style: {width: 200, height: 100, alignItems: "center"},
+    mini_card_image_style: { width: 200, height: 100, alignItems: "center" },
 
     maxi_card_style: {
         flex: 1,
-        marginHorizontal: 10,
-        alignItems: "center",
-        backgroundColor: "white",
+        margin: 10,
         width: 300,
-        elevation: 10,
+        height: 400,
+        padding: 10,
     },
 });

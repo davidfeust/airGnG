@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker"; // docs: https://www.npmjs.com/package/react-native-dropdown-picker
+import { StyleSheet } from "react-native";
 
 function CustomDropDown({
     items,
@@ -8,7 +9,7 @@ function CustomDropDown({
     setValue,
     placeholder,
     containerStyle,
-    itemkey
+    itemkey,
 }) {
     const [open, setOpen] = useState(false);
 
@@ -21,10 +22,19 @@ function CustomDropDown({
             setValue={setValue}
             setItems={setItems}
             placeholder={placeholder}
-            containerStyle={[{ alignSelf: "flex-start" }, containerStyle]}
+            containerStyle={[containerStyle, styles.dropDown]}
             itemKey={itemkey}
+            dropDownDirection="TOP"
         />
     );
 }
 
 export default CustomDropDown;
+
+const styles = StyleSheet.create({
+    dropDown: {
+        // justifyContent: "center",
+        // backgroundColor: "red",
+        marginVertical: 3,
+    },
+});
