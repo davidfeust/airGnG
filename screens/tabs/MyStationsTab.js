@@ -1,13 +1,12 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from "react-native";
-import {deleteDoc, doc} from "firebase/firestore";
+import {collection, deleteDoc, doc, getDocs, query, where} from "firebase/firestore";
 import {db} from "../../config/firebase";
 import MyStationCard from "../../components/MyStationCard";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import {colors} from "../../assets/styles/colors";
 import {publicStationsContext} from "../../providers/PublicStationsProvider";
 import {AuthenticatedUserContext} from "../../providers/AuthenticatedUserProvider";
-import {OrdersContext} from "../../providers/OrdersProvider";
 import {deleteObject, getStorage, ref} from "@firebase/storage";
 import {globalStyles} from "../../assets/styles/globalStyles";
 import CustomButton from "../../components/CustomButton";
@@ -20,7 +19,6 @@ import CustomButton from "../../components/CustomButton";
  */
 export default function MyStationsTab({navigation}) {
     const {user} = useContext(AuthenticatedUserContext);
-    const {orders} = useContext(OrdersContext);
     const {stations} = useContext(publicStationsContext);
     const [myStations, setMyStations] = useState([])
 
@@ -38,31 +36,37 @@ export default function MyStationsTab({navigation}) {
     };
 
     const onDelete = (id) => {
-        console.log(orders);
-        // TODO:  add condition that check if someone allrady invited that station and if dose' cancel the deleat action
-        // i made a order provider
-        return Alert.alert(
-            "Are your sure?",
-            "By pressing yes you confirm to remove this station permanently",
-            [
-                // The "Yes" button
-                {
-                    text: "Yes",
-                    onPress: async () => {
-                        await deleteDoc(doc(db, "stations", id));
+        const q = query(collection(db, 'orders'), where('station_id', '==', id));
+        getDocs(q).then(snap => {
+            if (snap.docs.length > 0) {
+                return Alert.alert(
+                    "someone invited your station!",
+                    "you should wait until the reservation will over...")
+            }
 
-                        const storgae = getStorage();
-                        deleteObject(ref(storgae, id + ".jpg")).catch(() => {
-                        })
+            return Alert.alert(
+                "Are your sure?",
+                "By pressing yes you confirm to remove this station permanently",
+                [
+                    // The "Yes" button
+                    {
+                        text: "Yes",
+                        onPress: async () => {
+                            await deleteDoc(doc(db, "stations", id));
+
+                            const storgae = getStorage();
+                            deleteObject(ref(storgae, id + ".jpg")).catch(() => {
+                            })
+                        },
                     },
-                },
-                // The "No" button
-                // Does nothing but dismiss the dialog when tapped
-                {
-                    text: "No",
-                },
-            ]
-        );
+                    // The "No" button
+                    // Does nothing but dismiss the dialog when tapped
+                    {
+                        text: "No",
+                    },
+                ]
+            );
+        })
     };
 
     if (myStations.length !== 0) {
@@ -94,6 +98,8 @@ export default function MyStationsTab({navigation}) {
                                 onEdit={onEdit}
                                 key={id}
                                 onGoToPublish={() => navigation.push("PublishStationScreen", {station_id: id})}
+                                onGoToReservation={() => navigation.push("ReservationFromMeScreen",
+                                    {station_id: id, station_image: image, station_address: address},)}
                             />
                         ))
                     }

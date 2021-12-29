@@ -52,6 +52,7 @@ export default function PublishStationScreen({ route, navigation }) {
                     <CustomDateManager
                         timeSlots={timeSlots}
                         setTimeSlots={setTimeSlots}
+                        station_id={route.params.station_id}
                     />
 
                     <CustomButton

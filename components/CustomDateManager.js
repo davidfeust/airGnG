@@ -5,10 +5,10 @@ import {colors} from "../assets/styles/colors";
 import TimeSlot from "./TimeSlot";
 import {getStartAndEndTime} from "../utils/GlobalFuncitions";
 
-export default function CustomDateManager({setTimeSlots, timeSlots}) {
-
+export default function CustomDateManager({setTimeSlots, timeSlots, station_id}) {
 
     const removeTimeSlot = (key) => {
+
         const newVal = timeSlots.filter((ts, idx) => key !== idx);
         setTimeSlots(newVal);
     };
@@ -43,7 +43,7 @@ export default function CustomDateManager({setTimeSlots, timeSlots}) {
         setTimeSlots(temp);
     }
 
-    return <View style={{width: '100%' }}>
+    return <View style={{width: '100%'}}>
         {timeSlots ? timeSlots.map((ts, key) => (
             <View key={key} style={{
                 flexDirection: "row",
@@ -54,7 +54,7 @@ export default function CustomDateManager({setTimeSlots, timeSlots}) {
             }}>
                 <TimeSlot index={key} start={timeSlots[key].start} end={timeSlots[key].end} set={inputHandler}/>
 
-                <TouchableOpacity onPress={() => removeTimeSlot(key)} disabled={timeSlots.length === 1}>
+                <TouchableOpacity onPress={() => removeTimeSlot(key)} disabled={timeSlots.length === 0}>
                     <MaterialCommunityIcons
                         name="minus-circle"
                         color={timeSlots.length !== 1 ? colors.primary : colors.invalid}

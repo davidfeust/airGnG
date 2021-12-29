@@ -19,15 +19,17 @@ import { Divider } from "react-native-elements";
 import CustomButton from "./CustomButton";
 
 export default function MaxiCard({
-    owner_id,
-    address,
-    timeSlots,
-    price,
-    image,
-    id,
-    style,
-    phone,
-}) {
+                                     goToMyOrdersTab,
+                                     owner_id,
+                                     address,
+                                     timeSlots,
+                                     price,
+                                     image,
+                                     id,
+                                     style,
+                                     phone,
+                                 }) {
+    const stretchAnim = useRef(new Animated.Value(100)).current; // Initial
     const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
     const [selectedDateRange, setSelectedDateRange] = useState([]);
     const [selectedStart, setSelectedStart] = useState(null);
@@ -57,8 +59,8 @@ export default function MaxiCard({
                     updateDoc(userRef, {
                         orders: arrayUnion(orderRef.id),
                     }).then(() => {
+                        goToMyOrdersTab();
                         setProcessing(false);
-                        //    TODO: navigate to myOrders
                     });
                 })
                 .catch((e) => {
@@ -110,11 +112,8 @@ export default function MaxiCard({
     }, [selectedStart]);
 
     useEffect(() => {
-        const q = query(
-            collection(db, "orders"),
-            where("station_id", "==", id)
-        );
-        getDocs(q).then((snap) => {
+        const q = query(collection(db, 'orders'), where('station_id', '==', id));
+        getDocs(q).then(snap => {
             setRelatedOrders(
                 snap.docs.map((order) => ({
                     start: order.data().reservation.date_start.toDate(),

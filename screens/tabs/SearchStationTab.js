@@ -17,7 +17,7 @@ import { colors } from "../../assets/styles/colors";
 import MiniCard from "../../components/MiniCard";
 import MaxiCard from "../../components/MaxiCard";
 import AddressAutocomplete from "../../components/AddressAutocomplete";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 import { AuthenticatedUserContext } from "../../providers/AuthenticatedUserProvider";
 import SlidingUpPanel from "rn-sliding-up-panel";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
@@ -152,7 +152,6 @@ export default function SearchStationTab({ navigation }) {
                         }}
                         tappable
                         onPress={() => setSelectedId(card.id)}
-                        // image={require("../assets/markers/basic_marker.png")}
                     >
                         <Image
                             source={require("../../assets/markers/basic_marker.png")}
@@ -200,6 +199,7 @@ export default function SearchStationTab({ navigation }) {
                                     key={id}
                                     style={globalStyles.maxi_card_style}
                                     phone={phone}
+                                    goToMyOrdersTab={() => navigation.navigate('MyOrdersTab')}
                                 />
                             </View>
                         </TouchableWithoutFeedback>
@@ -229,7 +229,6 @@ export default function SearchStationTab({ navigation }) {
                         index,
                     })}
                 />
-                {/* </View> */}
             </SlidingUpPanel>
         </View>
     );

@@ -21,7 +21,8 @@ export const MyOrdersProvider = ({children}) => {
                         collection(db, "orders"),
                         where(documentId(), "in", d.data().orders)
                     );
-                    getDocs(q).then((ds) => setMyOrders(ds.docs.map((d) => ({id: d.id, ...d.data()})))
+                    getDocs(q).then((ds) => setMyOrders(ds.docs.map((d) =>
+                        ({id: d.id, ...d.data()})))
                     ).catch(err => {
                         console.error(err);
                     })

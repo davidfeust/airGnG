@@ -9,12 +9,15 @@ import MyStationCard from "../components/MyStationCard";
 import MyStationsTab from "../screens/tabs/MyStationsTab";
 import PublishStationScreen from "../screens/PublishStationScreen";
 import UserDetailsScreen from "../screens/UserDetailsScreen";
+import ReservationFromMeScreen from "../screens/ReservationFromMeScreen";
 import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
 import {Text, View} from "react-native";
 import {globalStyles} from "../assets/styles/globalStyles";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import CustomButton from "../components/CustomButton";
 import {auth} from "../config/firebase";
+import MaxiCard from "../components/MaxiCard";
+import MyOrdersTab from "../screens/tabs/MyOrdersTab";
 
 const Stack = createStackNavigator();
 
@@ -32,16 +35,16 @@ export default function LoggedInStack() {
                 <Text style={globalStyles.title}>You are blocked!</Text>
                 <MaterialCommunityIcons name={'block-helper'} size={100} style={{marginTop: 30}}/>
                 <Text style={[globalStyles.subTitle, {marginTop: 30}]}>for more information please email
-                    info@airgng.com </Text>
+                                                                       info@airgng.com </Text>
                 {/*maybe delete the logout-for inconvenient way to enter again the app */}
                 <CustomButton style={{marginTop: 50}} text={"Logout"} onPress={
                     async () => {
-                    try {
-                    await auth.signOut();
-                } catch (error) {
-                    console.log(error);
-                }
-                }}/>
+                        try {
+                            await auth.signOut();
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }}/>
 
             </View>
         );
@@ -70,12 +73,24 @@ export default function LoggedInStack() {
                 component={MyStationCard}
             />
             <Stack.Screen
+                name="MaxiCard"
+                component={MaxiCard}
+            />
+            <Stack.Screen
                 name="PublishStationScreen"
                 component={PublishStationScreen}
             />
             <Stack.Screen
                 name="MyStationsTab"
                 component={MyStationsTab}
+            />
+            <Stack.Screen
+                name="ReservationFromMeScreen"
+                component={ReservationFromMeScreen}
+            />
+            <Stack.Screen
+                name="MyOrdersTab"
+                component={MyOrdersTab}
             />
             {!isNewUser && (
                 <Stack.Screen
