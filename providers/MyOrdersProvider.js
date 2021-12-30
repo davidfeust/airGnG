@@ -16,9 +16,9 @@ export const MyOrdersProvider = ({children}) => {
             setMyOrders([]);
             return;
         }
-        setIsLoading(true);
         const ordersArray = snap.data().orders;
         if (ordersArray.length > 0) {
+            setIsLoading(true);
             const q = query(
                 collection(db, "orders"),
                 where(documentId(), "in", ordersArray)
