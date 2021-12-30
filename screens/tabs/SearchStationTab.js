@@ -1,26 +1,16 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import {
-    Animated,
-    Dimensions,
-    FlatList,
-    Platform,
-    StyleSheet,
-    TouchableOpacity,
-    View,
-    Text,
-} from "react-native";
-import { publicStationsContext } from "../../providers/PublicStationsProvider";
-import MapView, { Marker } from "react-native-maps";
-import { globalStyles } from "../../assets/styles/globalStyles";
-import { Image } from "react-native-elements";
-import { colors } from "../../assets/styles/colors";
-import MiniCard from "../../components/MiniCard";
+import React, {useContext, useEffect, useRef, useState} from "react";
+import {Dimensions, FlatList, Platform, StyleSheet, View,} from "react-native";
+import {publicStationsContext} from "../../providers/PublicStationsProvider";
+import MapView, {Marker} from "react-native-maps";
+import {globalStyles} from "../../assets/styles/globalStyles";
+import {Image} from "react-native-elements";
+import {colors} from "../../assets/styles/colors";
 import MaxiCard from "../../components/MaxiCard";
 import AddressAutocomplete from "../../components/AddressAutocomplete";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
-import { AuthenticatedUserContext } from "../../providers/AuthenticatedUserProvider";
+import {AuthenticatedUserContext} from "../../providers/AuthenticatedUserProvider";
 import SlidingUpPanel from "rn-sliding-up-panel";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import {TouchableWithoutFeedback} from "react-native-gesture-handler";
 
 /**
  * create a page with all available stations in the DB,
@@ -31,17 +21,16 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
  * @returns <ScrollView>
  */
 
-export default function SearchStationTab({ navigation }) {
+export default function SearchStationTab({navigation}) {
     //for the autocomplete function
     const googleAddress = useRef();
     const [cords, setCords] = useState(null);
     const [viewPort, setViewPort] = useState(null);
 
-    const [showMaxiCard, setShowMaxiCard] = useState(false);
-    const { stations } = useContext(publicStationsContext);
+    const {stations} = useContext(publicStationsContext);
     const [selectedId, setSelectedId] = useState(null);
     const [publishedStations, setPublishedStations] = useState(stations);
-    const { user } = useContext(AuthenticatedUserContext);
+    const {user} = useContext(AuthenticatedUserContext);
     const slideUpPanel = useRef();
 
     useEffect(() => {
@@ -52,7 +41,7 @@ export default function SearchStationTab({ navigation }) {
             (card) => card.id === selectedId
         );
 
-        flatList.current.scrollToIndex({ index, animated: true });
+        flatList.current.scrollToIndex({index, animated: true});
 
         const selectedPlace = publishedStations[index];
         const region = {
@@ -78,7 +67,7 @@ export default function SearchStationTab({ navigation }) {
             // ex - if you will look for israel in the previous you will get just one dot(maybe in the center)
             // but in the new version you will get according to difference in north-east and south-west
             if (viewPort != null) {
-                const { northeast, southwest } = viewPort;
+                const {northeast, southwest} = viewPort;
                 region.latitudeDelta = (northeast.lat - southwest.lat) * 0.5;
                 region.longitudeDelta = (northeast.lng - southwest.lng) * 0.5;
             }
@@ -104,14 +93,14 @@ export default function SearchStationTab({ navigation }) {
         waitForInteraction: true,
         minimumViewTime: publishedStations.length * 60,
     });
-    const onViewChanged = useRef(({ viewableItems }) => {
+    const onViewChanged = useRef(({viewableItems}) => {
         if (viewableItems.length > 0) {
             const selectedPlace = viewableItems[0].item;
             setSelectedId(selectedPlace.id);
         }
     });
 
-    const onSelectingCard = (e) => {
+    const onSelectingCard = () => {
         slideUpPanel.current.show();
     };
 
@@ -129,7 +118,7 @@ export default function SearchStationTab({ navigation }) {
                 <MaterialCommunityIcons
                     name={"magnify"}
                     size={22}
-                    style={{ alignSelf: "center", marginRight: 20 }}
+                    style={{alignSelf: "center", marginRight: 20}}
                 />
             </View>
             <MapView
@@ -167,26 +156,26 @@ export default function SearchStationTab({ navigation }) {
             </MapView>
 
             <SlidingUpPanel
-                draggableRange={{ top: 450, bottom: 100 }}
+                draggableRange={{top: 450, bottom: 100}}
                 ref={(c) => (slideUpPanel.current = c)}
                 backdropOpacity={0.3}
             >
                 <FlatList
-                    style={{ position: "absolute" }}
+                    style={{position: "absolute"}}
                     keyExtractor={(item) => item.id}
                     ref={flatList}
                     data={publishedStations}
                     renderItem={({
-                        item: {
-                            owner_id,
-                            address,
-                            price,
-                            image,
-                            time_slots,
-                            id,
-                            phone,
-                        },
-                    }) => (
+                                     item: {
+                                         owner_id,
+                                         address,
+                                         price,
+                                         image,
+                                         time_slots,
+                                         id,
+                                         phone,
+                                     },
+                                 }) => (
                         <TouchableWithoutFeedback onPress={onSelectingCard}>
                             <View style={styles.slide}>
                                 <MaxiCard
@@ -199,7 +188,7 @@ export default function SearchStationTab({ navigation }) {
                                     key={id}
                                     style={globalStyles.maxi_card_style}
                                     phone={phone}
-                                    goToMyOrdersTab={() => navigation.navigate('MyOrdersTab')}
+                                    navigation={navigation}
                                 />
                             </View>
                         </TouchableWithoutFeedback>
@@ -266,7 +255,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         padding: 0,
         shadowColor: "#ccc",
-        shadowOffset: { width: 0, height: 3 },
+        shadowOffset: {width: 0, height: 3},
         shadowOpacity: 0.5,
         shadowRadius: 5,
         elevation: 10,

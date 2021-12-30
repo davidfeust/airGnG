@@ -1,5 +1,5 @@
 import React, {useContext} from "react";
-import {Alert, ScrollView, Text, View} from "react-native";
+import {ActivityIndicator, Alert, ScrollView, Text, View} from "react-native";
 import {arrayRemove, deleteDoc, doc, updateDoc,} from "firebase/firestore";
 import {db} from "../../config/firebase";
 import {myOrdersContext} from "../../providers/MyOrdersProvider";
@@ -7,6 +7,7 @@ import {globalStyles} from "../../assets/styles/globalStyles";
 import CustomButton from "../../components/CustomButton";
 import {AuthenticatedUserContext} from "../../providers/AuthenticatedUserProvider";
 import MyOrderCard from "../../components/MyOrderCard";
+import {colors} from "../../assets/styles/colors";
 
 /**
  * represents all the subscribed stations.
@@ -14,7 +15,7 @@ import MyOrderCard from "../../components/MyOrderCard";
  * @returns <ScrollView>
  */
 export default function MyOrdersTab({navigation}) {
-    const {myOrders} = useContext(myOrdersContext);
+    const {myOrders, isLoading} = useContext(myOrdersContext);
     const {user} = useContext(AuthenticatedUserContext);
 
     const onCancel = (order_id) => {
@@ -43,7 +44,11 @@ export default function MyOrdersTab({navigation}) {
             ]
         );
     };
-    if (myOrders.length !== 0) {
+    if (isLoading) {
+        return <View style={[globalStyles.container, {justifyContent: 'center'}]}>
+            <ActivityIndicator color={colors.primary} size={'large'}/>
+        </View>
+    } else if (myOrders.length !== 0) {
         return (
             <ScrollView>
                 {myOrders.map(

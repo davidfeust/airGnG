@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Alert, Animated, Image, Text, View } from "react-native";
-import { AuthenticatedUserContext } from "../providers/AuthenticatedUserProvider";
-import { db } from "../config/firebase";
+import React, {useContext, useEffect, useRef, useState} from "react";
+import {Alert, Animated, Image, Text, View} from "react-native";
+import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
+import {db} from "../config/firebase";
 import {
     addDoc,
     arrayUnion,
@@ -13,14 +13,13 @@ import {
     where,
 } from "firebase/firestore";
 import CustomDropDown from "./CustomDropDown";
-import { dateRange, dateToString } from "../utils/GlobalFuncitions";
-import { myOrdersContext } from "../providers/MyOrdersProvider";
-import { Divider } from "react-native-elements";
+import {dateRange, dateToString} from "../utils/GlobalFuncitions";
+import {myOrdersContext} from "../providers/MyOrdersProvider";
+import {Divider} from "react-native-elements";
 import CustomButton from "./CustomButton";
 
 export default function MaxiCard({
-                                     goToMyOrdersTab,
-                                     owner_id,
+                                     navigation,
                                      address,
                                      timeSlots,
                                      price,
@@ -34,8 +33,8 @@ export default function MaxiCard({
     const [selectedDateRange, setSelectedDateRange] = useState([]);
     const [selectedStart, setSelectedStart] = useState(null);
     const [selectedEnd, setSelectedEnd] = useState(null);
-    const { user } = useContext(AuthenticatedUserContext);
-    const { myOrders } = useContext(myOrdersContext);
+    const {user} = useContext(AuthenticatedUserContext);
+    const {myOrders} = useContext(myOrdersContext);
     const [relatedOrders, setRelatedOrders] = useState([]);
     const [processing, setProcessing] = useState(false);
 
@@ -59,7 +58,7 @@ export default function MaxiCard({
                     updateDoc(userRef, {
                         orders: arrayUnion(orderRef.id),
                     }).then(() => {
-                        goToMyOrdersTab();
+                        navigation.navigate('My Orders');
                         setProcessing(false);
                     });
                 })
@@ -88,7 +87,7 @@ export default function MaxiCard({
                 ).filter(
                     (dateItem) =>
                         !relatedOrders.some(
-                            ({ start, end }) =>
+                            ({start, end}) =>
                                 start <= dateItem && end > dateItem
                         )
                 )
@@ -101,7 +100,7 @@ export default function MaxiCard({
             selectedDateRange.filter(
                 (dateItem) =>
                     !relatedOrders.some(
-                        ({ start, end }) =>
+                        ({start, end}) =>
                             // selected start is between old reservation slot
                             (start <= selectedStart && end > selectedStart) ||
                             // OR: date resembles wrapping slot encapsulating old timeslot already ordered by user
@@ -144,11 +143,11 @@ export default function MaxiCard({
                     {phone} {price} nis
                 </Text>
             </View>
-            <Divider style={{ margin: 10 }} />
+            <Divider style={{margin: 10}}/>
             <Image
                 source={
                     image
-                        ? { uri: image }
+                        ? {uri: image}
                         : require("../assets/defaults/default_image.png")
                 }
                 style={{
@@ -171,7 +170,8 @@ export default function MaxiCard({
                     value: d,
                     key: index,
                 }))}
-                setItems={() => {}}
+                setItems={() => {
+                }}
                 value={selectedTimeSlot}
                 setValue={setSelectedTimeSlot}
                 placeholder="Choose Time Slot"
@@ -195,7 +195,7 @@ export default function MaxiCard({
                         setItems={setSelectedDateRange}
                         value={selectedStart}
                         setValue={setSelectedStart}
-                        containerStyle={{ width: "49%" }}
+                        containerStyle={{width: "49%"}}
                         placeholder="Choose Starting Hour"
                     />
                 ) : null}
@@ -210,17 +210,18 @@ export default function MaxiCard({
                                 value: date,
                                 key: index,
                             }))}
-                        setItems={() => {}}
+                        setItems={() => {
+                        }}
                         value={selectedEnd}
                         setValue={setSelectedEnd}
-                        containerStyle={{ width: "49%" }}
+                        containerStyle={{width: "49%"}}
                         placeholder="Choose Ending Hour"
                     />
                 ) : null}
             </View>
-            <Divider orientation="horizontal" />
+            <Divider orientation="horizontal"/>
 
-            <View style={{ alignItems: "center" }}>
+            <View style={{alignItems: "center"}}>
                 <CustomButton
                     text={"Order"}
                     onPress={onOrder}

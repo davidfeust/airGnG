@@ -5,8 +5,6 @@ import TabsNavigator from "./TabsNavigator";
 
 import AddNewStationScreen from "../screens/AddNewStationScreen";
 import EditMyStationScreen from "../screens/EditMyStationScreen";
-import MyStationCard from "../components/MyStationCard";
-import MyStationsTab from "../screens/tabs/MyStationsTab";
 import PublishStationScreen from "../screens/PublishStationScreen";
 import UserDetailsScreen from "../screens/UserDetailsScreen";
 import ReservationFromMeScreen from "../screens/ReservationFromMeScreen";
@@ -16,8 +14,6 @@ import {globalStyles} from "../assets/styles/globalStyles";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import CustomButton from "../components/CustomButton";
 import {auth} from "../config/firebase";
-import MaxiCard from "../components/MaxiCard";
-import MyOrdersTab from "../screens/tabs/MyOrdersTab";
 
 const Stack = createStackNavigator();
 
@@ -58,8 +54,10 @@ export default function LoggedInStack() {
                     component={UserDetailsScreen}
                 />
             )}
-
-            <Stack.Screen name="TabsNavigator" component={TabsNavigator}/>
+            <Stack.Screen
+                name="TabsNavigator"
+                component={TabsNavigator}
+            />
             <Stack.Screen
                 name="AddNewStationScreen"
                 component={AddNewStationScreen}
@@ -69,29 +67,14 @@ export default function LoggedInStack() {
                 component={EditMyStationScreen}
             />
             <Stack.Screen
-                name="MyStationCard"
-                component={MyStationCard}
-            />
-            <Stack.Screen
-                name="MaxiCard"
-                component={MaxiCard}
-            />
-            <Stack.Screen
                 name="PublishStationScreen"
                 component={PublishStationScreen}
-            />
-            <Stack.Screen
-                name="MyStationsTab"
-                component={MyStationsTab}
             />
             <Stack.Screen
                 name="ReservationFromMeScreen"
                 component={ReservationFromMeScreen}
             />
-            <Stack.Screen
-                name="MyOrdersTab"
-                component={MyOrdersTab}
-            />
+
             {!isNewUser && (
                 <Stack.Screen
                     name="UserDetailsScreen"

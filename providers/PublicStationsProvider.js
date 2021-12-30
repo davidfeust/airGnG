@@ -17,8 +17,6 @@ export const PublicStationsProvider = ({children}) => {
                 getFromCol("stations", setStations);
             }
         );
-
-
     }, []);
 
     return (
