@@ -4,6 +4,7 @@ import ReservationCard from "../components/ReservationCard";
 import {collection, getDocs, query, where} from "firebase/firestore";
 import {db} from "../config/firebase";
 import {globalStyles} from "../assets/styles/globalStyles";
+import {colors} from "../assets/styles/colors";
 
 
 export default function ReservationFromMeScreen({route}) {
@@ -24,8 +25,8 @@ export default function ReservationFromMeScreen({route}) {
                        style={styles.image}
                 />
                 <View style={styles.text}>
-                    <Text>{route.params.station_address}</Text>
-                    <Text>Number of orders: {reservations.length}</Text>
+                    <Text style={styles.address_text}>{route.params.station_address}</Text>
+                    <Text style={styles.num_text}>Number of orders: {reservations.length}</Text>
                 </View>
             </View>
 
@@ -84,7 +85,19 @@ const styles = StyleSheet.create({
     },
     text: {
         marginStart: 10,
-        marginTop: 40,
-
+        marginVertical: 20,
+        justifyContent: 'space-between',
+    },
+    address_text: {
+        maxWidth: '95%',
+        color: colors.primary,
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    num_text: {
+        maxWidth: '95%',
+        color: colors.primary,
+        fontSize: 15,
     }
+
 });
