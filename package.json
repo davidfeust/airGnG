@@ -26,6 +26,8 @@
     "expo-image-picker": "~11.0.3",
     "expo-status-bar": "~1.1.0",
     "firebase": "^9.4.1",
+    "firebase-admin": "^10.0.2",
+    "firebase-functions": "^3.18.1",
     "formik": "^2.2.9",
     "opencage-api-client": "^1.0.0",
     "react": "17.0.1",
