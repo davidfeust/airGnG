@@ -17,3 +17,4 @@ web-build/
 .gitignore
 .idea/workspace.xml
 package-lock.json
+functions/ui-debug.log

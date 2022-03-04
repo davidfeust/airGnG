@@ -5,11 +5,14 @@ import Constants from 'expo-constants';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage, ref } from 'firebase/storage';
-import { getFunctions, httpsCallable } from 'firebase/functions';
+import {
+    getFunctions,
+    httpsCallable,
+    connectFunctionsEmulator,
+} from 'firebase/functions';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-
 const firebaseConfig = {
     apiKey: Constants.manifest.extra.apiKey,
     authDomain: Constants.manifest.extra.authDomain,
@@ -26,6 +29,12 @@ const auth = getAuth();
 const db = getFirestore();
 const storage = getStorage();
 const functions = getFunctions();
-const logHelloWorld = httpsCallable(functions, 'logHelloWorld');
+connectFunctionsEmulator(functions, 'localhost', 4001);
 
-export { auth, db, storage, logHelloWorld, app };
+const airGnGFunctions = {
+    logHelloWorld: httpsCallable(functions, 'logHelloWorld'),
+    helloWorld: httpsCallable(functions, 'helloWorld'),
+    local: httpsCallable(functions, 'local'),
+};
+
+export { auth, db, storage, airGnGFunctions, app };
