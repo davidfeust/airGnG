@@ -1,12 +1,12 @@
 import React, {useContext} from 'react';
-import {Text, View} from 'react-native';
+import {Text,Image, View} from 'react-native';
 import {globalStyles} from "../../assets/styles/globalStyles";
 import CustomButton from "../../components/CustomButton";
 import {AuthenticatedUserContext} from "../../providers/AuthenticatedUserProvider";
 import {auth} from "../../config/firebase";
 
 
-export default function HomeTab({navigation}) {
+export default function HomeTab({navigation}, image) {
     const {user} = useContext(AuthenticatedUserContext);
     const handleSignOut = async () => {
         try {
@@ -17,6 +17,7 @@ export default function HomeTab({navigation}) {
     };
     return (
         <View style={[globalStyles.container, {justifyContent: "center"}]}>
+           
             {user.name ?
                 <Text style={globalStyles.subTitle}>Hello {user.name}!</Text>
                 : <Text style={globalStyles.subTitle}>Hello to you!</Text>
