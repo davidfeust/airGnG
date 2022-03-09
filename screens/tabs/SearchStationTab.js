@@ -1,16 +1,22 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
-import {Dimensions, FlatList, Platform, StyleSheet, View,} from "react-native";
-import {publicStationsContext} from "../../providers/PublicStationsProvider";
-import MapView, {Marker} from "react-native-maps";
-import {globalStyles} from "../../assets/styles/globalStyles";
-import {Image} from "react-native-elements";
-import {colors} from "../../assets/styles/colors";
-import MaxiCard from "../../components/MaxiCard";
-import AddressAutocomplete from "../../components/AddressAutocomplete";
-import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {AuthenticatedUserContext} from "../../providers/AuthenticatedUserProvider";
-import SlidingUpPanel from "rn-sliding-up-panel";
-import {TouchableWithoutFeedback} from "react-native-gesture-handler";
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Dimensions, FlatList, Platform, StyleSheet, View } from 'react-native';
+import { publicStationsContext } from '../../providers/PublicStationsProvider';
+import MapView, { Marker } from 'react-native-maps';
+import { globalStyles } from '../../assets/styles/globalStyles';
+import { Image } from 'react-native-elements';
+import { colors } from '../../assets/styles/colors';
+import MaxiCard from '../../components/MaxiCard';
+import AddressAutocomplete from '../../components/AddressAutocomplete';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
+import SlidingUpPanel from 'rn-sliding-up-panel';
+import {
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+} from 'react-native-gesture-handler';
+import MiniCard from '../../components/MiniCard';
+import { collection, documentId, getDocs, where } from 'firebase/firestore';
+import { db } from '../../config/firebase';
 
 /**
  * create a page with all available stations in the DB,
@@ -21,17 +27,30 @@ import {TouchableWithoutFeedback} from "react-native-gesture-handler";
  * @returns <ScrollView>
  */
 
-export default function SearchStationTab({navigation}) {
+export default function SearchStationTab({ navigation }) {
     //for the autocomplete function
     const googleAddress = useRef();
     const [cords, setCords] = useState(null);
     const [viewPort, setViewPort] = useState(null);
-
-    const {stations} = useContext(publicStationsContext);
+    const [ownerDetails, setOwnerDetails] = useState([]);
+    const { stations } = useContext(publicStationsContext);
     const [selectedId, setSelectedId] = useState(null);
     const [publishedStations, setPublishedStations] = useState(stations);
-    const {user} = useContext(AuthenticatedUserContext);
+    const { user } = useContext(AuthenticatedUserContext);
     const slideUpPanel = useRef();
+    const miniCard = React.createRef();
+    const cardWidth = 330;
+    const cardMarginHorizontal = 20;
+
+    useEffect(async () => {
+        const ids = publishedStations.map((station) => station.owner_id);
+        const ownersRef = collection(db, 'users');
+        const ownersObjects = (
+            await getDocs(ownersRef, where(documentId(), 'in', ids))
+        ).docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+
+        setOwnerDetails(ownersObjects);
+    }, [publishedStations]);
 
     useEffect(() => {
         if (!selectedId || !flatList) {
@@ -40,8 +59,8 @@ export default function SearchStationTab({navigation}) {
         const index = publishedStations.findIndex(
             (card) => card.id === selectedId
         );
-
-        flatList.current.scrollToIndex({index, animated: true});
+        console.log(index);
+        flatList.current.scrollToIndex({ index, animated: true });
 
         const selectedPlace = publishedStations[index];
         const region = {
@@ -67,7 +86,7 @@ export default function SearchStationTab({navigation}) {
             // ex - if you will look for israel in the previous you will get just one dot(maybe in the center)
             // but in the new version you will get according to difference in north-east and south-west
             if (viewPort != null) {
-                const {northeast, southwest} = viewPort;
+                const { northeast, southwest } = viewPort;
                 region.latitudeDelta = (northeast.lat - southwest.lat) * 0.5;
                 region.longitudeDelta = (northeast.lng - southwest.lng) * 0.5;
             }
@@ -93,15 +112,31 @@ export default function SearchStationTab({navigation}) {
         waitForInteraction: true,
         minimumViewTime: publishedStations.length * 60,
     });
-    const onViewChanged = useRef(({viewableItems}) => {
+    const onViewChanged = useRef(({ viewableItems }) => {
         if (viewableItems.length > 0) {
             const selectedPlace = viewableItems[0].item;
             setSelectedId(selectedPlace.id);
         }
     });
 
-    const onSelectingCard = () => {
-        slideUpPanel.current.show();
+    const onSelectingCard = (
+        address,
+        timeSlots,
+        price,
+        image,
+        id,
+        phone,
+        owner_id
+    ) => {
+        navigation.navigate('OrderStack', {
+            address,
+            timeSlots,
+            price,
+            image,
+            id,
+            phone,
+            owner_id,
+        });
     };
 
     return (
@@ -111,14 +146,14 @@ export default function SearchStationTab({navigation}) {
                 <AddressAutocomplete
                     reference={googleAddress}
                     setCords={setCords}
-                    placeHolder={"Search Here..."}
-                    styleTag={"styleSearch"}
+                    placeHolder={'Search Here...'}
+                    styleTag={'styleSearch'}
                     setViewPort={setViewPort}
                 />
                 <MaterialCommunityIcons
-                    name={"magnify"}
+                    name={'magnify'}
                     size={22}
-                    style={{alignSelf: "center", marginRight: 20}}
+                    style={{ alignSelf: 'center', marginRight: 20 }}
                 />
             </View>
             <MapView
@@ -140,81 +175,93 @@ export default function SearchStationTab({navigation}) {
                             longitude: card.cords.lng,
                         }}
                         tappable
-                        onPress={() => setSelectedId(card.id)}
+                        onPress={(e) => {
+                            e.stopPropagation();
+                            setSelectedId(card.id);
+                            console.log('pressed');
+                        }}
                     >
                         <Image
-                            source={require("../../assets/markers/basic_marker.png")}
+                            source={require('../../assets/markers/basic_marker.png')}
                             style={
                                 card.id === selectedId
                                     ? styles.selectedMarker
                                     : styles.regularMarker
                             }
-                            resizeMode="contain"
+                            resizeMode='contain'
                         />
                     </Marker>
                 ))}
             </MapView>
 
             <SlidingUpPanel
-                draggableRange={{top: 450, bottom: 100}}
+                draggableRange={{ top: 200, bottom: 100 }}
                 ref={(c) => (slideUpPanel.current = c)}
                 backdropOpacity={0.3}
+                snappingPoints={[100, 200]}
             >
                 <FlatList
-                    style={{position: "absolute"}}
+                    style={{ position: 'absolute' }}
                     keyExtractor={(item) => item.id}
                     ref={flatList}
                     data={publishedStations}
                     renderItem={({
-                                     item: {
-                                         owner_id,
-                                         address,
-                                         price,
-                                         image,
-                                         time_slots,
-                                         id,
-                                         phone,
-                                     },
-                                 }) => (
-                        <TouchableWithoutFeedback onPress={onSelectingCard}>
-                            <View style={styles.slide}>
-                                <MaxiCard
-                                    owner_id={owner_id}
+                        item: {
+                            owner_id,
+                            address,
+                            price,
+                            image,
+                            time_slots,
+                            id,
+                            phone,
+                        },
+                    }) => (
+                        <TouchableWithoutFeedback
+                            onPress={() =>
+                                onSelectingCard(
+                                    address,
+                                    time_slots,
+                                    price,
+                                    image,
+                                    id,
+                                    phone,
+                                    owner_id
+                                )
+                            }
+                        >
+                            <View>
+                                <MiniCard
+                                    ref={miniCard}
+                                    image={image}
+                                    ownerDetails={ownerDetails.find(
+                                        (details) => details.id === owner_id
+                                    )}
                                     address={address}
                                     price={price}
-                                    image={image}
-                                    timeSlots={time_slots}
-                                    id={id}
-                                    key={id}
-                                    style={globalStyles.maxi_card_style}
-                                    phone={phone}
-                                    navigation={navigation}
+                                    style={{
+                                        width: cardWidth,
+                                        marginHorizontal: cardMarginHorizontal,
+                                    }}
                                 />
                             </View>
                         </TouchableWithoutFeedback>
                     )}
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    snapToInterval={
-                        globalStyles.mini_card.width +
-                        2 * globalStyles.mini_card.marginHorizontal
-                    }
+                    snapToInterval={cardWidth + 2 * cardMarginHorizontal}
                     contentContainerStyle={{
                         paddingHorizontal:
-                            Platform.OS === "android"
-                                ? globalStyles.mini_card.marginHorizontal * 4
+                            Platform.OS === 'android'
+                                ? cardMarginHorizontal / 2
                                 : 0,
                     }}
-                    decelerationRate={"fast"}
+                    decelerationRate={'fast'}
                     viewabilityConfig={viewConfig.current}
                     onViewableItemsChanged={onViewChanged.current}
                     onScrollE
                     getItemLayout={(data, index) => ({
-                        length: globalStyles.mini_card.width,
-                        offset:
-                            (globalStyles.mini_card.width +
-                                globalStyles.mini_card.marginHorizontal * 2) *
-                            index,
+                        length: cardWidth,
+                        offset: (cardWidth + cardMarginHorizontal * 2) * index,
                         index,
                     })}
                 />
@@ -226,13 +273,13 @@ export default function SearchStationTab({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
+        backgroundColor: '#fff',
+        alignItems: 'center',
         // justifyContent: "center",
     },
     map: {
-        width: Dimensions.get("window").width,
-        height: Dimensions.get("window").height,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
     },
     selectedMarker: {
         width: 26,
@@ -246,16 +293,16 @@ const styles = StyleSheet.create({
     },
     //we use the searchBox style in order to present nicely the search bar oon the map
     searchBox: {
-        position: "absolute",
-        marginTop: Platform.OS === "ios" ? 20 : 40,
-        flexDirection: "row",
-        backgroundColor: "#fff",
-        width: "90%",
-        alignSelf: "center",
+        position: 'absolute',
+        marginTop: Platform.OS === 'ios' ? 20 : 40,
+        flexDirection: 'row',
+        backgroundColor: '#fff',
+        width: '90%',
+        alignSelf: 'center',
         borderRadius: 15,
         padding: 0,
-        shadowColor: "#ccc",
-        shadowOffset: {width: 0, height: 3},
+        shadowColor: '#ccc',
+        shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.5,
         shadowRadius: 5,
         elevation: 10,
@@ -264,10 +311,9 @@ const styles = StyleSheet.create({
     slide: {
         flex: 1,
         borderRadius: 15,
-        width: globalStyles.maxi_card_style.width,
-        backgroundColor: "white",
-        alignItems: "center",
-        justifyContent: "center",
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center',
         margin: 10,
         elevation: 10,
     },

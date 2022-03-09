@@ -4,39 +4,38 @@ import { Text, StyleSheet, View } from 'react-native';
 import moment from 'moment';
 import TimeSlot from './TimeSlot';
 
-const CustomDateRangePicker = ({ minDate, maxDate, setStart, setEnd }) => {
-    const [myStart, setMyStart] = useState(null);
-    const [myEnd, setMyEnd] = useState(null);
-    return (
-        <DateRangePicker
-            onChange={({ startDate, endDate }) => {
-                if (startDate !== undefined) {
-                    setMyStart(startDate);
-                    setStart(startDate);
-                }
-                if (endDate !== undefined) {
-                    setMyEnd(endDate);
-                    setEnd(endDate);
-                    // endDate && setShow(false);
-                }
-            }}
-            startDate={myStart}
-            endDate={myEnd}
-            minDate={moment(minDate)}
-            maxDate={moment(maxDate)}
-            range
-            displayedDate={moment(minDate)}
-            backdropStyle={{ opacity: 1 }}
+const CustomDateRangePicker = ({ start, end, setSlot, minDate, maxDate }) => {
+    const inputHandler = (s, e) => {
+        if (s) {
+            if (s > end) {
+                console.log('here!!!!');
+                // start time is after end time
+                end.setDate(s.getDate());
+                end.setHours(s.getHours() + 1);
+            }
 
-            // open={show}
-        >
-            <View style={{ marginVertical: 20 }}>
-                <TimeSlot
-                    start={myStart ? myStart.toDate() : minDate}
-                    end={myEnd ? myEnd.toDate() : maxDate}
-                />
-            </View>
-        </DateRangePicker>
+            setSlot({ start: minDate && minDate > s ? minDate : s, end });
+            return;
+        }
+        if (e) {
+            if (start > e) {
+                // end time is before start time
+                start.setDate(e.getDate());
+                start.setHours(e.getHours() - 1);
+            }
+            setSlot({ start, end: maxDate && maxDate < e ? maxDate : e });
+            return;
+        }
+    };
+
+    return (
+        <TimeSlot
+            start={start}
+            end={end}
+            set={inputHandler}
+            minDate={minDate}
+            maxDate={maxDate}
+        />
     );
 };
 
