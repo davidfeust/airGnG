@@ -1,8 +1,8 @@
-import React, { useState, useContext } from 'react';
-import { AuthenticatedUserContext } from '../providers/AuthenticatedUserProvider';
-import { View, Text, Alert } from 'react-native';
+import React, {useState, useContext} from 'react';
+import {AuthenticatedUserContext} from '../providers/AuthenticatedUserProvider';
+import {View, Text, Alert, StyleSheet} from 'react-native';
 import CustomButton from '../components/CustomButton';
-import { globalStyles } from '../assets/styles/globalStyles';
+import {globalStyles} from '../assets/styles/globalStyles';
 import {
     addDoc,
     arrayUnion,
@@ -10,13 +10,14 @@ import {
     doc,
     updateDoc,
 } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import {db} from '../config/firebase';
 import Checkbox from 'expo-checkbox';
+import {colors} from "../assets/styles/colors";
 
-const PaymentPage = ({ route, navigation }) => {
+const PaymentPage = ({route, navigation}) => {
     const [processing, setProcessing] = useState(false);
-    const { user } = useContext(AuthenticatedUserContext);
-    const { start, end, finalPrice, id } = route.params;
+    const {user} = useContext(AuthenticatedUserContext);
+    const {start, end, finalPrice, id} = route.params;
     const [validated, setValidated] = useState(false);
 
     const onOrder = () => {
@@ -57,10 +58,10 @@ const PaymentPage = ({ route, navigation }) => {
     };
 
     return (
-        <View>
-            <Text style={globalStyles.title}>This is the payment page</Text>
+        <View style={{alignItems: 'center'}}>
+            <Text style={styles.title}>This is the payment page</Text>
             <Text
-                style={globalStyles.subTitle}
+                style={[globalStyles.subTitle, {fontSize: 24, marginTop: 200}]}
             >{`Price: ${finalPrice} NIS`}</Text>
             <View style={globalStyles.flex_container}>
                 <Checkbox
@@ -83,3 +84,13 @@ const PaymentPage = ({ route, navigation }) => {
     );
 };
 export default PaymentPage;
+
+const styles = StyleSheet.create({
+    title: {
+        color: colors.primary,
+        fontSize: 30,
+        maxWidth: "60%",
+        textAlign: "center",
+        marginTop: 50
+    }
+})
