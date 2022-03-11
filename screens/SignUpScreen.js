@@ -1,14 +1,22 @@
-import React, {useState} from "react";
-import {auth, db} from "../config/firebase";
-import {Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View,} from "react-native";
-import {createUserWithEmailAndPassword} from "firebase/auth";
-import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {globalStyles} from "../assets/styles/globalStyles";
-import CustomButton from "../components/CustomButton";
-import {Formik} from "formik";
-import * as yup from "yup";
-import {colors} from "../assets/styles/colors"; // to manage forms. docs: https://formik.org/docs/api/formik
-import {doc, setDoc} from "firebase/firestore";
+import React, { useState } from 'react';
+import { auth, db } from '../config/firebase';
+import {
+    Keyboard,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View,
+} from 'react-native';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { globalStyles } from '../assets/styles/globalStyles';
+import CustomButton from '../components/CustomButton';
+import { Formik } from 'formik';
+import * as yup from 'yup';
+import { colors } from '../assets/styles/colors'; // to manage forms. docs: https://formik.org/docs/api/formik
+import { doc, setDoc } from 'firebase/firestore';
 
 /**
  * create a page where the user fills a form
@@ -24,9 +32,9 @@ export default function SignUpScreen() {
     const [processing, setProcessing] = useState(false);
 
     const formValues = {
-        email: "",
-        password: "",
-        passwordRepeat: "",
+        email: '',
+        password: '',
+        passwordRepeat: '',
     };
 
     const formSchema = yup.object({
@@ -34,8 +42,8 @@ export default function SignUpScreen() {
         password: yup.string().required().min(6),
         passwordRepeat: yup
             .string()
-            .required("repeat password is a required field")
-            .equals([yup.ref("password"), null], "passwords does not match"),
+            .required('repeat password is a required field')
+            .equals([yup.ref('password'), null], 'passwords does not match'),
     });
 
     function handlerSingUp(email, password) {
@@ -47,9 +55,9 @@ export default function SignUpScreen() {
                 const user = userCredential.user;
                 setDoc(doc(db, 'users', user.uid), {
                     mail: user.email,
-                    orders: []
-                }).then(() => {
-                })
+                    orders: [],
+                    reviews: [],
+                }).then(() => {});
                 setProcessing(false);
             })
             .catch((error) => {
@@ -72,23 +80,23 @@ export default function SignUpScreen() {
                     }
                 >
                     {(formikProps) => (
-                        <View style={{width: "100%", alignItems: "center"}}>
+                        <View style={{ width: '100%', alignItems: 'center' }}>
                             {/* Email field */}
                             <TextInput
                                 style={[
                                     globalStyles.text_input,
-                                    {marginTop: 20},
+                                    { marginTop: 20 },
                                 ]}
-                                placeholder="Insert email"
-                                autoCompleteType={"email"}
-                                keyboardType={"email-address"}
-                                onChangeText={formikProps.handleChange("email")}
-                                onBlur={formikProps.handleBlur("email")}
+                                placeholder='Insert email'
+                                autoCompleteType={'email'}
+                                keyboardType={'email-address'}
+                                onChangeText={formikProps.handleChange('email')}
+                                onBlur={formikProps.handleBlur('email')}
                                 value={formikProps.values.email}
                             />
-                            <Text style={{color: colors.error}}>
+                            <Text style={{ color: colors.error }}>
                                 {formikProps.touched.email &&
-                                formikProps.errors.email}
+                                    formikProps.errors.email}
                             </Text>
 
                             {/* Password 1 field */}
@@ -96,64 +104,64 @@ export default function SignUpScreen() {
                                 style={[
                                     globalStyles.text_input,
                                     {
-                                        flexDirection: "row",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
                                     },
                                 ]}
                             >
-                                <View style={{flex: 10}}>
+                                <View style={{ flex: 10 }}>
                                     <TextInput
-                                        placeholder="Insert password"
+                                        placeholder='Insert password'
                                         secureTextEntry={showPass}
-                                        autoCompleteType={"password"}
+                                        autoCompleteType={'password'}
                                         onChangeText={formikProps.handleChange(
-                                            "password"
+                                            'password'
                                         )}
                                         onBlur={formikProps.handleBlur(
-                                            "password"
+                                            'password'
                                         )}
                                         value={formikProps.values.password}
                                     />
                                 </View>
-                                <View style={{flex: 1}}>
+                                <View style={{ flex: 1 }}>
                                     <TouchableOpacity
                                         onPress={() => setShowPass(!showPass)}
                                     >
                                         <MaterialCommunityIcons
-                                            name={showPass ? "eye-off" : "eye"}
-                                            color={"gray"}
+                                            name={showPass ? 'eye-off' : 'eye'}
+                                            color={'gray'}
                                             size={18}
                                         />
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            <Text style={{color: colors.error}}>
+                            <Text style={{ color: colors.error }}>
                                 {formikProps.touched.password &&
-                                formikProps.errors.password}
+                                    formikProps.errors.password}
                             </Text>
 
                             {/* Password 2 field */}
                             <TextInput
                                 style={globalStyles.text_input}
-                                placeholder="Repeat password"
+                                placeholder='Repeat password'
                                 secureTextEntry={showPass}
                                 onChangeText={formikProps.handleChange(
-                                    "passwordRepeat"
+                                    'passwordRepeat'
                                 )}
                                 onBlur={formikProps.handleBlur(
-                                    "passwordRepeat"
+                                    'passwordRepeat'
                                 )}
                                 value={formikProps.values.passwordRepeat}
                             />
-                            <Text style={{color: colors.error}}>
+                            <Text style={{ color: colors.error }}>
                                 {formikProps.touched.passwordRepeat &&
-                                formikProps.errors.passwordRepeat}
+                                    formikProps.errors.passwordRepeat}
                             </Text>
 
                             <CustomButton
-                                text={"Sign Up"}
-                                style={{marginTop: 60}}
+                                text={'Sign Up'}
+                                style={{ marginTop: 60 }}
                                 processing={processing}
                                 onPress={formikProps.handleSubmit}
                                 disabled={
@@ -171,11 +179,11 @@ export default function SignUpScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
+        backgroundColor: '#fff',
+        alignItems: 'center',
     },
     title: {
-        marginTop: "30%",
-        marginBottom: "20%",
+        marginTop: '30%',
+        marginBottom: '20%',
     },
 });

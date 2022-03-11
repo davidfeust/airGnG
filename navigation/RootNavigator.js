@@ -1,15 +1,15 @@
-import React, {useContext, useEffect, useState} from "react";
-import {NavigationContainer} from "@react-navigation/native";
-import {ActivityIndicator, View} from "react-native";
-import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
-import {onAuthStateChanged} from "firebase/auth";
-import {auth, db} from "../config/firebase";
-import LoggedInStack from "./LoggedInStack";
-import AuthStack from "./AuthStack";
-import {doc, getDoc} from "firebase/firestore";
+import React, { useContext, useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { ActivityIndicator, View } from 'react-native';
+import { AuthenticatedUserContext } from '../providers/AuthenticatedUserProvider';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth, db } from '../config/firebase';
+import LoggedInStack from './LoggedInStack';
+import AuthStack from './AuthStack';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function RootNavigator() {
-    const {user, setUser} = useContext(AuthenticatedUserContext);
+    const { user, setUser } = useContext(AuthenticatedUserContext);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -18,14 +18,26 @@ export default function RootNavigator() {
         return onAuthStateChanged(auth, async (authenticatedUser) => {
             if (authenticatedUser) {
                 // get user info from DB and set it to user provider
-                const docRef = doc(db, "users", authenticatedUser.uid);
+                const docRef = doc(db, 'users', authenticatedUser.uid);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
-                    setUser({...authenticatedUser, ...docSnap.data()});
+                    let rating = 0;
+                    const reviews = docSnap.data().reviews;
+                    if (reviews) {
+                        let sum = 0;
+                        reviews.forEach((review) => {
+                            sum += review.rating;
+                        });
+                        rating = sum / reviews.length;
+                    }
+                    setUser({
+                        ...authenticatedUser,
+                        ...docSnap.data(),
+                        rating,
+                    });
                 } else {
                     setUser(authenticatedUser);
                 }
-                // updateMyOrders();
             } else {
                 setUser(null);
             }
@@ -38,17 +50,17 @@ export default function RootNavigator() {
             <View
                 style={{
                     flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
+                    justifyContent: 'center',
+                    alignItems: 'center',
                 }}
             >
-                <ActivityIndicator size="large"/>
+                <ActivityIndicator size='large' />
             </View>
         );
     }
     return (
         <NavigationContainer>
-            {user ? <LoggedInStack/> : <AuthStack/>}
+            {user ? <LoggedInStack /> : <AuthStack />}
         </NavigationContainer>
     );
 }

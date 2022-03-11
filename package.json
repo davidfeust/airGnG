@@ -39,6 +39,7 @@
     "react-native-maps": "0.29.4",
     "react-native-modal": "^13.0.0",
     "react-native-neat-date-picker": "^1.1.2",
+    "react-native-ratings": "^8.1.0",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-web": "0.17.1",
     "react-navigation": "^4.4.4",
