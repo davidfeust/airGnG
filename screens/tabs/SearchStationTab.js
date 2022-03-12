@@ -59,7 +59,6 @@ export default function SearchStationTab({ navigation }) {
         const index = publishedStations.findIndex(
             (card) => card.id === selectedId
         );
-        console.log(index);
         flatList.current.scrollToIndex({ index, animated: true });
 
         const selectedPlace = publishedStations[index];
@@ -301,20 +300,11 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         borderRadius: 15,
         padding: 0,
-        shadowColor: '#ccc',
+        shadowColor: 'black',
         shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.5,
         shadowRadius: 5,
         elevation: 10,
         zIndex: 3,
-    },
-    slide: {
-        flex: 1,
-        borderRadius: 15,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        justifyContent: 'center',
-        margin: 10,
-        elevation: 10,
     },
 });
