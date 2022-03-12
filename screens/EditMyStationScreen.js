@@ -1,9 +1,9 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Keyboard, Text, TouchableWithoutFeedback, View,} from "react-native";
 import {doc, getDoc, updateDoc} from "firebase/firestore";
-import {db, storage} from "../config/firebase";
 import {globalStyles} from "../assets/styles/globalStyles";
 
+import {db, storage} from "../config/firebase";
 import {getStartAndEndTime, uploadImage} from "../utils/GlobalFuncitions";
 import StationForm from "../components/StationForm";
 import {deleteObject, ref} from "@firebase/storage";

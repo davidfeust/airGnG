@@ -6,6 +6,7 @@ import { colors } from '../assets/styles/colors';
 import { globalStyles } from '../assets/styles/globalStyles';
 import CustomButton from './CustomButton';
 
+// 
 const CustomRating = ({ onReview, ratingProps }) => {
     const [showComment, setShowComment] = useState(false);
     const [rating, setRating] = useState(0);
@@ -17,7 +18,7 @@ const CustomRating = ({ onReview, ratingProps }) => {
     };
     return (
         <View style={styles.containerStyle}>
-            {switchRating || ratingProps?.isDisabled ? (
+            {(switchRating || ratingProps?.isDisabled) ? (
                 <Rating
                     startingValue={ratingProps?.defaultRating}
                     readonly

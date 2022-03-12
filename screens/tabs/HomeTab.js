@@ -26,6 +26,7 @@ export default function HomeTab({ navigation }) {
             ) : (
                 <Text style={globalStyles.subTitle}>Hello to you!</Text>
             )}
+            <Image style={{height:505,width:500}} source={"assets/defaults/default_image.png"}/>
             <Rating readonly startingValue={user.rating} />
             <CustomButton text={'Logout'} onPress={handleSignOut} />
             <CustomButton

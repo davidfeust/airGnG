@@ -9,6 +9,7 @@ import {doc, updateDoc} from "firebase/firestore";
 import {db} from "../config/firebase";
 import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
+import UploadPicture from '../components/UploadPicture';
 
 export default function UserDetailsScreen({navigation}) {
 
@@ -49,6 +50,8 @@ export default function UserDetailsScreen({navigation}) {
     return (
         <View style={globalStyles.container}>
             <Text style={[globalStyles.title, {marginTop: 80}]}>Let us know you!</Text>
+            <UploadPicture fullPath={`images_profiles/${user.uid}.jpg`}/>
+
             <Formik
                 initialValues={formValues}
                 onSubmit={values => onSave(values)}
