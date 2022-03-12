@@ -21,10 +21,11 @@ export default function ReservationCard({
     onCancel,
 }) {
     // stores the order's station details
-    const [stationOrdered, setStationOrdered] = useState(null);
+    const [stationOrdered, setStationOrdered] = useState({});
 
     // stores the order's sub details
-    const [subDetails, setSubDetails] = useState(null);
+    const [subDetails, setSubDetails] = useState({});
+    const [subRating, setSubRating] = useState(0);
 
     useEffect(() => {
         // update station details from db
@@ -36,16 +37,18 @@ export default function ReservationCard({
     useEffect(() => {
         // update owner details from db
         getDoc(doc(db, 'users', sub_id)).then((subDoc) => {
-            const subData = subDoc.data();
-            const reviews = subData.reviews;
-            let rating = 0;
-            if (reviews) {
-                let sum = 0;
-                reviews.forEach((reaview) => (sum += reaview.rating));
-            }
-            setSubDetails({ ...subData, rating });
+            setSubDetails(subDoc.data());
         });
     }, []);
+    useEffect(() => {
+        const reviews = subDetails.reviews;
+        if (reviews) {
+            let sum = 0;
+            reviews.forEach((reaview) => (sum += reaview.rating));
+            const rating = sum / reviews.length;
+            setSubRating(rating);
+        }
+    }, [subDetails]);
 
     return (
         <View>
@@ -74,7 +77,7 @@ export default function ReservationCard({
                             <CustomRating
                                 ratingProps={{
                                     isDisabled: true,
-                                    defaultRating: subDetails.rating,
+                                    defaultRating: subRating,
                                     size: 15,
                                 }}
                             />
