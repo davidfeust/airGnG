@@ -3,10 +3,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { ActivityIndicator, View } from 'react-native';
 import { AuthenticatedUserContext } from '../providers/AuthenticatedUserProvider';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from '../config/firebase';
+import { auth, db, storage } from '../config/firebase';
 import LoggedInStack from './LoggedInStack';
 import AuthStack from './AuthStack';
 import { doc, getDoc } from 'firebase/firestore';
+import { getDownloadURL, ref } from 'firebase/storage';
 
 export default function RootNavigator() {
     const { user, setUser } = useContext(AuthenticatedUserContext);
@@ -30,10 +31,20 @@ export default function RootNavigator() {
                         });
                         rating = sum / reviews.length;
                     }
+                    const image = await getDownloadURL(
+                        ref(
+                            storage,
+                            `images_profiles/${authenticatedUser.uid}.jpg`
+                        )
+                    ).then(
+                        (value) => value,
+                        (reason) => null
+                    );
                     setUser({
                         ...authenticatedUser,
                         ...docSnap.data(),
                         rating,
+                        image,
                     });
                 } else {
                     setUser(authenticatedUser);
