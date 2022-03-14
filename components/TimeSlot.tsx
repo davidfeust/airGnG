@@ -1,8 +1,14 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import PickTime from './PickTime';
-
-export default function TimeSlot({ set, start, end, minDate, maxDate }) {
+type time = {
+    set?: CallableFunction;
+    start: Date;
+    end: Date;
+    minDate?: Date;
+    maxDate?: Date;
+};
+export default function TimeSlot({ set, start, end, minDate, maxDate }: time) {
     return (
         <View style={styles.container}>
             <PickTime

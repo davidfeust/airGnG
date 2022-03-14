@@ -1,7 +1,7 @@
 {
-  "tabWidth": 4,
-  "useTabs": false,
-  "jsxSingleQuote": true,
-  "singleQuote": true,
-  "proseWrap": "never"
+    "tabWidth": 4,
+    "useTabs": false,
+    "jsxSingleQuote": true,
+    "singleQuote": true,
+    "proseWrap": "never"
 }

@@ -10,7 +10,6 @@ import { colors } from '../assets/styles/colors';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import TimeSlot from '../components/TimeSlot';
-import moment from 'moment';
 import CustomDateRangePicker from '../components/CustomDateRangePicker';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Divider } from 'react-native-elements/dist/divider/Divider';
@@ -56,10 +55,13 @@ const OrderStack = ({ route, navigation }) => {
     const Stack = createStackNavigator();
     const [ownerDetails, setOwnerDetails] = useState(null);
 
-    useEffect(async () => {
+    useEffect(() => {
         const ownerRef = doc(db, 'users', owner_id);
-        const ownerObject = await getDoc(ownerRef);
-        setOwnerDetails(ownerObject.data());
+        getDoc(ownerRef)
+            .then((ownerObject) => {
+                setOwnerDetails(ownerObject.data());
+            })
+            .catch((err) => console.error(err));
     }, [owner_id]);
 
     const ChooseTime = ({ route, navigation }) => {
@@ -93,14 +95,14 @@ const OrderStack = ({ route, navigation }) => {
                 <CustomButton
                     text='To Payment Page'
                     style={{ marginTop: 140 }}
-                    onPress={() =>
+                    onPress={() => {
+                        navigation.setOptions({ start: start, end: end });
                         navigation.navigate('Payment Page', {
                             finalPrice,
-                            start,
-                            end,
+
                             id,
-                        })
-                    }
+                        });
+                    }}
                 />
                 <Text
                     style={{
