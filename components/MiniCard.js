@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet } from 'react-native';
-import { colors } from '../assets/styles/colors';
+import {View, Image, Text, StyleSheet} from 'react-native';
+import {colors} from '../assets/styles/colors';
 
 class MiniCard extends React.PureComponent {
     render() {
-        const { image, ownerDetails, address, children, style } = this.props;
+        const {image, ownerDetails, address, children, style} = this.props;
         return (
             <View
                 style={{
@@ -13,7 +13,7 @@ class MiniCard extends React.PureComponent {
                 }}
             >
                 <View style={[styles.station_details, style]}>
-                    <Image source={{ uri: image }} style={styles.image} />
+                    <Image source={{uri: image}} style={styles.image}/>
                     <View style={styles.text}>
                         <Text style={styles.address_text}>{address}</Text>
                         {ownerDetails && (
@@ -33,7 +33,7 @@ export default MiniCard;
 const styles = StyleSheet.create({
     station_details: {
         backgroundColor: '#fff',
-        // width: '95%',
+        width: '90%',
         top: 40,
         flexDirection: 'row',
         borderRadius: 15,
