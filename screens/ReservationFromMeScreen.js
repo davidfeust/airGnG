@@ -5,10 +5,11 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { globalStyles } from '../assets/styles/globalStyles';
 import { colors } from '../assets/styles/colors';
+import MiniCard from '../components/MiniCard';
 
 export default function ReservationFromMeScreen({
     route: {
-        params: { station_image, station_address },
+        params: { station_image, station_address, station_id },
     },
 }) {
     const [reservations, setReservations] = useState([]);
@@ -16,7 +17,7 @@ export default function ReservationFromMeScreen({
     useEffect(() => {
         const res = query(
             collection(db, 'orders'),
-            where('station_id', '==', route.params.station_id)
+            where('station_id', '==', station_id)
         );
         getDocs(res).then((snap) => {
             setReservations(snap.docs.map((d) => ({ ...d.data(), id: d.id })));
@@ -24,49 +25,52 @@ export default function ReservationFromMeScreen({
     }, [reservations]);
 
     return (
-        <View style={{ alignItems: 'center' }}>
-            <View style={styles.station_details}>
-                <Image source={{ uri: station_image }} style={styles.image} />
-                <View style={styles.text}>
-                    <Text style={styles.address_text}>{station_address}</Text>
-                    <Text style={styles.num_text}>
-                        Number of orders: {reservations.length}
-                    </Text>
+        <View>
+            <MiniCard
+                image={station_image}
+                address={station_address}
+                ownerDetails={{ name: 'achiya' }}
+            >
+                <Text style={styles.num_text}>
+                    {`Number of orders: ${reservations.length}`}
+                </Text>
+            </MiniCard>
+            <View style={{ alignItems: 'center' }}>
+                <View style={{ marginTop: 160, alignItems: 'center' }}>
+                    {reservations.length > 0 ? (
+                        <ScrollView>
+                            {reservations.map(
+                                ({
+                                    date_of_sub,
+                                    payed,
+                                    reservation,
+                                    station_id,
+                                    sub_car_type,
+                                    sub_id,
+                                    id,
+                                }) => (
+                                    <ReservationCard
+                                        date_of_sub={date_of_sub}
+                                        payed={payed}
+                                        reservation={reservation}
+                                        station_id={station_id}
+                                        sub_car_type={sub_car_type}
+                                        sub_id={sub_id}
+                                        order_id={id}
+                                        // onCancel={onCancel}
+                                        key={id}
+                                    />
+                                )
+                            )}
+                        </ScrollView>
+                    ) : (
+                        <Text
+                            style={[globalStyles.subTitle, { marginTop: 150 }]}
+                        >
+                            You don't have any orders yet...
+                        </Text>
+                    )}
                 </View>
-            </View>
-
-            <View style={{ marginTop: 160, alignItems: 'center' }}>
-                {reservations.length > 0 ? (
-                    <ScrollView>
-                        {reservations.map(
-                            ({
-                                date_of_sub,
-                                payed,
-                                reservation,
-                                station_id,
-                                sub_car_type,
-                                sub_id,
-                                id,
-                            }) => (
-                                <ReservationCard
-                                    date_of_sub={date_of_sub}
-                                    payed={payed}
-                                    reservation={reservation}
-                                    station_id={station_id}
-                                    sub_car_type={sub_car_type}
-                                    sub_id={sub_id}
-                                    order_id={id}
-                                    // onCancel={onCancel}
-                                    key={id}
-                                />
-                            )
-                        )}
-                    </ScrollView>
-                ) : (
-                    <Text style={[globalStyles.subTitle, { marginTop: 150 }]}>
-                        You don't have any orders yet...
-                    </Text>
-                )}
             </View>
         </View>
     );

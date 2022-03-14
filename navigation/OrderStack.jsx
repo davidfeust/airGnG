@@ -1,29 +1,34 @@
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {colors} from '../assets/styles/colors';
-import {doc, getDoc} from 'firebase/firestore';
-import {db} from '../config/firebase';
+import {
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { colors } from '../assets/styles/colors';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import TimeSlot from '../components/TimeSlot';
 import moment from 'moment';
 import CustomDateRangePicker from '../components/CustomDateRangePicker';
-import {createStackNavigator} from '@react-navigation/stack';
-import {globalStyles} from '../assets/styles/globalStyles';
-import {Divider} from 'react-native-elements/dist/divider/Divider';
+import { createStackNavigator } from '@react-navigation/stack';
+import { Divider } from 'react-native-elements/dist/divider/Divider';
 import CustomButton from '../components/CustomButton';
 import PaymentPage from '../pages/PaymentPage';
 import MiniCard from '../components/MiniCard';
 
-const ChooseTimeSlot = ({route, navigation}) => {
+const ChooseTimeSlot = ({ route, navigation }) => {
     return (
-        <View style={{alignSelf: 'center'}}>
+        <View style={{ alignSelf: 'center' }}>
             <Text style={styles.orderTitle}>Creating Your Order</Text>
-            <Divider/>
+            <Divider />
             <Text style={styles.orderSubTitle}>
                 Lets start with Choosing your Slot
             </Text>
-            <ScrollView style={{marginTop: 20}}>
+            <ScrollView style={{ marginTop: 20 }}>
                 {route.params.timeSlots.map((slot, idx) => {
-                    const {start, end} = slot;
+                    const { start, end } = slot;
                     const s = start.toDate();
                     const e = end.toDate();
                     return (
@@ -36,7 +41,7 @@ const ChooseTimeSlot = ({route, navigation}) => {
                                 })
                             }
                         >
-                            <TimeSlot start={s} end={e}/>
+                            <TimeSlot start={s} end={e} />
                         </TouchableOpacity>
                     );
                 })}
@@ -45,15 +50,11 @@ const ChooseTimeSlot = ({route, navigation}) => {
     );
 };
 
-const OrderStack = ({route, navigation}) => {
-    const {address, timeSlots, price, image, id, phone, owner_id} =
+const OrderStack = ({ route, navigation }) => {
+    const { address, timeSlots, price, image, id, phone, owner_id } =
         route.params;
     const Stack = createStackNavigator();
     const [ownerDetails, setOwnerDetails] = useState(null);
-    const [selectedSlotIdx, setSelectedSlotIdx] = useState(-1);
-    const [chosenStart, setChosenStart] = useState(null);
-    const [chosenEnd, setChosenEnd] = useState(null);
-    const [show, setShow] = useState(moment());
 
     useEffect(async () => {
         const ownerRef = doc(db, 'users', owner_id);
@@ -61,7 +62,7 @@ const OrderStack = ({route, navigation}) => {
         setOwnerDetails(ownerObject.data());
     }, [owner_id]);
 
-    const ChooseTime = ({route, navigation}) => {
+    const ChooseTime = ({ route, navigation }) => {
         const [start, setStart] = useState(route.params.start.toDate());
         const [end, setEnd] = useState(route.params.end.toDate());
         const [finalPrice, setFinalPrice] = useState(
@@ -69,11 +70,11 @@ const OrderStack = ({route, navigation}) => {
         );
 
         return (
-            <View style={{alignItems: 'center'}}>
+            <View style={{ alignItems: 'center' }}>
                 <Text style={styles.orderSubTitle}>
                     {'When do you come by?'}
                 </Text>
-                <View style={{alignSelf: 'stretch', marginTop: 50}}>
+                <View style={{ alignSelf: 'stretch', marginTop: 50 }}>
                     <CustomDateRangePicker
                         start={start}
                         end={end}
@@ -82,7 +83,7 @@ const OrderStack = ({route, navigation}) => {
                             setEnd(slot.end);
                             setFinalPrice(
                                 (price * (end.getTime() - start.getTime())) /
-                                (1000 * 3600)
+                                    (1000 * 3600)
                             );
                         }}
                         minDate={new Date(route.params.start.toDate())}
@@ -91,7 +92,7 @@ const OrderStack = ({route, navigation}) => {
                 </View>
                 <CustomButton
                     text='To Payment Page'
-                    style={{marginTop: 140}}
+                    style={{ marginTop: 140 }}
                     onPress={() =>
                         navigation.navigate('Payment Page', {
                             finalPrice,
@@ -102,7 +103,12 @@ const OrderStack = ({route, navigation}) => {
                     }
                 />
                 <Text
-                    style={{color: colors.primary, fontSize: 18, textAlign: 'center'}}>
+                    style={{
+                        color: colors.primary,
+                        fontSize: 18,
+                        textAlign: 'center',
+                    }}
+                >
                     {`Price:\n${finalPrice} NIS`}
                 </Text>
             </View>
@@ -128,10 +134,10 @@ const OrderStack = ({route, navigation}) => {
                 <Stack.Screen
                     name='Choose Time Slot'
                     component={ChooseTimeSlot}
-                    initialParams={{timeSlots}}
+                    initialParams={{ timeSlots }}
                 />
-                <Stack.Screen name='Choose Time' component={ChooseTime}/>
-                <Stack.Screen name='Payment Page' component={PaymentPage}/>
+                <Stack.Screen name='Choose Time' component={ChooseTime} />
+                <Stack.Screen name='Payment Page' component={PaymentPage} />
             </Stack.Group>
         </Stack.Navigator>
     );
@@ -181,14 +187,13 @@ const styles = StyleSheet.create({
         marginTop: 38,
         fontSize: 32,
         color: colors.primary,
-        textAlign: "center"
+        textAlign: 'center',
     },
     orderSubTitle: {
         marginTop: 25,
         fontSize: 26,
         color: colors.secondary,
-        textAlign: "center",
-        maxWidth: "70%"
+        textAlign: 'center',
+        maxWidth: '70%',
     },
-
 });

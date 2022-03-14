@@ -2,18 +2,13 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Dimensions, FlatList, Platform, StyleSheet, View } from 'react-native';
 import { publicStationsContext } from '../../providers/PublicStationsProvider';
 import MapView, { Marker } from 'react-native-maps';
-import { globalStyles } from '../../assets/styles/globalStyles';
 import { Image } from 'react-native-elements';
 import { colors } from '../../assets/styles/colors';
-import MaxiCard from '../../components/MaxiCard';
 import AddressAutocomplete from '../../components/AddressAutocomplete';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
 import SlidingUpPanel from 'rn-sliding-up-panel';
-import {
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-} from 'react-native-gesture-handler';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import MiniCard from '../../components/MiniCard';
 import { collection, documentId, getDocs, where } from 'firebase/firestore';
 import { db } from '../../config/firebase';
@@ -38,11 +33,63 @@ export default function SearchStationTab({ navigation }) {
     const [publishedStations, setPublishedStations] = useState(stations);
     const { user } = useContext(AuthenticatedUserContext);
     const slideUpPanel = useRef();
-    const miniCard = React.createRef();
-    const cardWidth = 330;
-    const cardMarginHorizontal = 20;
+    const cardWidth = 360;
+    const cardMarginHorizontal = 7;
+
+    const map = useRef();
+    const flatList = useRef();
+
+    const viewConfig = useRef({
+        itemVisiblePercentThreshold: 70,
+        waitForInteraction: true,
+        minimumViewTime: 60,
+    });
+    const onViewChanged = useRef(({ viewableItems }) => {
+        if (viewableItems.length > 0) {
+            const selectedPlace = viewableItems[0].item;
+            setSelectedId(selectedPlace.id);
+        }
+    });
+
+    const animateToMarker = () => {
+        console.log(selectedId);
+        if (selectedId) {
+            const index = publishedStations.findIndex(
+                (card) => card.id === selectedId
+            );
+            const selectedPlace = publishedStations[index];
+            const region = {
+                latitude: selectedPlace.cords.lat - 0.005,
+                longitude: selectedPlace.cords.lng,
+                latitudeDelta: 0.02,
+                longitudeDelta: 0.02,
+            };
+            map.current.animateToRegion(region);
+        }
+    };
+
+    const onSelectingCard = (
+        address,
+        timeSlots,
+        price,
+        image,
+        id,
+        phone,
+        owner_id
+    ) => {
+        navigation.navigate('OrderStack', {
+            address,
+            timeSlots,
+            price,
+            image,
+            id,
+            phone,
+            owner_id,
+        });
+    };
 
     useEffect(async () => {
+        // updating owner details
         const ids = publishedStations.map((station) => station.owner_id);
         const ownersRef = collection(db, 'users');
         const ownersObjects = (
@@ -52,24 +99,11 @@ export default function SearchStationTab({ navigation }) {
         setOwnerDetails(ownersObjects);
     }, [publishedStations]);
 
-    useEffect(() => {
-        if (!selectedId || !flatList) {
-            return;
-        }
-        const index = publishedStations.findIndex(
-            (card) => card.id === selectedId
-        );
-        flatList.current.scrollToIndex({ index, animated: true });
+    const scrollToCard = (cardId) => {
+        const index = publishedStations.findIndex((card) => card.id === cardId);
 
-        const selectedPlace = publishedStations[index];
-        const region = {
-            latitude: selectedPlace.cords.lat - 0.005,
-            longitude: selectedPlace.cords.lng,
-            latitudeDelta: 0.02,
-            longitudeDelta: 0.02,
-        };
-        map.current.animateToRegion(region);
-    }, [selectedId]);
+        flatList.current.scrollToIndex({ index, animated: true });
+    };
 
     //In this useEffect we jump the correct location on the map when the user select address in the search bar
     //deps : cords - the object that hold the coordinates that the user choose
@@ -94,49 +128,13 @@ export default function SearchStationTab({ navigation }) {
     }, [cords]);
 
     useEffect(() => {
+        //updating published stations based on stations changes
         setPublishedStations(
             stations.filter((s) => s.published && s.owner_id !== user.uid)
         );
     }, [stations]);
 
-    useEffect(() => {
-        slideUpPanel.current.show();
-    }, []);
-
-    const map = useRef();
-    const flatList = useRef();
-
-    const viewConfig = useRef({
-        itemVisiblePercentThreshold: 70,
-        waitForInteraction: true,
-        minimumViewTime: publishedStations.length * 60,
-    });
-    const onViewChanged = useRef(({ viewableItems }) => {
-        if (viewableItems.length > 0) {
-            const selectedPlace = viewableItems[0].item;
-            setSelectedId(selectedPlace.id);
-        }
-    });
-
-    const onSelectingCard = (
-        address,
-        timeSlots,
-        price,
-        image,
-        id,
-        phone,
-        owner_id
-    ) => {
-        navigation.navigate('OrderStack', {
-            address,
-            timeSlots,
-            price,
-            image,
-            id,
-            phone,
-            owner_id,
-        });
-    };
+    slideUpPanel.current?.show();
 
     return (
         <View style={styles.container}>
@@ -177,7 +175,15 @@ export default function SearchStationTab({ navigation }) {
                         onPress={(e) => {
                             e.stopPropagation();
                             setSelectedId(card.id);
-                            console.log('pressed');
+                            const region = {
+                                latitude: card.cords.lat,
+                                longitude: card.cords.lng,
+                                latitudeDelta: 0.02,
+                                longitudeDelta: 0.02,
+                            };
+                            map.current.animateToRegion(region);
+
+                            scrollToCard(card.id);
                         }}
                     >
                         <Image
@@ -194,10 +200,10 @@ export default function SearchStationTab({ navigation }) {
             </MapView>
 
             <SlidingUpPanel
-                draggableRange={{ top: 200, bottom: 100 }}
+                draggableRange={{ top: 230, bottom: 130 }}
                 ref={(c) => (slideUpPanel.current = c)}
                 backdropOpacity={0.3}
-                snappingPoints={[100, 200]}
+                snappingPoints={[130, 230]}
             >
                 <FlatList
                     style={{ position: 'absolute' }}
@@ -230,7 +236,6 @@ export default function SearchStationTab({ navigation }) {
                         >
                             <View>
                                 <MiniCard
-                                    ref={miniCard}
                                     image={image}
                                     ownerDetails={ownerDetails.find(
                                         (details) => details.id === owner_id
@@ -239,6 +244,7 @@ export default function SearchStationTab({ navigation }) {
                                     price={price}
                                     style={{
                                         width: cardWidth,
+                                        overflow: 'hidden',
                                         marginHorizontal: cardMarginHorizontal,
                                     }}
                                 />
@@ -257,9 +263,9 @@ export default function SearchStationTab({ navigation }) {
                     decelerationRate={'fast'}
                     viewabilityConfig={viewConfig.current}
                     onViewableItemsChanged={onViewChanged.current}
-                    onScrollE
+                    onMomentumScrollEnd={animateToMarker}
                     getItemLayout={(data, index) => ({
-                        length: cardWidth,
+                        length: cardWidth + cardMarginHorizontal * 2,
                         offset: (cardWidth + cardMarginHorizontal * 2) * index,
                         index,
                     })}
