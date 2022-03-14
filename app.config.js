@@ -1,42 +1,43 @@
-import "dotenv/config";
+import 'dotenv/config';
 
 export default {
     expo: {
         plugins: [
             [
-                "expo-image-picker",
+                'expo-image-picker',
                 {
                     photosPermission:
-                        "The app accesses your photos to let you share them with your friends.",
+                        'The app accesses your photos to let you share them with your friends.',
                 },
             ],
         ],
-        name: "airGnG",
-        slug: "airGnG",
-        version: "1.0.0",
-        orientation: "portrait",
-        icon: "./assets/icon.png",
-        userInterfaceStyle: 'light',
+        name: 'airGnG',
+        slug: 'airGnG',
+        version: '1.0.0',
+        orientation: 'portrait',
+        icon: './assets/icon.png',
+
         splash: {
-            image: "./assets/splash.png",
-            resizeMode:"contain",
-            backgroundColor: "#ffffff",
+            image: './assets/splash.png',
+            resizeMode: 'contain',
+            backgroundColor: '#ffffff',
         },
         updates: {
             fallbackToCacheTimeout: 0,
         },
-        assetBundlePatterns: ["**/*"],
+        assetBundlePatterns: ['**/*'],
         ios: {
             supportsTablet: true,
         },
         android: {
             adaptiveIcon: {
-                foregroundImage: "./assets/adaptive-icon.png",
-                backgroundColor: "#FFFFFF",
+                foregroundImage: './assets/adaptive-icon.png',
+                backgroundColor: '#FFFFFF',
             },
+            userInterfaceStyle: 'automatic',
         },
         web: {
-            favicon: "./assets/favicon.png",
+            favicon: './assets/favicon.png',
         },
         extra: {
             apiKey: process.env.API_KEY,

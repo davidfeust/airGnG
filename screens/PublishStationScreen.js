@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
-import CustomDateManager from "../components/CustomDateManager";
-import { globalStyles } from "../assets/styles/globalStyles";
-import { getStartAndEndTime } from "../utils/GlobalFuncitions";
-import CustomButton from "../components/CustomButton";
-import { db } from "../config/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import React, { useEffect, useState } from 'react';
+import { ScrollView, Text, View } from 'react-native';
+import CustomDateManager from '../components/CustomDateManager';
+import { globalStyles } from '../assets/styles/globalStyles';
+import { getStartAndEndTime } from '../utils/GlobalFuncitions';
+import CustomButton from '../components/CustomButton';
+import { db } from '../config/firebase';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export default function PublishStationScreen({ route, navigation }) {
     const [timeSlots, setTimeSlots] = useState([]);
     const [processing, setProcessing] = useState(false);
 
     useEffect(async () => {
-        const docRef = doc(db, "stations", route.params.station_id);
+        const docRef = doc(db, 'stations', route.params.station_id);
         const docSnap = await getDoc(docRef);
         const docData = docSnap.data();
 
@@ -31,7 +31,7 @@ export default function PublishStationScreen({ route, navigation }) {
     const onPublish = async () => {
         setProcessing(true);
 
-        const stationRef = doc(db, "stations", route.params.station_id);
+        const stationRef = doc(db, 'stations', route.params.station_id);
         await updateDoc(stationRef, {
             time_slots: timeSlots,
             published: true,
@@ -52,11 +52,10 @@ export default function PublishStationScreen({ route, navigation }) {
                     <CustomDateManager
                         timeSlots={timeSlots}
                         setTimeSlots={setTimeSlots}
-                        station_id={route.params.station_id}
                     />
 
                     <CustomButton
-                        text={"Publish"}
+                        text={'Publish'}
                         onPress={onPublish}
                         processing={processing}
                     />
