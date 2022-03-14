@@ -1,40 +1,28 @@
-import opencage from "opencage-api-client";
-import Constants from "expo-constants";
-import {collection, getDocs} from "firebase/firestore";
-import {db, storage} from "../config/firebase";
-import * as ImagePicker from "expo-image-picker";
-import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
-import {Alert, Linking, Platform} from "react-native";
+import { collection, getDocs } from 'firebase/firestore';
+import { db, storage } from '../config/firebase';
+import * as ImagePicker from 'expo-image-picker';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { Alert, Linking, Platform } from 'react-native';
 
-export const addressToCords = async (address) => {
-    try {
-        const res = await opencage.geocode({
-            q: address,
-            key: Constants.manifest.extra.opencageApiKey,
-            no_annotations: 1,
-        });
-        return res.results[0].geometry;
-    } catch (error) {
-        console.error(error.toString());
-    }
-};
-
-export const getFromCol = async (col_name, set_fun) => {
+export const getFromCol = async (
+    col_name: string,
+    set_fun: (map: { id: string }[]) => void
+) => {
     const col = collection(db, col_name);
     const cards_col = await getDocs(col);
     const map = cards_col.docs.map((doc) => {
         let id = doc.id;
         let data = doc.data();
-        return {id, ...data};
+        return { id, ...data };
     });
     set_fun(map);
     return map;
 };
 
-export const pickImageLibrary = async (setImage) => {
-    const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-        alert("not permitted");
+export const pickImageLibrary = async (setImage: (uri: string) => void) => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+        alert('not permitted');
         return;
     }
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -48,10 +36,10 @@ export const pickImageLibrary = async (setImage) => {
         setImage(result.uri);
     }
 };
-export const pickImageCamera = async (setImage) => {
-    const {status} = await ImagePicker.requestCameraPermissionsAsync();
-    if (status !== "granted") {
-        alert("not permitted");
+export const pickImageCamera = async (setImage: (uri: string) => void) => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+        alert('not permitted');
         return;
     }
     let result = await ImagePicker.launchCameraAsync({
@@ -69,14 +57,14 @@ export const pickImageCamera = async (setImage) => {
 export const uploadImage = async (path: string, url: string) => {
     const response = await fetch(path);
     const blob = await response.blob();
-    const storageRef = await ref(storage, url);
+    const storageRef = ref(storage, url);
     await uploadBytes(storageRef, blob);
-    return await getDownloadURL(storageRef, url);
+    return await getDownloadURL(storageRef);
 };
 
 export const dateToString = (date: Date) => {
     const zeroPad = (num: number, places: number) =>
-        String(num).padStart(places, "0");
+        String(num).padStart(places, '0');
 
     return dateToStringNoHours(date) + dateToStringHours(date);
 };
@@ -84,11 +72,11 @@ export const dateToString = (date: Date) => {
 export const dateToStringNoHours = (date: Date) => {
     return (
         date.getDate() +
-        "/" +
+        '/' +
         (date.getMonth() + 1) +
-        "/" +
+        '/' +
         date.getFullYear() +
-        " "
+        ' '
     );
 };
 
@@ -97,12 +85,12 @@ export const getStartAndEndTime = () => {
     const end_date = new Date();
     start_date.setMinutes(Math.ceil(start_date.getMinutes() / 30) * 30);
     end_date.setMinutes(Math.ceil(end_date.getMinutes() / 30) * 30 + 60);
-    return new Object({start: start_date, end: end_date});
+    return new Object({ start: start_date, end: end_date });
 };
 
 export const onCall = (phone) => {
     let phoneNumber = phone;
-    if (Platform.OS !== "android") {
+    if (Platform.OS !== 'android') {
         phoneNumber = `telprompt:${phone}`;
     } else {
         phoneNumber = `tel:${phone}`;
@@ -110,7 +98,7 @@ export const onCall = (phone) => {
     Linking.canOpenURL(phoneNumber)
         .then((supported) => {
             if (!supported) {
-                Alert.alert("Phone number is not available");
+                Alert.alert('Phone number is not available');
             } else {
                 return Linking.openURL(phoneNumber);
             }
@@ -119,8 +107,8 @@ export const onCall = (phone) => {
 };
 
 export const dateToStringHours = (date: Date) => {
-    const zeroPad = (num, places) => String(num).padStart(places, "0");
-    return zeroPad(date.getHours(), 2) + ":" + zeroPad(date.getMinutes(), 2);
+    const zeroPad = (num, places) => String(num).padStart(places, '0');
+    return zeroPad(date.getHours(), 2) + ':' + zeroPad(date.getMinutes(), 2);
 };
 
 export function dateRange(start: Date, end: Date, intervalInMinutes: number) {
