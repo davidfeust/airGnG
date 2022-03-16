@@ -10,14 +10,10 @@ import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvi
 import SlidingUpPanel from 'rn-sliding-up-panel';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import MiniCard from '../../components/MiniCard';
-import {
-    collection,
-    documentId,
-    getDocs,
-    query,
-    where,
-} from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
+import { GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
+import { Station } from '../../App.d';
 
 /**
  * create a page with all available stations in the DB,
@@ -30,7 +26,6 @@ import { db } from '../../config/firebase';
 
 export default function SearchStationTab({ navigation }) {
     //for the autocomplete function
-    const googleAddress = useRef();
     const [cords, setCords] = useState(null);
     const [viewPort, setViewPort] = useState(null);
     const [ownerDetails, setOwnerDetails] = useState([]);
@@ -38,12 +33,13 @@ export default function SearchStationTab({ navigation }) {
     const [selectedId, setSelectedId] = useState(null);
     const [publishedStations, setPublishedStations] = useState(stations);
     const { user } = useContext(AuthenticatedUserContext);
-    const slideUpPanel = useRef();
     const cardWidth = 360;
     const cardMarginHorizontal = 7;
 
+    const slideUpPanel = useRef<SlidingUpPanel>();
+    const googleAddress = useRef<GooglePlacesAutocompleteRef>();
     const map = useRef<MapView>();
-    const flatList = useRef();
+    const flatList = useRef<FlatList>();
 
     const viewConfig = useRef({
         itemVisiblePercentThreshold: 70,
@@ -58,7 +54,6 @@ export default function SearchStationTab({ navigation }) {
     });
 
     const animateToMarker = () => {
-        console.log(selectedId);
         if (selectedId) {
             const index = publishedStations.findIndex(
                 (card) => card.id === selectedId
@@ -74,42 +69,21 @@ export default function SearchStationTab({ navigation }) {
         }
     };
 
-    const onSelectingCard = (
-        address,
-        timeSlots,
-        price,
-        image,
-        id,
-        phone,
-        owner_id
-    ) => {
-        navigation.navigate('OrderStack', {
-            address,
-            timeSlots,
-            price,
-            image,
-            id,
-            phone,
-            owner_id,
-        });
+    const onSelectingCard = (station: Station) => {
+        navigation.navigate('OrderStack', station);
     };
 
     useEffect(() => {
         // updating owner details
-        const ids = publishedStations.map((station) => station.owner_id);
-        const ownersQuery = query(
-            collection(db, 'users'),
-            where(documentId(), 'in', ids)
-        );
-        getDocs(ownersQuery).then(({ docs }) => {
-            const details = docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-            setOwnerDetails(details);
+        const owners = [];
+        publishedStations.forEach(async (station) => {
+            const ownerDoc = await getDoc(doc(db, `users/${station.owner_id}`));
+            owners.push(ownerDoc.data());
         });
+        setOwnerDetails(owners);
     }, [publishedStations]);
 
-    const scrollToCard = (cardId) => {
-        const index = publishedStations.findIndex((card) => card.id === cardId);
-
+    const scrollToCard = (index: number) => {
         flatList.current.scrollToIndex({ index, animated: true });
     };
 
@@ -171,7 +145,7 @@ export default function SearchStationTab({ navigation }) {
                 }}
                 style={styles.map}
             >
-                {publishedStations.map((card) => (
+                {publishedStations.map((card, index) => (
                     <Marker
                         key={card.id}
                         title={card.address}
@@ -191,7 +165,7 @@ export default function SearchStationTab({ navigation }) {
                             };
                             map.current.animateToRegion(region);
 
-                            scrollToCard(card.id);
+                            scrollToCard(index);
                         }}
                     >
                         <Image
@@ -220,34 +194,33 @@ export default function SearchStationTab({ navigation }) {
                     data={publishedStations}
                     renderItem={({
                         item: {
-                            owner_id,
                             address,
                             price,
                             image,
                             time_slots,
                             id,
                             phone,
+                            owner_id,
                         },
+                        index,
                     }) => (
                         <TouchableWithoutFeedback
                             onPress={() =>
-                                onSelectingCard(
+                                onSelectingCard({
                                     address,
                                     time_slots,
                                     price,
                                     image,
                                     id,
                                     phone,
-                                    owner_id
-                                )
+                                    owner_id,
+                                })
                             }
                         >
                             <View>
                                 <MiniCard
                                     image={image}
-                                    ownerDetails={ownerDetails.find(
-                                        (details) => details.id === owner_id
-                                    )}
+                                    ownerDetails={ownerDetails[index]}
                                     address={address}
                                     price={price}
                                     style={{

@@ -26,7 +26,7 @@ const ChooseTimeSlot = ({ route, navigation }) => {
                 Lets start with Choosing your Slot
             </Text>
             <ScrollView style={{ marginTop: 20 }}>
-                {route.params.timeSlots.map((slot, idx) => {
+                {route.params.time_slots.map((slot, idx) => {
                     const { start, end } = slot;
                     const s = start.toDate();
                     const e = end.toDate();
@@ -50,7 +50,7 @@ const ChooseTimeSlot = ({ route, navigation }) => {
 };
 
 const OrderStack = ({ route, navigation }) => {
-    const { address, timeSlots, price, image, id, phone, owner_id } =
+    const { address, time_slots, price, image, id, phone, owner_id } =
         route.params;
     const Stack = createStackNavigator();
     const [ownerDetails, setOwnerDetails] = useState(null);
@@ -136,7 +136,7 @@ const OrderStack = ({ route, navigation }) => {
                 <Stack.Screen
                     name='Choose Time Slot'
                     component={ChooseTimeSlot}
-                    initialParams={{ timeSlots }}
+                    initialParams={{ time_slots }}
                 />
                 <Stack.Screen name='Choose Time' component={ChooseTime} />
                 <Stack.Screen name='Payment Page' component={PaymentPage} />
