@@ -1,25 +1,40 @@
-import React, {useEffect, useState} from "react";
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {globalStyles} from "../assets/styles/globalStyles";
-import {dateToString, onCall} from "../utils/GlobalFuncitions";
-import {colors} from "../assets/styles/colors";
-import {Card} from "react-native-elements";
-import {doc, getDoc} from "firebase/firestore";
-import {db} from "../config/firebase";
-import TimeSlot from "./TimeSlot";
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { globalStyles } from '../assets/styles/globalStyles';
+import { dateToString, onCall } from '../utils/GlobalFuncitions';
+import { colors } from '../assets/styles/colors';
+import { Card } from 'react-native-elements';
+import { doc, getDoc, Timestamp } from 'firebase/firestore';
+import { db } from '../config/firebase';
+import TimeSlot from './TimeSlot';
+
+type Reservation = {
+    date_start: Timestamp;
+    date_finish: Timestamp;
+};
+
+type CarType = 'BEV' | 'PHEV' | 'HEV';
 
 export default function ReservationCard({
-                                            date_of_sub,
-                                            payed,
-                                            reservation, // = { start_date:{firebase date type...} , finish_date:{firebase date type...}}
-                                            station_id,
-                                            sub_car_type,
-                                            sub_id,
-                                            order_id,
-                                            onCancel,
-                                        }) {
-
+    date_of_sub,
+    payed,
+    reservation,
+    station_id,
+    sub_car_type,
+    sub_id,
+    order_id,
+    onCancel,
+}: {
+    date_of_sub: Timestamp;
+    payed: boolean;
+    reservation: Reservation;
+    station_id: string;
+    sub_car_type: CarType;
+    sub_id: string;
+    order_id: string;
+    onCancel?: (order_id: string) => void;
+}) {
     // stores the order's station details
     const [stationOrdered, setStationOrdered] = useState(null);
 
@@ -28,21 +43,21 @@ export default function ReservationCard({
 
     useEffect(() => {
         // update station details from db
-        getDoc(doc(db, "stations", station_id)).then((d) =>
+        getDoc(doc(db, 'stations', station_id)).then((d) =>
             setStationOrdered(d.data())
         );
     }, []);
 
     useEffect(() => {
         // update owner details from db
-        getDoc(doc(db, "users", sub_id)).then((d) => {
+        getDoc(doc(db, 'users', sub_id)).then((d) => {
             setSubDetails(d.data());
         });
     }, []);
     return (
         <View>
             {stationOrdered && subDetails && (
-                <Card containerStyle={{borderRadius: 15}}>
+                <Card containerStyle={{ borderRadius: 15 }}>
                     {/* order date */}
                     <Card.Title>
                         ordered on: {dateToString(date_of_sub.toDate())}
@@ -50,23 +65,24 @@ export default function ReservationCard({
                     <View
                         style={{
                             flex: 1,
-                            flexDirection: "row",
-                            justifyContent: "space-between",
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
                         }}
                     >
                         {/* the order user name if exists... */}
                         {subDetails.name && (
-                            <Card.Title>ordered by: {subDetails.name}</Card.Title>
+                            <Card.Title>
+                                ordered by: {subDetails.name}
+                            </Card.Title>
                         )}
                     </View>
 
-                    <Card.Divider orientation="horizontal"/>
+                    <Card.Divider orientation='horizontal' />
 
                     {/* reservation details */}
                     <TimeSlot
                         start={reservation.date_start.toDate()}
                         end={reservation.date_finish.toDate()}
-                        index={0}
                     />
 
                     {/* is it payed already? */}
@@ -74,11 +90,11 @@ export default function ReservationCard({
 
                     {/* calculated price */}
                     <Text>
-                        price:{" "}
-                        {((reservation.date_finish.toDate() -
-                                reservation.date_start.toDate()) /
+                        price:{' '}
+                        {((reservation.date_finish.toDate().getTime() -
+                            reservation.date_start.toDate().getTime()) /
                             36e5) *
-                        stationOrdered.price}{" "}
+                            stationOrdered.price}{' '}
                         nis
                     </Text>
 
@@ -99,7 +115,7 @@ export default function ReservationCard({
                                 onPress={() => onCancel(order_id)}
                             >
                                 <MaterialCommunityIcons
-                                    name="trash-can"
+                                    name='trash-can'
                                     size={30}
                                     color={colors.primary}
                                 />
@@ -114,7 +130,7 @@ export default function ReservationCard({
                                 onPress={() => onCall(subDetails.phone)}
                             >
                                 <MaterialCommunityIcons
-                                    name="phone"
+                                    name='phone'
                                     size={30}
                                     color={colors.primary}
                                 />
@@ -133,11 +149,11 @@ export default function ReservationCard({
 const styles = StyleSheet.create({
     icon: {
         margin: 15,
-        alignItems: "center",
+        alignItems: 'center',
     },
     explain: {
         marginTop: 3,
         width: 70,
-        textAlign: "center",
+        textAlign: 'center',
     },
 });

@@ -54,7 +54,7 @@ export default function ReservationFromMeScreen({
                                         payed={payed}
                                         reservation={reservation}
                                         station_id={station_id}
-                                        sub_car_type={sub_car_type}
+                                        sub_car_type={'BEV'} // currently sub_car_type contains some bullshit string we need to clean the database...
                                         sub_id={sub_id}
                                         order_id={id}
                                         // onCancel={onCancel}

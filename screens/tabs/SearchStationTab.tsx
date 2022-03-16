@@ -10,7 +10,13 @@ import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvi
 import SlidingUpPanel from 'rn-sliding-up-panel';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import MiniCard from '../../components/MiniCard';
-import { collection, documentId, getDocs, where } from 'firebase/firestore';
+import {
+    collection,
+    documentId,
+    getDocs,
+    query,
+    where,
+} from 'firebase/firestore';
 import { db } from '../../config/firebase';
 
 /**
@@ -36,7 +42,7 @@ export default function SearchStationTab({ navigation }) {
     const cardWidth = 360;
     const cardMarginHorizontal = 7;
 
-    const map = useRef();
+    const map = useRef<MapView>();
     const flatList = useRef();
 
     const viewConfig = useRef({
@@ -88,15 +94,17 @@ export default function SearchStationTab({ navigation }) {
         });
     };
 
-    useEffect(async () => {
+    useEffect(() => {
         // updating owner details
         const ids = publishedStations.map((station) => station.owner_id);
-        const ownersRef = collection(db, 'users');
-        const ownersObjects = (
-            await getDocs(ownersRef, where(documentId(), 'in', ids))
-        ).docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-
-        setOwnerDetails(ownersObjects);
+        const ownersQuery = query(
+            collection(db, 'users'),
+            where(documentId(), 'in', ids)
+        );
+        getDocs(ownersQuery).then(({ docs }) => {
+            const details = docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+            setOwnerDetails(details);
+        });
     }, [publishedStations]);
 
     const scrollToCard = (cardId) => {

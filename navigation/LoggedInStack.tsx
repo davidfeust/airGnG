@@ -23,7 +23,7 @@ export default function LoggedInStack() {
 
     const created = new Date(user.metadata.creationTime);
     const now = new Date();
-    const isNewUser = now - created < 5000; // if creation time is less then current time, show
+    const isNewUser = now.getTime() - created.getTime() < 5000; // if creation time is less then current time, show
 
     //user blocked view
     if (user.blocked) {
