@@ -7,6 +7,7 @@ import { auth, db } from '../../config/firebase';
 import { doc } from 'firebase/firestore';
 import { Rating } from 'react-native-ratings';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Ratings from '../../components/Ratings';
 
 export default function HomeTab({ navigation }) {
     const [showBigImage, setShowBigImage] = useState(false);
@@ -56,7 +57,10 @@ export default function HomeTab({ navigation }) {
                     </View>
                 </Modal>
             </Pressable>
-            <Rating readonly startingValue={user.rating} />
+            <Ratings ratingProps={{
+                                       defaultRating: user.reviews.rating,
+                                        size: 40,
+                                    }}/>
             <CustomButton text={'Logout'} onPress={handleSignOut} />
             <CustomButton
                 text={'Edit your profile'}

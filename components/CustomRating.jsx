@@ -1,10 +1,12 @@
 import { Formik } from 'formik';
 import React, { useState } from 'react';
 import { Modal, StyleSheet, Text, TextInput, View } from 'react-native';
-import { AirbnbRating, Rating } from 'react-native-ratings';
+import {Rating, AirbnbRating} from 'react-native-ratings';
+// import {Ratings} from './Ratings';
 import { colors } from '../assets/styles/colors';
 import { globalStyles } from '../assets/styles/globalStyles';
 import CustomButton from './CustomButton';
+import Ratings from './Ratings';
 
 // 
 const CustomRating = ({ onReview, ratingProps }) => {
@@ -19,12 +21,19 @@ const CustomRating = ({ onReview, ratingProps }) => {
     return (
         <View style={styles.containerStyle}>
             {(switchRating || ratingProps?.isDisabled) ? (
-                <Rating
-                    startingValue={ratingProps?.defaultRating}
-                    readonly
-                    imageSize={ratingProps?.size | 0}
-                    showRating={false}
-                />
+              
+              
+            //   <Rating
+            //         startingValue={ratingProps?.defaultRating}
+            //         readonly
+            //         imageSize={ratingProps?.size | 0}
+            //         showRating={false}
+            //     />
+            <Ratings ratingProps={{
+                defaultRating: ratingProps?.defaultRating,
+                 size: ratingProps?.size | 0,
+             }}/>
+
             ) : (
                 <AirbnbRating
                     onFinishRating={onRating}
