@@ -124,7 +124,6 @@ const OrderStack = ({ route, navigation }) => {
                 presentation: 'modal',
                 header: (props) => (
                     <MiniCard
-                        {...props}
                         image={image}
                         ownerDetails={ownerDetails}
                         address={address}

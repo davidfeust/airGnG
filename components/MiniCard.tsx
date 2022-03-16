@@ -1,10 +1,28 @@
 import React from 'react';
-import {View, Image, Text, StyleSheet} from 'react-native';
-import {colors} from '../assets/styles/colors';
 
-class MiniCard extends React.PureComponent {
+import {
+    View,
+    Image,
+    Text,
+    StyleSheet,
+    ViewProps,
+    ViewStyle,
+    StyleProp,
+} from 'react-native';
+import { Owner } from '../App.d';
+import { colors } from '../assets/styles/colors';
+
+class MiniCard extends React.PureComponent<{
+    image: string;
+    ownerDetails: Owner;
+    address: string;
+    children?: React.ReactNode;
+    style?: StyleProp<ViewStyle>;
+    price?: number;
+}> {
     render() {
-        const {image, ownerDetails, address, children, style} = this.props;
+        const { image, ownerDetails, address, children, style, price } =
+            this.props;
         return (
             <View
                 style={{
@@ -13,7 +31,7 @@ class MiniCard extends React.PureComponent {
                 }}
             >
                 <View style={[styles.station_details, style]}>
-                    <Image source={{uri: image}} style={styles.image}/>
+                    <Image source={{ uri: image }} style={styles.image} />
                     <View style={styles.text}>
                         <Text style={styles.address_text}>{address}</Text>
                         {ownerDetails && (

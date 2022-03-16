@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore';
+
 export type Time = {
     set?: CallableFunction;
     start: Date;
@@ -8,6 +10,7 @@ export type Time = {
 
 export type Owner = {
     ownerId: string;
+    name: string;
 };
 
 export type Station = {
@@ -19,3 +22,10 @@ export type Station = {
     phone: number;
     owner_id: string;
 };
+
+export type Reservation = {
+    date_start: Timestamp;
+    date_finish: Timestamp;
+};
+
+export type CarType = 'BEV' | 'PHEV' | 'HEV';

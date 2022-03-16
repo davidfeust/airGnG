@@ -11,7 +11,7 @@ export default function PublishStationScreen({ route, navigation }) {
     const [timeSlots, setTimeSlots] = useState([]);
     const [processing, setProcessing] = useState(false);
 
-    useEffect(async () => {
+    const updateTimeSlots = async () => {
         const docRef = doc(db, 'stations', route.params.station_id);
         const docSnap = await getDoc(docRef);
         const docData = docSnap.data();
@@ -26,6 +26,9 @@ export default function PublishStationScreen({ route, navigation }) {
             temp.push(getStartAndEndTime());
         }
         setTimeSlots(temp);
+    };
+    useEffect(() => {
+        updateTimeSlots();
     }, []);
 
     const onPublish = async () => {

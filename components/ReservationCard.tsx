@@ -8,13 +8,7 @@ import { Card } from 'react-native-elements';
 import { doc, getDoc, Timestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import TimeSlot from './TimeSlot';
-
-type Reservation = {
-    date_start: Timestamp;
-    date_finish: Timestamp;
-};
-
-type CarType = 'BEV' | 'PHEV' | 'HEV';
+import { Reservation, CarType } from '../App.d';
 
 export default function ReservationCard({
     date_of_sub,
@@ -57,18 +51,17 @@ export default function ReservationCard({
     return (
         <View>
             {stationOrdered && subDetails && (
-                <Card containerStyle={{ borderRadius: 15 }}>
+                <Card
+                    containerStyle={{
+                        borderRadius: 15,
+                        flex: 1,
+                    }}
+                >
                     {/* order date */}
                     <Card.Title>
                         ordered on: {dateToString(date_of_sub.toDate())}
                     </Card.Title>
-                    <View
-                        style={{
-                            flex: 1,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                        }}
-                    >
+                    <View>
                         {/* the order user name if exists... */}
                         {subDetails.name && (
                             <Card.Title>
@@ -107,6 +100,7 @@ export default function ReservationCard({
                     )*/}
 
                     {/* buttons */}
+
                     <View style={globalStyles.flex_container}>
                         {/* CANCEL */}
                         {onCancel && (
