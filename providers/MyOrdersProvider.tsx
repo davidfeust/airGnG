@@ -11,7 +11,10 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { db } from '../config/firebase';
 import { AuthenticatedUserContext } from './AuthenticatedUserProvider';
 
-export const myOrdersContext = createContext({});
+export const myOrdersContext = createContext({
+    myOrders: [],
+    isLoading: false,
+});
 
 export const MyOrdersProvider = ({ children }) => {
     const { user } = useContext(AuthenticatedUserContext);

@@ -1,4 +1,5 @@
 import { Timestamp } from 'firebase/firestore';
+import { LatLng } from 'react-native-maps';
 
 export type Time = {
     set?: CallableFunction;
@@ -8,6 +9,11 @@ export type Time = {
     maxDate?: Date;
 };
 
+export type TimeSlotType = {
+    start: Date;
+    end: Date;
+};
+
 export type Owner = {
     ownerId: string;
     name: string;
@@ -15,12 +21,15 @@ export type Owner = {
 
 export type Station = {
     address: string;
-    time_slots: Time;
+    time_slots?: Time;
     price: number;
     image: string;
     id: string;
     phone: number;
     owner_id: string;
+    cords?: LatLng;
+    shadowed?: boolean;
+    plugType: PlugType;
 };
 
 export type Reservation = {
@@ -28,4 +37,4 @@ export type Reservation = {
     date_finish: Timestamp;
 };
 
-export type CarType = 'BEV' | 'PHEV' | 'HEV';
+export type PlugType = 'BEV' | 'PHEV' | 'HEV';

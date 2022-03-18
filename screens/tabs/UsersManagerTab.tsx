@@ -14,7 +14,7 @@ import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors } from '../../assets/styles/colors';
-import { IconProps, SearchBar } from 'react-native-elements';
+import { SearchBar } from 'react-native-elements';
 
 export default function UsersManagerTab() {
     const [usersList, setUsersList] = useState([]);
@@ -138,7 +138,9 @@ export default function UsersManagerTab() {
             <SearchBar
                 round
                 searchIcon={{ name: 'search' }}
-                onChangeText={(text) => searchFilterFunction(text)}
+                onChangeText={(text) => {
+                    searchFilterFunction(text);
+                }}
                 value={search}
                 onClear={() => searchFilterFunction('')}
                 placeholder='Search User Here...'

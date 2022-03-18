@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import ReservationCard from '../components/ReservationCard';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../config/firebase';

@@ -7,6 +7,8 @@ import { AuthenticatedUserContext } from '../providers/AuthenticatedUserProvider
 import { uploadImage } from '../utils/GlobalFuncitions';
 import StationForm from '../components/StationForm'; // to manage forms. docs: https://formik.org/docs/api/formik
 import { GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
+import { LatLng } from 'react-native-maps';
+import { Station } from '../App.d';
 
 /**
  * create a page where the user fills a form
@@ -27,9 +29,16 @@ export default function AddNewStationScreen(props) {
         shadowed: false,
         image: null,
         cords: null,
+        plugType: null,
     };
 
-    async function onPost({ cords, image, price, shadowed }) {
+    async function onPost({
+        cords,
+        image,
+        price,
+        shadowed,
+        plugType,
+    }: Station) {
         setProcessing(true);
 
         addDoc(collection(db, 'stations'), {
@@ -41,6 +50,7 @@ export default function AddNewStationScreen(props) {
             cords: cords,
             creation_date: Date(),
             published: false,
+            plug_type: plugType,
         })
             .then(async (docRef) => {
                 if (image) {

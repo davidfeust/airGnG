@@ -8,7 +8,7 @@ import { Card } from 'react-native-elements';
 import { doc, getDoc, Timestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import TimeSlot from './TimeSlot';
-import { Reservation, CarType } from '../App.d';
+import { Reservation, PlugType } from '../App.d';
 
 export default function ReservationCard({
     date_of_sub,
@@ -24,7 +24,7 @@ export default function ReservationCard({
     payed: boolean;
     reservation: Reservation;
     station_id: string;
-    sub_car_type: CarType;
+    sub_car_type: PlugType;
     sub_id: string;
     order_id: string;
     onCancel?: (order_id: string) => void;

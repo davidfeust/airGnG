@@ -4,7 +4,6 @@ import {
     Styles,
 } from 'react-native-google-places-autocomplete';
 import Constants from 'expo-constants';
-import { StyleProp } from 'react-native';
 
 export default function AddressAutocomplete({
     reference,

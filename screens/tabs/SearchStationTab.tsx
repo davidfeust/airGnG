@@ -204,6 +204,7 @@ export default function SearchStationTab({ navigation }) {
                                     id,
                                     phone,
                                     owner_id,
+                                    plugType: 'BEV',
                                 })
                             }
                         >

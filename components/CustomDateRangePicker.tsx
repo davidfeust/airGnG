@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
-import DateRangePicker from 'react-native-daterange-picker';
-import { Text, StyleSheet, View } from 'react-native';
-import moment from 'moment';
+import React from 'react';
+import { TimeSlotType } from '../App.d';
 import TimeSlot from './TimeSlot';
 
-const CustomDateRangePicker = ({ start, end, setSlot, minDate, maxDate }) => {
-    const inputHandler = (s, e) => {
+const CustomDateRangePicker = ({
+    start,
+    end,
+    setSlot,
+    minDate,
+    maxDate,
+}: {
+    start: Date;
+    end: Date;
+    setSlot: ({ start, end }: TimeSlotType) => void;
+    minDate?: Date;
+    maxDate?: Date;
+}) => {
+    const inputHandler = (s: Date, e: Date) => {
         if (s) {
             if (s > end) {
                 console.log('here!!!!');
@@ -40,10 +50,3 @@ const CustomDateRangePicker = ({ start, end, setSlot, minDate, maxDate }) => {
 };
 
 export default CustomDateRangePicker;
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
