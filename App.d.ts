@@ -2,7 +2,7 @@ import { Timestamp } from 'firebase/firestore';
 import { LatLng } from 'react-native-maps';
 
 export type Time = {
-    set?: CallableFunction;
+    set?: (start: Date | null, end: Date | null) => void;
     start: Date;
     end: Date;
     minDate?: Date;
