@@ -32,7 +32,7 @@ export default function MyOrderCard({
     // stores the order's owner details
     const [stationOwner, setStationOwner] = useState(null);
 
-    // stores the owners rating
+    // stores th owners rating
     const [ownerRating, setOwnerRating] = useState(0);
 
     useEffect(() => {
@@ -129,7 +129,7 @@ export default function MyOrderCard({
                     />
 
                     {/* is it payed already? */}
-                    {!String(payed)? <Text>payed: yes</Text> : <Text>payed: no</Text>}
+                    <Text>payed: {String(payed)}</Text>
 
                     {/* calculated price */}
                     <Text>
