@@ -106,33 +106,26 @@ export default function MyStationsTab({ navigation }) {
                 </TouchableOpacity>
 
                 <ScrollView>
-                    {myStations.map(
-                        ({ name, address, price, image, date, id }) => (
-                            <MyStationCard
-                                owner={name}
-                                address={address}
-                                price={price}
-                                image={image}
-                                date={date}
-                                id={id}
-                                onDelete={onDelete}
-                                onEdit={onEdit}
-                                key={id}
-                                onGoToPublish={() =>
-                                    navigation.push('PublishStationScreen', {
-                                        station_id: id,
-                                    })
-                                }
-                                onGoToReservation={() =>
-                                    navigation.push('ReservationFromMeScreen', {
-                                        station_id: id,
-                                        station_image: image,
-                                        station_address: address,
-                                    })
-                                }
-                            />
-                        )
-                    )}
+                    {myStations.map((station) => (
+                        <MyStationCard
+                            station={station}
+                            onDelete={onDelete}
+                            onEdit={onEdit}
+                            key={station.id}
+                            onGoToPublish={() =>
+                                navigation.push('PublishStationScreen', {
+                                    station_id: station.id,
+                                })
+                            }
+                            onGoToReservation={() =>
+                                navigation.push('ReservationFromMeScreen', {
+                                    station_id: station.id,
+                                    station_image: station.image,
+                                    station_address: station.address,
+                                })
+                            }
+                        />
+                    ))}
                 </ScrollView>
             </View>
         );

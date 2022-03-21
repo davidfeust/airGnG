@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from 'react';
 import {
     Keyboard,
     StyleSheet,
@@ -7,23 +7,23 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
     View,
-} from "react-native";
+} from 'react-native';
 import {
     signInWithEmailAndPassword,
     sendPasswordResetEmail,
-} from "firebase/auth";
-import {auth} from "../config/firebase";
-import {globalStyles} from "../assets/styles/globalStyles";
-import {MaterialCommunityIcons} from "@expo/vector-icons";
-import CustomButton from "../components/CustomButton";
-import {Formik} from "formik"; // to manage forms. docs: https://formik.org/docs/api/formik
-import * as yup from "yup"; // validation of forms. docs: https://www.npmjs.com/package/yup
-import {colors} from "../assets/styles/colors";
+} from 'firebase/auth';
+import { auth } from '../config/firebase';
+import { globalStyles } from '../assets/styles/globalStyles';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import CustomButton from '../components/CustomButton';
+import { Formik } from 'formik'; // to manage forms. docs: https://formik.org/docs/api/formik
+import * as yup from 'yup'; // validation of forms. docs: https://www.npmjs.com/package/yup
+import { colors } from '../assets/styles/colors';
 
 export default function SignInScreen() {
     const formValues = {
-        email: "",
-        password: "",
+        email: '',
+        password: '',
     };
 
     const formSchema = yup.object({
@@ -50,15 +50,15 @@ export default function SignInScreen() {
         sendPasswordResetEmail(auth, Email, null)
             .then(() => {
                 alert(
-                    "reset email sent to " +
-                    Email +
-                    "\nPlease check your email..."
+                    'reset email sent to ' +
+                        Email +
+                        '\nPlease check your email...'
                 );
-                console.log("reset email sent to " + Email);
+                console.log('reset email sent to ' + Email);
             })
             .catch(function (e) {
                 console.log(e);
-                alert("Email Not Verified!");
+                alert('Email Not Verified!');
             });
     };
 
@@ -82,29 +82,29 @@ export default function SignInScreen() {
                          * @param formikProps
                          * @returns {JSX.Element}
                          */
-                            (formikProps) => {
+                        (formikProps) => {
                             return (
                                 <View
                                     style={{
-                                        width: "100%",
-                                        alignItems: "center",
+                                        width: '100%',
+                                        alignItems: 'center',
                                     }}
                                 >
                                     {/* Email field */}
                                     <TextInput
                                         style={globalStyles.text_input}
-                                        placeholder={"Email"}
+                                        placeholder={'Email'}
                                         onChangeText={formikProps.handleChange(
-                                            "email"
+                                            'email'
                                         )}
                                         value={formikProps.values.email}
-                                        onBlur={formikProps.handleBlur("email")}
-                                        autoCompleteType={"email"}
-                                        keyboardType={"email-address"}
+                                        onBlur={formikProps.handleBlur('email')}
+                                        textContentType='emailAddress'
+                                        keyboardType={'email-address'}
                                     />
-                                    <Text style={{color: colors.error}}>
+                                    <Text style={{ color: colors.error }}>
                                         {formikProps.touched.email &&
-                                        formikProps.errors.email}
+                                            formikProps.errors.email}
                                     </Text>
 
                                     {/* View for password field to include eye button inside the field */}
@@ -112,29 +112,29 @@ export default function SignInScreen() {
                                         style={[
                                             globalStyles.text_input,
                                             {
-                                                flexDirection: "row",
-                                                justifyContent: "space-between",
-                                                alignItems: "center",
+                                                flexDirection: 'row',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
                                             },
                                         ]}
                                     >
-                                        <View style={{flex: 10}}>
+                                        <View style={{ flex: 10 }}>
                                             <TextInput
                                                 onChangeText={formikProps.handleChange(
-                                                    "password"
+                                                    'password'
                                                 )}
                                                 value={
                                                     formikProps.values.password
                                                 }
-                                                placeholder="Password"
+                                                placeholder='Password'
                                                 secureTextEntry={showPass}
-                                                autoCompleteType={"password"}
+                                                autoComplete={'password'}
                                                 onBlur={formikProps.handleBlur(
-                                                    "password"
+                                                    'password'
                                                 )}
                                             />
                                         </View>
-                                        <View style={{flex: 1}}>
+                                        <View style={{ flex: 1 }}>
                                             <TouchableOpacity
                                                 onPress={() =>
                                                     setShowPass(!showPass)
@@ -143,35 +143,42 @@ export default function SignInScreen() {
                                                 <MaterialCommunityIcons
                                                     name={
                                                         showPass
-                                                            ? "eye-off"
-                                                            : "eye"
+                                                            ? 'eye-off'
+                                                            : 'eye'
                                                     }
-                                                    color={"gray"}
+                                                    color={'gray'}
                                                     size={20}
                                                 />
                                             </TouchableOpacity>
                                         </View>
                                     </View>
-                                    <Text style={{color: "crimson"}}>
+                                    <Text style={{ color: 'crimson' }}>
                                         {formikProps.touched.password
                                             ? formikProps.errors.password
-                                            : ""}
+                                            : ''}
                                     </Text>
 
                                     <TouchableOpacity
-                                        style={{marginTop: 30}}
+                                        style={{ marginTop: 30 }}
                                         onPress={() => {
-                                            forgotPassword(formikProps.values.email);
+                                            forgotPassword(
+                                                formikProps.values.email
+                                            );
                                         }}
                                     >
-                                        <Text style={{color: "darkblue", fontSize: 16}}>
+                                        <Text
+                                            style={{
+                                                color: 'darkblue',
+                                                fontSize: 16,
+                                            }}
+                                        >
                                             Forgot your password? Reset now!
                                         </Text>
                                     </TouchableOpacity>
 
                                     <CustomButton
-                                        text={"Login"}
-                                        style={{marginTop: 50}}
+                                        text={'Login'}
+                                        style={{ marginTop: 50 }}
                                         processing={processing}
                                         onPress={formikProps.handleSubmit}
                                         disabled={
@@ -194,11 +201,11 @@ export default function SignInScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
+        backgroundColor: '#fff',
+        alignItems: 'center',
     },
     title: {
-        marginTop: "30%",
-        marginBottom: "20%",
+        marginTop: '30%',
+        marginBottom: '20%',
     },
 });

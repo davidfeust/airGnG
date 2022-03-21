@@ -1,34 +1,33 @@
-import React from "react";
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {globalStyles} from "../assets/styles/globalStyles";
-import {onCall} from "../utils/GlobalFuncitions";
-import {colors} from "../assets/styles/colors";
-import {Card} from "react-native-elements";
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { globalStyles } from '../assets/styles/globalStyles';
+import { onCall } from '../utils/GlobalFuncitions';
+import { colors } from '../assets/styles/colors';
+import { Card } from 'react-native-elements';
 
 export default function MyStationCard({
-                                          address,
-                                          price,
-                                          image,
-                                          onDelete,
-                                          id,
-                                          onEdit,
-                                          phone,
-                                          onGoToPublish,
-                                          onGoToReservation,
-                                      }) {
+    station,
+    onDelete,
+    onEdit,
+    onGoToPublish,
+    onGoToReservation,
+}) {
+    const { address, price, image, id, phone } = station;
     return (
         <View>
-            <Card containerStyle={{borderRadius: 15}}>
+            <Card containerStyle={{ borderRadius: 15 }}>
                 <Card.Title>{address}</Card.Title>
-                <Card.Divider orientation="horizontal"/>
+                <Card.Divider orientation='horizontal' />
                 <Text>price: {price} nis</Text>
 
-                <Card.Image source={
-                    image
-                        ? {uri: image}
-                        : require("../assets/defaults/default_image.png")
-                }/>
+                <Card.Image
+                    source={
+                        image
+                            ? { uri: image }
+                            : require('../assets/defaults/default_image.png')
+                    }
+                />
 
                 <View style={globalStyles.flex_container}>
                     {/* EDIT */}
@@ -38,7 +37,7 @@ export default function MyStationCard({
                             onPress={() => onEdit(id)}
                         >
                             <MaterialCommunityIcons
-                                name="pencil"
+                                name='pencil'
                                 size={30}
                                 color={colors.primary}
                             />
@@ -53,7 +52,7 @@ export default function MyStationCard({
                             onPress={() => onDelete(id)}
                         >
                             <MaterialCommunityIcons
-                                name="trash-can"
+                                name='trash-can'
                                 size={30}
                                 color={colors.primary}
                             />
@@ -68,7 +67,7 @@ export default function MyStationCard({
                             onPress={() => onCall(phone)}
                         >
                             <MaterialCommunityIcons
-                                name="phone"
+                                name='phone'
                                 size={30}
                                 color={colors.primary}
                             />
@@ -83,7 +82,7 @@ export default function MyStationCard({
                             onPress={onGoToPublish}
                         >
                             <MaterialCommunityIcons
-                                name="clock"
+                                name='clock'
                                 size={30}
                                 color={colors.primary}
                             />
@@ -97,13 +96,12 @@ export default function MyStationCard({
                         onPress={onGoToReservation}
                     >
                         <MaterialCommunityIcons
-                            name="view-list"
+                            name='view-list'
                             size={30}
                             color={colors.primary}
                         />
                         <Text style={styles.explain}>Orders</Text>
                     </TouchableOpacity>
-
                 </View>
             </Card>
         </View>
@@ -114,11 +112,11 @@ const styles = StyleSheet.create({
     icon: {
         margin: 8,
         marginTop: 18,
-        alignItems: "center",
+        alignItems: 'center',
     },
     explain: {
         marginTop: 3,
         width: 70,
-        textAlign: "center",
+        textAlign: 'center',
     },
 });

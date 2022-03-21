@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import ReservationCard from '../components/ReservationCard';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { globalStyles } from '../assets/styles/globalStyles';
 import { colors } from '../assets/styles/colors';
 import MiniCard from '../components/MiniCard';
+import { AuthenticatedUserContext } from '../providers/AuthenticatedUserProvider';
 
 export default function ReservationFromMeScreen({
     route: {
@@ -13,6 +14,7 @@ export default function ReservationFromMeScreen({
     },
 }) {
     const [reservations, setReservations] = useState([]);
+    const { user } = useContext(AuthenticatedUserContext);
 
     useEffect(() => {
         const res = query(
@@ -29,16 +31,25 @@ export default function ReservationFromMeScreen({
             <MiniCard
                 image={station_image}
                 address={station_address}
-                ownerDetails={{ name: 'achiya' }}
+                ownerDetails={user}
             >
                 <Text style={styles.num_text}>
                     {`Number of orders: ${reservations.length}`}
                 </Text>
             </MiniCard>
             <View style={{ alignItems: 'center' }}>
-                <View style={{ marginTop: 160, alignItems: 'center' }}>
+                <View
+                    style={{
+                        alignItems: 'center',
+                        width: '100%',
+                    }}
+                >
                     {reservations.length > 0 ? (
-                        <ScrollView>
+                        <ScrollView
+                            style={{
+                                width: '100%',
+                            }}
+                        >
                             {reservations.map(
                                 ({
                                     date_of_sub,
@@ -54,7 +65,7 @@ export default function ReservationFromMeScreen({
                                         payed={payed}
                                         reservation={reservation}
                                         station_id={station_id}
-                                        sub_car_type={sub_car_type}
+                                        sub_car_type={'BEV'} // currently sub_car_type contains some bullshit string we need to clean the database...
                                         sub_id={sub_id}
                                         order_id={id}
                                         // onCancel={onCancel}
@@ -64,9 +75,7 @@ export default function ReservationFromMeScreen({
                             )}
                         </ScrollView>
                     ) : (
-                        <Text
-                            style={[globalStyles.subTitle, { marginTop: 150 }]}
-                        >
+                        <Text style={globalStyles.subTitle}>
                             You don't have any orders yet...
                         </Text>
                     )}

@@ -10,21 +10,13 @@ import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvi
 import SlidingUpPanel from 'rn-sliding-up-panel';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import MiniCard from '../../components/MiniCard';
-import { collection, documentId, getDocs, where } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
-
-/**
- * create a page with all available stations in the DB,
- * and a button for each to represent subscribing to station.
- * and a listener to that button so the station gets orderd.
- * as soon as the user subscribed for a station,
- * it should be marked as unavailable and removed from this screen
- * @returns <ScrollView>
- */
+import { GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
+import { Station } from '../../App.d';
 
 export default function SearchStationTab({ navigation }) {
     //for the autocomplete function
-    const googleAddress = useRef();
     const [cords, setCords] = useState(null);
     const [viewPort, setViewPort] = useState(null);
     const [ownerDetails, setOwnerDetails] = useState([]);
@@ -32,12 +24,13 @@ export default function SearchStationTab({ navigation }) {
     const [selectedId, setSelectedId] = useState(null);
     const [publishedStations, setPublishedStations] = useState(stations);
     const { user } = useContext(AuthenticatedUserContext);
-    const slideUpPanel = useRef();
     const cardWidth = 360;
     const cardMarginHorizontal = 7;
 
-    const map = useRef();
-    const flatList = useRef();
+    const slideUpPanel = useRef<SlidingUpPanel>();
+    const googleAddress = useRef<GooglePlacesAutocompleteRef>();
+    const map = useRef<MapView>();
+    const flatList = useRef<FlatList>();
 
     const viewConfig = useRef({
         itemVisiblePercentThreshold: 70,
@@ -52,7 +45,6 @@ export default function SearchStationTab({ navigation }) {
     });
 
     const animateToMarker = () => {
-        console.log(selectedId);
         if (selectedId) {
             const index = publishedStations.findIndex(
                 (card) => card.id === selectedId
@@ -68,40 +60,20 @@ export default function SearchStationTab({ navigation }) {
         }
     };
 
-    const onSelectingCard = (
-        address,
-        timeSlots,
-        price,
-        image,
-        id,
-        phone,
-        owner_id
-    ) => {
-        navigation.navigate('OrderStack', {
-            address,
-            timeSlots,
-            price,
-            image,
-            id,
-            phone,
-            owner_id,
-        });
+    const onSelectingCard = (station: Station) => {
+        navigation.navigate('OrderStack', station);
     };
 
-    useEffect(async () => {
+    useEffect(() => {
         // updating owner details
-        const ids = publishedStations.map((station) => station.owner_id);
-        const ownersRef = collection(db, 'users');
-        const ownersObjects = (
-            await getDocs(ownersRef, where(documentId(), 'in', ids))
-        ).docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-
-        setOwnerDetails(ownersObjects);
+        const owners = publishedStations.map(async (station) => {
+            const ownerDoc = await getDoc(doc(db, `users/${station.owner_id}`));
+            return ownerDoc.data();
+        });
+        Promise.all(owners).then(setOwnerDetails);
     }, [publishedStations]);
 
-    const scrollToCard = (cardId) => {
-        const index = publishedStations.findIndex((card) => card.id === cardId);
-
+    const scrollToCard = (index: number) => {
         flatList.current.scrollToIndex({ index, animated: true });
     };
 
@@ -163,7 +135,7 @@ export default function SearchStationTab({ navigation }) {
                 }}
                 style={styles.map}
             >
-                {publishedStations.map((card) => (
+                {publishedStations.map((card, index) => (
                     <Marker
                         key={card.id}
                         title={card.address}
@@ -183,7 +155,7 @@ export default function SearchStationTab({ navigation }) {
                             };
                             map.current.animateToRegion(region);
 
-                            scrollToCard(card.id);
+                            scrollToCard(index);
                         }}
                     >
                         <Image
@@ -212,34 +184,34 @@ export default function SearchStationTab({ navigation }) {
                     data={publishedStations}
                     renderItem={({
                         item: {
-                            owner_id,
                             address,
                             price,
                             image,
                             time_slots,
                             id,
                             phone,
+                            owner_id,
                         },
+                        index,
                     }) => (
                         <TouchableWithoutFeedback
                             onPress={() =>
-                                onSelectingCard(
+                                onSelectingCard({
                                     address,
                                     time_slots,
                                     price,
                                     image,
                                     id,
                                     phone,
-                                    owner_id
-                                )
+                                    owner_id,
+                                    plugType: 'BEV',
+                                })
                             }
                         >
                             <View>
                                 <MiniCard
                                     image={image}
-                                    ownerDetails={ownerDetails.find(
-                                        (details) => details.id === owner_id
-                                    )}
+                                    ownerDetails={ownerDetails[index]}
                                     address={address}
                                     price={price}
                                     style={{

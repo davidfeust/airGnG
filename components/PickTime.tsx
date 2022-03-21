@@ -3,7 +3,9 @@ import React, { useState } from 'react';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../assets/styles/colors';
 import { dateToString } from '../utils/GlobalFuncitions';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, { Event } from '@react-native-community/datetimepicker';
+
+type Mode = 'date' | 'time';
 
 const PickTime = ({
     set,
@@ -12,10 +14,10 @@ const PickTime = ({
     minTime = null,
     maxTime = null,
 }) => {
-    const [mode, setMode] = useState('date');
+    const [mode, setMode]: [Mode, CallableFunction] = useState('date');
     const [show, setShow] = useState(false);
 
-    const onChange = (event, selectedDate) => {
+    const onChange = (event: Event, selectedDate: Date) => {
         setShow(Platform.OS === 'ios');
         if (mode === 'date') {
             const currentDate = selectedDate || time;
@@ -36,7 +38,7 @@ const PickTime = ({
         }
     };
 
-    const showMode = (currentMode) => {
+    const showMode = (currentMode: Mode) => {
         setShow(true);
         setMode(currentMode);
     };
@@ -80,7 +82,6 @@ const PickTime = ({
             </View>
             {show && set && (
                 <DateTimePicker
-                    testID='dateTimePicker'
                     value={time}
                     mode={mode}
                     is24Hour={true}

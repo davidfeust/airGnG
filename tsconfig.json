@@ -1,4 +1,9 @@
 {
-  "compilerOptions": {},
-  "extends": "expo/tsconfig.base"
+    "compilerOptions": {
+        "target": "es5",
+        "jsx": "react",
+        "allowSyntheticDefaultImports": true
+    },
+    "include": ["src/*"],
+    "extends": "expo/tsconfig.base"
 }

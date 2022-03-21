@@ -2,13 +2,11 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors } from '../assets/styles/colors';
-import TimeSlot from './TimeSlot';
 import { getStartAndEndTime } from '../utils/GlobalFuncitions';
 import CustomDateRangePicker from './CustomDateRangePicker';
-import { replace } from 'formik';
 
 export default function CustomDateManager({ setTimeSlots, timeSlots }) {
-    const removeTimeSlot = (key) => {
+    const removeTimeSlot = (key: number) => {
         timeSlots.splice(key, 1);
         setTimeSlots([...timeSlots]);
     };
