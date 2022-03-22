@@ -5,10 +5,12 @@ import { globalStyles } from '../assets/styles/globalStyles';
 import { dateToString, onCall } from '../utils/GlobalFuncitions';
 import { colors } from '../assets/styles/colors';
 import { Card } from 'react-native-elements';
-import { doc, getDoc } from 'firebase/firestore';
+import { arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import TimeSlot from './TimeSlot';
 import { AuthenticatedUserContext } from '../providers/AuthenticatedUserProvider';
+import CustomRating from "./CustomRating";
+
 
 export default function MyOrderCard({
     date_of_sub,
@@ -103,6 +105,7 @@ export default function MyOrderCard({
                             <View>
                                 <Card.Title>ordered by: {user.name}</Card.Title>
                                 <CustomRating
+                                onReview={{}}
                                     ratingProps={{
                                         size: 15,
                                         defaultRating: user.rating,

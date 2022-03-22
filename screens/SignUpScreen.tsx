@@ -56,10 +56,7 @@ export default function SignUpScreen() {
                 setDoc(doc(db, 'users', user.uid), {
                     mail: user.email,
                     orders: [],
-<<<<<<< HEAD:screens/SignUpScreen.js
                     reviews: [],
-=======
->>>>>>> e46627d39dd3a73b3c4bc6f98ed8491f07003f52:screens/SignUpScreen.tsx
                 }).then(() => {});
                 setProcessing(false);
             })
@@ -91,11 +88,7 @@ export default function SignUpScreen() {
                                     { marginTop: 20 },
                                 ]}
                                 placeholder='Insert email'
-<<<<<<< HEAD:screens/SignUpScreen.js
-                                autoCompleteType={'email'}
-=======
                                 autoComplete={'email'}
->>>>>>> e46627d39dd3a73b3c4bc6f98ed8491f07003f52:screens/SignUpScreen.tsx
                                 keyboardType={'email-address'}
                                 onChangeText={formikProps.handleChange('email')}
                                 onBlur={formikProps.handleBlur('email')}
@@ -121,11 +114,7 @@ export default function SignUpScreen() {
                                     <TextInput
                                         placeholder='Insert password'
                                         secureTextEntry={showPass}
-<<<<<<< HEAD:screens/SignUpScreen.js
-                                        autoCompleteType={'password'}
-=======
                                         autoComplete={'password'}
->>>>>>> e46627d39dd3a73b3c4bc6f98ed8491f07003f52:screens/SignUpScreen.tsx
                                         onChangeText={formikProps.handleChange(
                                             'password'
                                         )}
