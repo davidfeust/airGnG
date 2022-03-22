@@ -1,15 +1,17 @@
 import React from 'react';
-import {GooglePlacesAutocomplete} from "react-native-google-places-autocomplete";
-import Constants from "expo-constants";
-
+import {
+    GooglePlacesAutocomplete,
+    Styles,
+} from 'react-native-google-places-autocomplete';
+import Constants from 'expo-constants';
 
 export default function AddressAutocomplete({
-                                                reference,
-                                                setCords,
-                                                placeHolder = "Address",
-                                                setViewPort = null,
-                                                styleTag = "default"
-                                            }) {
+    reference,
+    setCords,
+    placeHolder = 'Address',
+    setViewPort = null,
+    styleTag = 'default',
+}) {
     const defaultStyle = {
         container: {
             flex: 0,
@@ -17,22 +19,20 @@ export default function AddressAutocomplete({
         },
         textInput: {
             borderBottomWidth: 1,
-            borderColor: "gray",
+            borderColor: 'gray',
             margin: 2,
             padding: 5,
         },
         listView: {
-            position: "absolute",
+            position: 'absolute',
             zIndex: 2,
             top: 46,
             borderBottomWidth: 1,
-
         },
         row: {
-            backgroundColor: 'white'
+            backgroundColor: 'white',
         },
-    }
-
+    };
 
     const styleSearch = {
         container: {
@@ -41,19 +41,19 @@ export default function AddressAutocomplete({
         },
         textInput: {
             margin: 2,
-            borderRadius: 15
+            borderRadius: 15,
         },
         listView: {
             zIndex: 4,
         },
         row: {
-            backgroundColor: 'white'
+            backgroundColor: 'white',
         },
-    }
+    };
     // I used styleToUse to implements the right style for the autocomplete component
-    let styleToUse = defaultStyle;
-    if (styleTag === "styleSearch") {
-        styleToUse = styleSearch
+    let styleToUse: Object | Partial<Styles> = defaultStyle;
+    if (styleTag === 'styleSearch') {
+        styleToUse = styleSearch;
     }
 
     return (
@@ -61,8 +61,7 @@ export default function AddressAutocomplete({
             ref={reference}
             placeholder={placeHolder}
             styles={styleToUse}
-            // styles={defaultStyle}
-            nearbyPlacesAPI={"GooglePlacesSearch"}
+            nearbyPlacesAPI={'GooglePlacesSearch'}
             debounce={400}
             query={{
                 key: Constants.manifest.extra.googleMapsApi,
@@ -71,12 +70,10 @@ export default function AddressAutocomplete({
             onPress={(data, details = null) => {
                 setCords(details.geometry.location);
                 if (setViewPort != null) {
-                    setViewPort(details.geometry.viewport)
+                    setViewPort(details.geometry.viewport);
                 }
             }}
             fetchDetails={true}
         />
-
     );
-
 }

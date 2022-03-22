@@ -5,20 +5,29 @@ import { globalStyles } from '../assets/styles/globalStyles';
 import { dateToString, onCall } from '../utils/GlobalFuncitions';
 import { colors } from '../assets/styles/colors';
 import { Card } from 'react-native-elements';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, Timestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import TimeSlot from './TimeSlot';
-import CustomRating from './CustomRating';
+import { Reservation, PlugType } from '../App.d';
 
 export default function ReservationCard({
     date_of_sub,
     payed,
-    reservation, // = { start_date:{firebase date type...} , finish_date:{firebase date type...}}
+    reservation,
     station_id,
     sub_car_type,
     sub_id,
     order_id,
     onCancel,
+}: {
+    date_of_sub: Timestamp;
+    payed: boolean;
+    reservation: Reservation;
+    station_id: string;
+    sub_car_type: PlugType;
+    sub_id: string;
+    order_id: string;
+    onCancel?: (order_id: string) => void;
 }) {
     // stores the order's station details
     const [stationOrdered, setStationOrdered] = useState({});
@@ -36,8 +45,8 @@ export default function ReservationCard({
 
     useEffect(() => {
         // update owner details from db
-        getDoc(doc(db, 'users', sub_id)).then((subDoc) => {
-            setSubDetails(subDoc.data());
+        getDoc(doc(db, 'users', sub_id)).then((d) => {
+            setSubDetails(d.data());
         });
     }, []);
     useEffect(() => {
@@ -53,25 +62,22 @@ export default function ReservationCard({
     return (
         <View>
             {stationOrdered && subDetails && (
-                <Card containerStyle={{ borderRadius: 15 }}>
+                <Card
+                    containerStyle={{
+                        borderRadius: 15,
+                        flex: 1,
+                    }}
+                >
                     {/* order date */}
                     <Card.Title>
                         ordered on: {dateToString(date_of_sub.toDate())}
                     </Card.Title>
-                    <View
-                        style={{
-                            flex: 1,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                        }}
-                    >
+                    <View>
                         {/* the order user name if exists... */}
                         {subDetails.name && (
-                            <View>
-                                <Card.Title>
-                                    ordered by: {subDetails.name}
-                                </Card.Title>
-                            </View>
+                            <Card.Title>
+                                ordered by: {subDetails.name}
+                            </Card.Title>
                         )}
                         <View>
                             <CustomRating
@@ -90,7 +96,6 @@ export default function ReservationCard({
                     <TimeSlot
                         start={reservation.date_start.toDate()}
                         end={reservation.date_finish.toDate()}
-                        index={0}
                     />
 
                     {/* is it payed already? */}
@@ -99,8 +104,8 @@ export default function ReservationCard({
                     {/* calculated price */}
                     <Text>
                         price:{' '}
-                        {((reservation.date_finish.toDate() -
-                            reservation.date_start.toDate()) /
+                        {((reservation.date_finish.toDate().getTime() -
+                            reservation.date_start.toDate().getTime()) /
                             36e5) *
                             stationOrdered.price}{' '}
                         nis
@@ -115,6 +120,7 @@ export default function ReservationCard({
                     )*/}
 
                     {/* buttons */}
+
                     <View style={globalStyles.flex_container}>
                         {/* CANCEL */}
                         {onCancel && (

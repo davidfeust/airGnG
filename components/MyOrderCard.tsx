@@ -1,17 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Modal } from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { globalStyles } from '../assets/styles/globalStyles';
 import { dateToString, onCall } from '../utils/GlobalFuncitions';
 import { colors } from '../assets/styles/colors';
 import { Card } from 'react-native-elements';
-import { arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import TimeSlot from './TimeSlot';
 import { AuthenticatedUserContext } from '../providers/AuthenticatedUserProvider';
-import { Rating } from 'react-native-ratings';
-import CustomButton from './CustomButton';
-import CustomRating from './CustomRating';
 
 export default function MyOrderCard({
     date_of_sub,
@@ -31,34 +28,31 @@ export default function MyOrderCard({
 
     // stores the order's owner details
     const [stationOwner, setStationOwner] = useState(null);
+    const ordersRecievedFromFirebase = useRef<boolean>(false);
 
     // stores th owners rating
     const [ownerRating, setOwnerRating] = useState(0);
 
     useEffect(() => {
         // update station details from db
-        getDoc(doc(db, 'stations', station_id)).then((d) =>
-            setStationOrdered(d.data())
+        getDoc(doc(db, 'stations', station_id)).then(
+            (d) =>
+                !ordersRecievedFromFirebase.current &&
+                setStationOrdered(d.data())
         );
+        // return callback to cancel the async task. see an example here:
+        // https://stackoverflow.com/questions/56450975/to-fix-cancel-all-subscriptions-and-asynchronous-tasks-in-a-useeffect-cleanup-f
+        return () => {
+            ordersRecievedFromFirebase.current = true;
+        };
     }, []);
 
     useEffect(() => {
         // update owner details from db
         stationOrdered &&
-            getDoc(doc(db, 'users', stationOrdered.owner_id)).then(
-                (ownerDoc) => {
-                    setStationOwner(ownerDoc.data());
-                    if (ownerDoc.data().reviews?.length > 0) {
-                        const sum = ownerDoc
-                            .data()
-                            .reviews.reduce(
-                                (sum, review) => sum + review.rating,
-                                0
-                            );
-                        setOwnerRating(sum / ownerDoc.data().reviews.length);
-                    }
-                }
-            );
+            getDoc(doc(db, 'users', stationOrdered.owner_id)).then((d) => {
+                setStationOwner(d.data());
+            });
     }, [stationOrdered]);
 
     const onReview = async (rating, comment) => {
@@ -125,7 +119,6 @@ export default function MyOrderCard({
                     <TimeSlot
                         start={reservation.date_start.toDate()}
                         end={reservation.date_finish.toDate()}
-                        index={0}
                     />
 
                     {/* is it payed already? */}
