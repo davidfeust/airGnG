@@ -42,15 +42,21 @@ const UploadPicture = ({
                     })
                     .catch((error) => {
                         // Uh-oh, an error occurred!
+                        // console.log("ERR");
                         console.error(error);
                     });
             } else {
-                await uploadImage(image, fullPath).then((url) => {
+                await uploadImage(image, fullPath).then(
+                    (url) => {
+                    //    console.log("blabla");
                     SetCurrentImage(url);
                     onFinish && onFinish(url);
-                });
+                }
+                )
+                ;
             }
         } else {
+            // console.log("ELSE");
             SetCurrentImage(image);
             onFinish(image);
         }

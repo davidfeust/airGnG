@@ -41,7 +41,6 @@ export default function HomeTab({ navigation }) {
                             : require('../../assets/defaults/default_image.png')
                     }
                 />
-
                 <Modal visible={showBigImage} transparent animationType='slide'>
                     <View style={styles.modalView}>
                         <Image
@@ -57,6 +56,7 @@ export default function HomeTab({ navigation }) {
                 </Modal>
             </Pressable>
             <Rating readonly startingValue={user.rating} />
+            <Text>( {user?.reviews.length} )</Text>
             <CustomButton text={'Logout'} onPress={handleSignOut} />
             <CustomButton
                 text={'Edit your profile'}

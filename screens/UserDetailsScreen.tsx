@@ -10,6 +10,7 @@ import { db } from '../config/firebase';
 import { AuthenticatedUserContext } from '../providers/AuthenticatedUserProvider';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import UploadPicture from '../components/UploadPicture';
+import { uploadImage } from '../utils/GlobalFuncitions';
 
 export default function UserDetailsScreen({ navigation }) {
     const { user, setUser } = useContext(AuthenticatedUserContext);
@@ -47,6 +48,8 @@ export default function UserDetailsScreen({ navigation }) {
             .catch(console.error);
     };
 
+
+    
     return (
         <View style={globalStyles.container}>
             <Text style={[globalStyles.title, { marginTop: 80 }]}>
