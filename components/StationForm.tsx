@@ -1,4 +1,6 @@
-import React from 'react';
+import { Picker } from '@react-native-community/picker';
+import { Formik } from 'formik';
+import React, { MutableRefObject } from 'react';
 import {
     Dimensions,
     Keyboard,
@@ -8,23 +10,29 @@ import {
     TouchableWithoutFeedback,
     View,
 } from 'react-native';
-import { globalStyles } from '../assets/styles/globalStyles';
-import { Formik } from 'formik';
-import AddressAutocomplete from './AddressAutocomplete';
-import { colors } from '../assets/styles/colors';
-import ImagePicker from './ImagePicker';
-import Checkbox from 'expo-checkbox';
-import CustomButton from './CustomButton';
+import {
+    GooglePlacesAutocompleteRef,
+    Point,
+} from 'react-native-google-places-autocomplete';
 import * as yup from 'yup';
+import { colors } from '../assets/styles/colors';
+import { globalStyles } from '../assets/styles/globalStyles';
+import AddressAutocomplete from './AddressAutocomplete';
+import CustomButton from './CustomButton';
+import ImagePicker from './ImagePicker';
 
 export default function StationForm({
     submit,
     processing,
     formValues,
     googleAddress,
+}: {
+    submit: any;
+    processing: boolean;
+    formValues: any;
+    googleAddress: MutableRefObject<GooglePlacesAutocompleteRef>;
 }) {
     const width = Dimensions.get('window').width;
-
     const formSchema = yup.object({
         price: yup.number().required(),
         cords: yup
@@ -32,9 +40,10 @@ export default function StationForm({
             .nullable()
             .test(
                 'notNull',
-                'address is a required field',
-                (value) => value == null
+                'Please Choose a station address',
+                (test) => test != null
             ),
+        plugType: yup.string().required(),
     });
 
     return (
@@ -48,9 +57,12 @@ export default function StationForm({
                 <View style={{ width: '100%', alignItems: 'center' }}>
                     <AddressAutocomplete
                         reference={googleAddress}
-                        setCords={(newVal) =>
-                            formikProps.setFieldValue('cords', newVal)
-                        }
+                        setCords={(newVal: Point) => {
+                            formikProps.setFieldValue('cords', {
+                                latitude: newVal.lat,
+                                longitude: newVal.lng,
+                            });
+                        }}
                     />
                     <Text style={{ color: colors.error }}>
                         {
@@ -64,7 +76,7 @@ export default function StationForm({
                             <View
                                 style={[
                                     globalStyles.container,
-                                    { width: width, paddingBottom: 170 },
+                                    { width: width, paddingBottom: 150 },
                                 ]}
                             >
                                 {/* Price field*/}
@@ -83,29 +95,40 @@ export default function StationForm({
                                         formikProps.errors.price}
                                 </Text>
 
+                                <Text style={{ color: colors.error }}>
+                                    {formikProps.touched.plugType &&
+                                        formikProps.errors.plugType}
+                                </Text>
+
+                                {/* Plug type field*/}
+                                <Text>Plug Type:</Text>
+                                <Picker
+                                    style={{
+                                        alignSelf: 'stretch',
+                                        maxWidth: '75%',
+                                    }}
+                                    selectedValue={formikProps.values.plugType}
+                                    onValueChange={(selected) =>
+                                        formikProps.setFieldValue(
+                                            'plugType',
+                                            selected
+                                        )
+                                    }
+                                >
+                                    <Picker.Item value={'BEV'} label={'BEV'} />
+                                    <Picker.Item
+                                        value={'PHEV'}
+                                        label={'PHEV'}
+                                    />
+                                    <Picker.Item value={'HEV'} label={'HEV'} />
+                                </Picker>
+
                                 <ImagePicker
                                     image={formikProps.values.image}
                                     setImage={(img) =>
                                         formikProps.setFieldValue('image', img)
                                     }
                                 />
-
-                                {/* shadowed field */}
-                                <View style={globalStyles.flex_container}>
-                                    <Checkbox
-                                        style={globalStyles.checkbox}
-                                        value={formikProps.values.shadowed}
-                                        onValueChange={(nextValue) =>
-                                            formikProps.setFieldValue(
-                                                'shadowed',
-                                                nextValue
-                                            )
-                                        }
-                                    />
-                                    <Text style={globalStyles.checkbox_label}>
-                                        Shadowed parking spot
-                                    </Text>
-                                </View>
 
                                 {/* Submit */}
                                 <CustomButton
