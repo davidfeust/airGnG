@@ -1,28 +1,34 @@
 import React from 'react';
-
 import {
-    View,
     Image,
-    Text,
-    StyleSheet,
-    ViewProps,
-    ViewStyle,
     StyleProp,
+    StyleSheet,
+    Text,
+    View,
+    ViewStyle,
 } from 'react-native';
-import { Owner } from '../App.d';
+import { AirGnGUser, PlugType } from '../App.d';
 import { colors } from '../assets/styles/colors';
 
 class MiniCard extends React.PureComponent<{
     image: string;
-    ownerDetails: Owner;
+    ownerDetails: AirGnGUser;
     address: string;
     children?: React.ReactNode;
     style?: StyleProp<ViewStyle>;
     price?: number;
+    plugType: PlugType;
 }> {
     render() {
-        const { image, ownerDetails, address, children, style, price } =
-            this.props;
+        const {
+            image,
+            ownerDetails,
+            address,
+            children,
+            style,
+            price,
+            plugType,
+        } = this.props;
         return (
             <View
                 style={{
@@ -34,6 +40,9 @@ class MiniCard extends React.PureComponent<{
                     <Image source={{ uri: image }} style={styles.image} />
                     <View style={styles.text}>
                         <Text style={styles.address_text}>{address}</Text>
+                        <Text
+                            style={styles.owner_text}
+                        >{`Plug Type: ${plugType}`}</Text>
                         {ownerDetails && (
                             <Text style={styles.owner_text}>
                                 {'Owner: ' + ownerDetails.name}

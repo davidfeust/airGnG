@@ -1,6 +1,6 @@
 import { User } from 'firebase/auth';
 import { DocumentData, Timestamp } from 'firebase/firestore';
-import { LatLng } from 'react-native-maps';
+import { Point } from 'react-native-google-places-autocomplete';
 
 export type Time = {
     set?: (start: Date | null, end: Date | null) => void;
@@ -16,11 +16,12 @@ export type TimeSlotType = {
 };
 
 export type Order = {
-    id: number;
-    user_id: number;
-    station_id: number;
+    id: string;
+    user_id: string;
+    station_id: string;
     reservation: Reservation;
-    order_date: Date;
+    order_date: Timestamp;
+    paid: boolean;
 };
 export type AirGnGUser = DocumentData &
     User & {
@@ -37,8 +38,8 @@ interface Station extends DocumentData {
     image: string;
     phone: number;
     owner_id: string;
-    cords: LatLng;
-    plugType: PlugType;
+    cords: Point;
+    plug_type: PlugType;
 }
 
 export type Reservation = {

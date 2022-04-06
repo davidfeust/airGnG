@@ -2,8 +2,9 @@ import React, { createContext, useEffect, useState } from 'react';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { getFromCol } from '../utils/GlobalFuncitions';
+import { Station } from '../App.d';
 
-export const publicStationsContext = createContext({ stations: [] });
+export const publicStationsContext = createContext({ stations: [] as Station[]});
 
 export const PublicStationsProvider = ({ children }) => {
     const [stations, setStations] = useState([]);

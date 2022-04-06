@@ -41,7 +41,10 @@ export default function StationForm({
             .test(
                 'notNull',
                 'Please Choose a station address',
-                (test) => test != null
+
+                (test) => {
+                    return test != null && test != undefined;
+                }
             ),
         plugType: yup.string().required(),
     });
@@ -58,10 +61,11 @@ export default function StationForm({
                     <AddressAutocomplete
                         reference={googleAddress}
                         setCords={(newVal: Point) => {
-                            formikProps.setFieldValue('cords', {
-                                latitude: newVal.lat,
-                                longitude: newVal.lng,
-                            });
+                            if (newVal) {
+                                formikProps.setFieldValue('cords', newVal);
+                            } else {
+                                formikProps.setFieldValue('cords', null);
+                            }
                         }}
                     />
                     <Text style={{ color: colors.error }}>

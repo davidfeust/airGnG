@@ -22,7 +22,8 @@ export default function SearchStationTab({ navigation }) {
     const [ownerDetails, setOwnerDetails] = useState([]);
     const { stations } = useContext(publicStationsContext);
     const [selectedId, setSelectedId] = useState(null);
-    const [publishedStations, setPublishedStations] = useState(stations);
+    const [publishedStations, setPublishedStations] =
+        useState<Station[]>(stations);
     const { user } = useContext(AuthenticatedUserContext);
     const cardWidth = 360;
     const cardMarginHorizontal = 7;
@@ -30,7 +31,7 @@ export default function SearchStationTab({ navigation }) {
     const slideUpPanel = useRef<SlidingUpPanel>();
     const googleAddress = useRef<GooglePlacesAutocompleteRef>();
     const map = useRef<MapView>();
-    const flatList = useRef<FlatList>();
+    const flatList = useRef<FlatList<Station>>();
 
     const viewConfig = useRef({
         itemVisiblePercentThreshold: 70,
@@ -182,38 +183,17 @@ export default function SearchStationTab({ navigation }) {
                     keyExtractor={(item) => item.id}
                     ref={flatList}
                     data={publishedStations}
-                    renderItem={({
-                        item: {
-                            address,
-                            price,
-                            image,
-                            time_slots,
-                            id,
-                            phone,
-                            owner_id,
-                        },
-                        index,
-                    }) => (
+                    renderItem={({ item, index }) => (
                         <TouchableWithoutFeedback
-                            onPress={() =>
-                                onSelectingCard({
-                                    address,
-                                    time_slots,
-                                    price,
-                                    image,
-                                    id,
-                                    phone,
-                                    owner_id,
-                                    plugType: 'BEV',
-                                })
-                            }
+                            onPress={() => onSelectingCard(item)}
                         >
                             <View>
                                 <MiniCard
-                                    image={image}
+                                    image={item.image}
                                     ownerDetails={ownerDetails[index]}
-                                    address={address}
-                                    price={price}
+                                    address={item.address}
+                                    price={item.price}
+                                    plugType={item.plug_type}
                                     style={{
                                         width: cardWidth,
                                         overflow: 'hidden',

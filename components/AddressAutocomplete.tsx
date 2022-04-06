@@ -69,7 +69,11 @@ export default function AddressAutocomplete({
 
     return (
         <GooglePlacesAutocomplete
-            keepResultsAfterBlur={false}
+            textInputProps={{
+                onSelectionChange: (e) => {
+                    setCords(null);
+                },
+            }}
             ref={reference}
             placeholder={placeHolder}
             styles={styleToUse}
