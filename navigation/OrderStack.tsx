@@ -34,7 +34,6 @@ const ChooseTimeSlot = ({ route, navigation }) => {
                         <TouchableOpacity
                             key={idx}
                             onPress={() => {
-                                console.log(start, end);
                                 navigation.navigate('Choose Time', {
                                     start: start,
                                     end: end,

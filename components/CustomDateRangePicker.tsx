@@ -18,7 +18,6 @@ const CustomDateRangePicker = ({
     const inputHandler = (s: Date, e: Date) => {
         if (s) {
             if (s > end) {
-                console.log('here!!!!');
                 // start time is after end time
                 end.setDate(s.getDate());
                 end.setHours(s.getHours() + 1);
