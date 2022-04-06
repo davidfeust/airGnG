@@ -86,7 +86,11 @@ export default function MyOrderCard({
                     />
 
                     {/* is it Paid already? */}
-                    <Text>{`Paid: ${String(order.paid)}`}</Text>
+                    {order.paid ? (
+                        <Text>{'Reservation Confirmed'}</Text>
+                    ) : (
+                        <Text>{'Wating For Confirmation'}</Text>
+                    )}
 
                     {/* calculated price */}
                     <Text>
