@@ -7,13 +7,14 @@ import { globalStyles } from '../assets/styles/globalStyles';
 import { colors } from '../assets/styles/colors';
 import MiniCard from '../components/MiniCard';
 import { AuthenticatedUserContext } from '../providers/AuthenticatedUserProvider';
+import { Order } from '../App.d';
 
 export default function ReservationFromMeScreen({
     route: {
         params: { station_image, station_address, station_id },
     },
 }) {
-    const [reservations, setReservations] = useState([]);
+    const [reservations, setReservations] = useState<Order[]>([]);
     const { user } = useContext(AuthenticatedUserContext);
 
     useEffect(() => {
@@ -22,7 +23,9 @@ export default function ReservationFromMeScreen({
             where('station_id', '==', station_id)
         );
         getDocs(res).then((snap) => {
-            setReservations(snap.docs.map((d) => ({ ...d.data(), id: d.id })));
+            setReservations(
+                snap.docs.map((d) => ({ ...(d.data() as Order), id: d.id }))
+            );
         });
     }, [reservations]);
 
@@ -50,29 +53,9 @@ export default function ReservationFromMeScreen({
                                 width: '100%',
                             }}
                         >
-                            {reservations.map(
-                                ({
-                                    date_of_sub,
-                                    payed,
-                                    reservation,
-                                    station_id,
-                                    sub_car_type,
-                                    sub_id,
-                                    id,
-                                }) => (
-                                    <ReservationCard
-                                        date_of_sub={date_of_sub}
-                                        payed={payed}
-                                        reservation={reservation}
-                                        station_id={station_id}
-                                        sub_car_type={'BEV'} // currently sub_car_type contains some bullshit string we need to clean the database...
-                                        sub_id={sub_id}
-                                        order_id={id}
-                                        // onCancel={onCancel}
-                                        key={id}
-                                    />
-                                )
-                            )}
+                            {reservations.map((order) => (
+                                <ReservationCard order={order} key={order.id} />
+                            ))}
                         </ScrollView>
                     ) : (
                         <Text style={globalStyles.subTitle}>

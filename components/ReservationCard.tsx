@@ -1,32 +1,20 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { doc, getDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { globalStyles } from '../assets/styles/globalStyles';
-import { dateToString, onCall } from '../utils/GlobalFuncitions';
-import { colors } from '../assets/styles/colors';
 import { Card } from 'react-native-elements';
-import { doc, getDoc, Timestamp } from 'firebase/firestore';
+import { Order } from '../App.d';
+import { colors } from '../assets/styles/colors';
+import { globalStyles } from '../assets/styles/globalStyles';
 import { db } from '../config/firebase';
+import { dateToString, onCall } from '../utils/GlobalFuncitions';
 import TimeSlot from './TimeSlot';
-import { Reservation, PlugType } from '../App.d';
 
 export default function ReservationCard({
-    date_of_sub,
-    payed,
-    reservation,
-    station_id,
-    sub_car_type,
-    sub_id,
-    order_id,
+    order,
     onCancel,
 }: {
-    date_of_sub: Timestamp;
-    payed: boolean;
-    reservation: Reservation;
-    station_id: string;
-    sub_car_type: PlugType;
-    sub_id: string;
-    order_id: string;
+    order: Order;
     onCancel?: (order_id: string) => void;
 }) {
     // stores the order's station details
@@ -37,14 +25,14 @@ export default function ReservationCard({
 
     useEffect(() => {
         // update station details from db
-        getDoc(doc(db, 'stations', station_id)).then((d) =>
+        getDoc(doc(db, 'stations', order.station_id)).then((d) =>
             setStationOrdered(d.data())
         );
     }, []);
 
     useEffect(() => {
         // update owner details from db
-        getDoc(doc(db, 'users', sub_id)).then((d) => {
+        getDoc(doc(db, 'users', order.user_id)).then((d) => {
             setSubDetails(d.data());
         });
     }, []);
@@ -59,7 +47,7 @@ export default function ReservationCard({
                 >
                     {/* order date */}
                     <Card.Title>
-                        ordered on: {dateToString(date_of_sub.toDate())}
+                        ordered on: {dateToString(order.order_date.toDate())}
                     </Card.Title>
                     <View>
                         {/* the order user name if exists... */}
@@ -74,30 +62,24 @@ export default function ReservationCard({
 
                     {/* reservation details */}
                     <TimeSlot
-                        start={reservation.date_start.toDate()}
-                        end={reservation.date_finish.toDate()}
+                        start={order.reservation.date_start.toDate()}
+                        end={order.reservation.date_finish.toDate()}
                     />
 
-                    {/* is it payed already? */}
-                    <Text>payed: {String(payed)}</Text>
+                    {/* is it Paid already? */}
+                    <Text>{`Paid: ${String(order.paid)}`}</Text>
 
                     {/* calculated price */}
                     <Text>
                         price:{' '}
-                        {((reservation.date_finish.toDate().getTime() -
-                            reservation.date_start.toDate().getTime()) /
+                        {((order.reservation.date_finish.toDate().getTime() -
+                            order.reservation.date_start.toDate().getTime()) /
                             36e5) *
                             stationOrdered.price}{' '}
                         nis
                     </Text>
 
-                    {/* car type. we might erase this field in the future */}
-                    <Text>car type: {sub_car_type}</Text>
-
                     {/*TODO: the 'Reservation man' image, */}
-                    {/*stationOrdered.image !== undefined && (
-                        <Card.Image source={{uri: stationOrdered.image}}/>
-                    )*/}
 
                     {/* buttons */}
 
@@ -106,7 +88,7 @@ export default function ReservationCard({
                         {onCancel && (
                             <TouchableOpacity
                                 style={styles.icon}
-                                onPress={() => onCancel(order_id)}
+                                onPress={() => onCancel(order.id)}
                             >
                                 <MaterialCommunityIcons
                                     name='trash-can'

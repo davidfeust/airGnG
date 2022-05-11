@@ -2,6 +2,7 @@ import {
     collection,
     doc,
     documentId,
+    DocumentSnapshot,
     getDocs,
     onSnapshot,
     query,
@@ -10,9 +11,10 @@ import {
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { db } from '../config/firebase';
 import { AuthenticatedUserContext } from './AuthenticatedUserProvider';
+import { Order } from '../App.d';
 
 export const myOrdersContext = createContext({
-    myOrders: [],
+    myOrders: [] as Order[],
     isLoading: false,
 });
 
@@ -21,7 +23,7 @@ export const MyOrdersProvider = ({ children }) => {
     const [myOrders, setMyOrders] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    const updateMyOrders = async (snap) => {
+    const updateMyOrders = async (snap: DocumentSnapshot) => {
         if (!snap.exists()) {
             setMyOrders([]);
             return;

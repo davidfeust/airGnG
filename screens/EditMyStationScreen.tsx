@@ -1,12 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Keyboard, Text, TouchableWithoutFeedback, View } from 'react-native';
-import {
-    doc,
-    DocumentData,
-    DocumentSnapshot,
-    getDoc,
-    updateDoc,
-} from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../config/firebase';
 import { globalStyles } from '../assets/styles/globalStyles';
 
@@ -14,14 +8,7 @@ import { getStartAndEndTime, uploadImage } from '../utils/GlobalFuncitions';
 import StationForm from '../components/StationForm';
 import { deleteObject, ref } from '@firebase/storage';
 import { GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
-
-interface Station extends DocumentData {
-    price?: number;
-    shadowed?: boolean;
-    image?: string;
-    cords?: any;
-    addres?: string;
-}
+import { Station } from '../App.d';
 
 export default function EditMyStationScreen({ navigation, route }) {
     const googleAddress = useRef<GooglePlacesAutocompleteRef>();
@@ -31,11 +18,11 @@ export default function EditMyStationScreen({ navigation, route }) {
         phone: '',
         name: '',
         price: 0,
-        shadowed: false,
         timeSlots: [getStartAndEndTime()],
         image: null,
         cords: null,
         address: '',
+        plugType: 'BEV',
     });
 
     /**
@@ -44,15 +31,15 @@ export default function EditMyStationScreen({ navigation, route }) {
     useEffect(() => {
         const docRef = doc(db, 'stations', route.params.station_id);
         getDoc(docRef).then((docSnap) => {
-            const docData: Station = docSnap.data();
+            const docData: Station = docSnap.data() as Station;
             // set initial values of form from DB
             setFormValues({
                 ...formValues,
                 price: docData.price,
-                shadowed: docData.shadowed,
                 image: docData.image,
                 cords: docData.cords,
                 address: docData.address,
+                plugType: docData.plug_type,
             });
         });
     }, []);
@@ -62,9 +49,8 @@ export default function EditMyStationScreen({ navigation, route }) {
         googleAddress.current.setAddressText(formValues.address);
     }, [formValues.address]);
 
-    async function onSave(values) {
+    async function onSave({ cords, image, price, plugType }) {
         setProcessing(true);
-        const { cords, image, price, shadowed } = values;
 
         let image_url = null;
         if (image !== formValues.image) {
@@ -97,9 +83,9 @@ export default function EditMyStationScreen({ navigation, route }) {
         await updateDoc(postRef, {
             address: googleAddress.current.getAddressText(),
             price: price,
-            shadowed: shadowed,
             image: image_url,
             cords: cords,
+            plug_type: plugType,
         })
             .then(() => {
                 setProcessing(false);

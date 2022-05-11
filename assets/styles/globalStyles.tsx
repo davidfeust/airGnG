@@ -1,24 +1,24 @@
-import { StyleSheet } from "react-native";
-import { colors } from "./colors";
+import { StyleSheet } from 'react-native';
+import { colors } from './colors';
 
 export const globalStyles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
+        backgroundColor: '#fff',
+        alignItems: 'center',
     },
     title: {
         fontSize: 40,
-        fontWeight: "bold",
-        maxWidth: "75%",
-        textAlign: "center",
+        fontWeight: 'bold',
+        maxWidth: '75%',
+        textAlign: 'center',
         color: colors.primary,
     },
     subTitle: {
         fontSize: 28,
-        fontWeight: "bold",
-        maxWidth: "75%",
-        textAlign: "center",
+        fontWeight: 'bold',
+        maxWidth: '75%',
+        textAlign: 'center',
         color: colors.primary,
     },
     bt: {
@@ -26,46 +26,46 @@ export const globalStyles = StyleSheet.create({
         height: 45,
         backgroundColor: colors.primary,
         borderRadius: 15,
-        alignItems: "center",
-        justifyContent: "center",
+        alignItems: 'center',
+        justifyContent: 'center',
         margin: 10,
         elevation: 10,
     },
     in_bt: {
-        color: "white",
+        color: 'white',
         // margin: 10,
         // width: "40%",
-        textAlign: "center",
+        textAlign: 'center',
     },
     text_input: {
         borderBottomWidth: 1,
-        borderColor: "gray",
+        borderColor: 'gray',
         margin: 2,
         padding: 5,
-        width: "80%",
+        width: '80%',
     },
     flex_container: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     checkbox: {
-        alignSelf: "center",
+        alignSelf: 'center',
     },
     checkbox_label: {
         margin: 10,
     },
     mini_card: {
-        flexDirection: "row",
+        flexDirection: 'row',
         width: 300,
 
         opacity: 0.8,
         elevation: 10,
         marginHorizontal: 10,
-        backgroundColor: "white",
+        backgroundColor: 'white',
         borderRadius: 5,
     },
-    mini_card_image_style: { width: 200, height: 100, alignItems: "center" },
+    mini_card_image_style: { width: 200, height: 100, alignItems: 'center' },
 
     maxi_card_style: {
         flex: 1,
