@@ -3,7 +3,7 @@ import { db, storage } from '../config/firebase';
 import * as ImagePicker from 'expo-image-picker';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { Alert, Linking, Platform } from 'react-native';
-
+import { Review } from '../App.d';
 export const getFromCol = async (
     col_name: string,
     set_fun: (map: { id: string }[]) => void
@@ -68,7 +68,9 @@ export const dateToString = (date: Date) => {
 
     return dateToStringNoHours(date) + dateToStringHours(date);
 };
-
+export const get_average_rate= (reviews: Review[]): number => {
+    return(reviews.reduce((a, b) => a + b.rating, 0) / reviews.length);  
+}
 export const dateToStringNoHours = (date: Date) => {
     return (
         date.getDate() +

@@ -13,7 +13,7 @@ import CustomRating from "./CustomRating";
 
 
 export default function MyOrderCard({
-    date_of_sub,
+    order_date,
     payed,
     reservation, // = { start_date:{firebase date type...} , finish_date:{firebase date type...}}
     station_id,
@@ -67,6 +67,7 @@ export default function MyOrderCard({
             reviews: arrayUnion(review),
         });
     };
+    console.log("date: "+order_date);
 
     return (
         <View>
@@ -76,7 +77,8 @@ export default function MyOrderCard({
                     <Card.Title>address: {stationOrdered.address}</Card.Title>
                     {/* order date */}
                     <Card.Title>
-                        oredered on: {dateToString(date_of_sub.toDate())}
+                        
+                       { `oredered on: ${dateToString(order_date.toDate())}`}
                     </Card.Title>
                     <View
                         style={{

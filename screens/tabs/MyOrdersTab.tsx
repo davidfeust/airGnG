@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect} from "react";
 import {ActivityIndicator, Alert, ScrollView, Text, View} from "react-native";
 import {arrayRemove, deleteDoc, doc, updateDoc,} from "firebase/firestore";
 import {db} from "../../config/firebase";
@@ -17,7 +17,7 @@ import {colors} from "../../assets/styles/colors";
 export default function MyOrdersTab({navigation}) {
     const {myOrders, isLoading} = useContext(myOrdersContext);
     const {user} = useContext(AuthenticatedUserContext);
-
+    useEffect(()=>{console.log(myOrders)},[]) // see the current my orders
     const onCancel = (order_id) => {
         return Alert.alert(
             "Are your sure?",
@@ -53,7 +53,7 @@ export default function MyOrdersTab({navigation}) {
             <ScrollView>
                 {myOrders.map(
                     ({
-                         date_of_sub,
+                         order_date,
                          payed,
                          reservation,
                          station_id,
@@ -62,7 +62,7 @@ export default function MyOrdersTab({navigation}) {
                          id,
                      }) => (
                         <MyOrderCard
-                            date_of_sub={date_of_sub}
+                            order_date={order_date}
                             payed={payed}
                             reservation={reservation}
                             station_id={station_id}

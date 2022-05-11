@@ -37,4 +37,10 @@ export type Reservation = {
     date_finish: Timestamp;
 };
 
+export type Review = {
+    comment : String
+    rating : number 
+    reviewer : String
+}
+
 export type PlugType = 'BEV' | 'PHEV' | 'HEV';

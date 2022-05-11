@@ -7,11 +7,15 @@ import { auth, db } from '../../config/firebase';
 import { doc } from 'firebase/firestore';
 import { Rating } from 'react-native-ratings';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { map } from '@firebase/util';
+import { Review } from '../../App.d';
+import { get_average_rate } from '../../utils/GlobalFuncitions';
 
 export default function HomeTab({ navigation }) {
     const [showBigImage, setShowBigImage] = useState(false);
     const { user, unSubUser } = useContext(AuthenticatedUserContext);
     // user.reviews = [{rating:0, reviewer: 'shimon', comment: 'he is awsome'}]
+    useEffect(()=>{console.log(user.re)},[]) // see the current my orders
 
     const handleSignOut = async () => {
         try {
@@ -55,7 +59,7 @@ export default function HomeTab({ navigation }) {
                     </View>
                 </Modal>
             </Pressable>
-            <Rating readonly startingValue={user.rating} />
+            <Rating readonly startingValue={user.reviews? get_average_rate(user.reviews) : 0 } />
             <Text>( {user?.reviews.length} )</Text>
             <CustomButton text={'Logout'} onPress={handleSignOut} />
             <CustomButton
@@ -88,3 +92,5 @@ const styles = StyleSheet.create({
         // bottom: 20,
     },
 });
+
+
