@@ -11,7 +11,7 @@ import { Order } from '../App.d';
 
 export default function ReservationFromMeScreen({
     route: {
-        params: { station_image, station_address, station_id },
+        params: { station_image, station_address, station_id, plugType },
     },
 }) {
     const [reservations, setReservations] = useState<Order[]>([]);
@@ -35,6 +35,7 @@ export default function ReservationFromMeScreen({
                 image={station_image}
                 address={station_address}
                 ownerDetails={user}
+                plugType={plugType}
             >
                 <Text style={styles.num_text}>
                     {`Number of orders: ${reservations.length}`}

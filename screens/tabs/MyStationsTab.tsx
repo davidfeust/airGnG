@@ -24,6 +24,7 @@ import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvi
 import { deleteObject, getStorage, ref } from '@firebase/storage';
 import { globalStyles } from '../../assets/styles/globalStyles';
 import CustomButton from '../../components/CustomButton';
+import { Station } from '../../App.d';
 
 /**
  * represents the page where a user can see the status of his post.
@@ -34,7 +35,7 @@ import CustomButton from '../../components/CustomButton';
 export default function MyStationsTab({ navigation }) {
     const { user } = useContext(AuthenticatedUserContext);
     const { stations } = useContext(publicStationsContext);
-    const [myStations, setMyStations] = useState([]);
+    const [myStations, setMyStations] = useState<Station[]>([]);
 
     useEffect(() => {
         //give the admin user all the stations
@@ -122,6 +123,7 @@ export default function MyStationsTab({ navigation }) {
                                     station_id: station.id,
                                     station_image: station.image,
                                     station_address: station.address,
+                                    plugType: station.plug_type,
                                 })
                             }
                         />
