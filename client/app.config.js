@@ -47,6 +47,8 @@ export default {
             messagingSenderId: process.env.MESSAGING_SENDER_ID,
             appId: process.env.APP_ID,
             googleMapsApi: process.env.GOOGLE_MAPS_APIKEY,
+            baseUrl: process.env.REACT_APP_BASE_URL,
+            port: process.env.PORT,
         },
     },
 };

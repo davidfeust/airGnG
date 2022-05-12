@@ -1,20 +1,18 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import axios from 'axios';
+import Constants from 'expo-constants';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Dimensions, FlatList, Platform, StyleSheet, View } from 'react-native';
-import { publicStationsContext } from '../../providers/PublicStationsProvider';
-import MapView, { Marker } from 'react-native-maps';
 import { Image } from 'react-native-elements';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
+import MapView, { Marker } from 'react-native-maps';
+import SlidingUpPanel from 'rn-sliding-up-panel';
+import { Station } from '../../App.d';
 import { colors } from '../../assets/styles/colors';
 import AddressAutocomplete from '../../components/AddressAutocomplete';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
-import SlidingUpPanel from 'rn-sliding-up-panel';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import MiniCard from '../../components/MiniCard';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../../config/firebase';
-import { GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
-import { Station } from '../../App.d';
-import axios from 'axios';
+import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
 
 export default function SearchStationTab({ navigation }) {
     //for the autocomplete function
@@ -47,9 +45,10 @@ export default function SearchStationTab({ navigation }) {
     });
     useEffect(() => {
         axios
-            .get('http://192.168.1.108:8080/stations', {
-                headers: { accept: 'application/json' },
-            })
+            .get(
+                `${Constants.manifest.extra.baseUrl}:${Constants.manifest.extra.port}/stations`
+            )
+
             .then((res) => setStations(res.data));
     }, []);
     const animateToMarker = () => {
@@ -76,7 +75,10 @@ export default function SearchStationTab({ navigation }) {
         // updating owner details
         const owners = publishedStations.map(async (station) => {
             return axios
-                .get(`http://192.168.1.108:8080/users/${station.owner_id}`)
+                .get(
+                    `${Constants.manifest.extra.baseUrl}:${Constants.manifest.extra.port}/users/${station.owner_id}`
+                )
+
                 .then((res) => res.data);
         });
         Promise.all(owners).then(setOwnerDetails);

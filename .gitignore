@@ -18,3 +18,4 @@ web-build/
 .idea/workspace.xml
 package-lock.json
 client/.env
+server/.env

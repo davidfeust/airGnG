@@ -1,12 +1,12 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { doc, getDoc } from 'firebase/firestore';
+import axios from 'axios';
+import Constants from 'expo-constants';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Card } from 'react-native-elements';
 import { Order } from '../App.d';
 import { colors } from '../assets/styles/colors';
 import { globalStyles } from '../assets/styles/globalStyles';
-import { db } from '../config/firebase';
 import { dateToString, onCall } from '../utils/GlobalFuncitions';
 import TimeSlot from './TimeSlot';
 
@@ -25,16 +25,22 @@ export default function ReservationCard({
 
     useEffect(() => {
         // update station details from db
-        getDoc(doc(db, 'stations', order.station_id)).then((d) =>
-            setStationOrdered(d.data())
-        );
+        axios
+            .get(
+                `${Constants.manifest.extra.baseUrl}:${Constants.manifest.extra.port}/stations/${order.station_id}`
+            )
+            .then((d) => setStationOrdered(d.data));
     }, []);
 
     useEffect(() => {
         // update owner details from db
-        getDoc(doc(db, 'users', order.user_id)).then((d) => {
-            setSubDetails(d.data());
-        });
+        axios
+            .get(
+                `${Constants.manifest.extra.baseUrl}:${Constants.manifest.extra.port}/users/${order.user_id}`
+            )
+            .then((d) => {
+                setSubDetails(d.data);
+            });
     }, []);
     return (
         <View>

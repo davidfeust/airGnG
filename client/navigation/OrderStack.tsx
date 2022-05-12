@@ -17,6 +17,12 @@ import CustomButton from '../components/CustomButton';
 import PaymentPage from '../pages/PaymentPage';
 import MiniCard from '../components/MiniCard';
 type Slot = { start: Timestamp; end: Timestamp };
+function toDateTime(time: Timestamp) {
+    var t = new Date(1970, 0, 1); // Epoch
+    t.setSeconds(time.seconds);
+    t.setMilliseconds(time.nanoseconds * 1000);
+    return t;
+}
 const ChooseTimeSlot = ({ route, navigation }) => {
     return (
         <View style={{ alignSelf: 'center' }}>
@@ -28,8 +34,9 @@ const ChooseTimeSlot = ({ route, navigation }) => {
             <ScrollView style={{ marginTop: 20 }}>
                 {route.params.time_slots.map((slot: Slot, idx: number) => {
                     const { start, end } = slot;
-                    const s = start.toDate();
-                    const e = end.toDate();
+                    const s = toDateTime(start);
+                    const e = toDateTime(end);
+
                     return (
                         <TouchableOpacity
                             key={idx}
@@ -74,8 +81,8 @@ const OrderStack = ({ route, navigation }) => {
     }, [owner_id]);
 
     const ChooseTime = ({ route, navigation }) => {
-        const [start, setStart] = useState(route.params.start.toDate());
-        const [end, setEnd] = useState(route.params.end.toDate());
+        const [start, setStart] = useState(toDateTime(route.params.start));
+        const [end, setEnd] = useState(toDateTime(route.params.end));
         const [finalPrice, setFinalPrice] = useState(
             (price * (end.getTime() - start.getTime())) / (1000 * 3600)
         );
@@ -97,8 +104,8 @@ const OrderStack = ({ route, navigation }) => {
                                     (1000 * 3600)
                             );
                         }}
-                        minDate={new Date(route.params.start.toDate())}
-                        maxDate={new Date(route.params.end.toDate())}
+                        minDate={new Date(toDateTime(route.params.start))}
+                        maxDate={new Date(toDateTime(route.params.end))}
                     />
                 </View>
                 <CustomButton

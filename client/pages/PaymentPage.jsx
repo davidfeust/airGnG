@@ -23,7 +23,7 @@ const PaymentPage = ({ route, navigation }) => {
         if (start && end) {
             setProcessing(true);
             addDoc(collection(db, 'orders'), {
-                sub_id: user.uid,
+                user_id: user.uid,
                 order_date: new Date(),
                 reservation: {
                     date_start: start,
