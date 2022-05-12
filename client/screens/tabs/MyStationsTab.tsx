@@ -24,6 +24,8 @@ import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvi
 import { deleteObject, getStorage, ref } from '@firebase/storage';
 import { globalStyles } from '../../assets/styles/globalStyles';
 import CustomButton from '../../components/CustomButton';
+import { Station } from '../../App.d';
+import axios from 'axios';
 
 /**
  * represents the page where a user can see the status of his post.
@@ -33,8 +35,14 @@ import CustomButton from '../../components/CustomButton';
  */
 export default function MyStationsTab({ navigation }) {
     const { user } = useContext(AuthenticatedUserContext);
-    const { stations } = useContext(publicStationsContext);
+    const [stations, setStations] = useState<Station[]>([]);
     const [myStations, setMyStations] = useState([]);
+
+    useEffect(() => {
+        axios
+            .get('http://192.168.1.108:8080/stations')
+            .then((res) => setStations(res.data));
+    }, []);
 
     useEffect(() => {
         //give the admin user all the stations
@@ -47,11 +55,11 @@ export default function MyStationsTab({ navigation }) {
         }
     }, [stations]);
 
-    const onEdit = (id) => {
+    const onEdit = (id: string) => {
         navigation.push('EditMyStationScreen', { station_id: id }); // push to the navigation EditMyStationScreen() component' so we could go back
     };
 
-    const onDelete = (id) => {
+    const onDelete = (id: string) => {
         const q = query(
             collection(db, 'orders'),
             where('station_id', '==', id)

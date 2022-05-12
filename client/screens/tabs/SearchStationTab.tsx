@@ -14,14 +14,15 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
 import { Station } from '../../App.d';
+import axios from 'axios';
 
 export default function SearchStationTab({ navigation }) {
     //for the autocomplete function
     const [cords, setCords] = useState(null);
     const [viewPort, setViewPort] = useState(null);
     const [ownerDetails, setOwnerDetails] = useState([]);
-    const { stations } = useContext(publicStationsContext);
     const [selectedId, setSelectedId] = useState(null);
+    const [stations, setStations] = useState<Station[]>([]);
     const [publishedStations, setPublishedStations] =
         useState<Station[]>(stations);
     const { user } = useContext(AuthenticatedUserContext);
@@ -44,7 +45,13 @@ export default function SearchStationTab({ navigation }) {
             setSelectedId(selectedPlace.id);
         }
     });
-
+    useEffect(() => {
+        axios
+            .get('http://192.168.1.108:8080/stations', {
+                headers: { accept: 'application/json' },
+            })
+            .then((res) => setStations(res.data));
+    }, []);
     const animateToMarker = () => {
         if (selectedId) {
             const index = publishedStations.findIndex(
@@ -68,8 +75,9 @@ export default function SearchStationTab({ navigation }) {
     useEffect(() => {
         // updating owner details
         const owners = publishedStations.map(async (station) => {
-            const ownerDoc = await getDoc(doc(db, `users/${station.owner_id}`));
-            return ownerDoc.data();
+            return axios
+                .get(`http://192.168.1.108:8080/users/${station.owner_id}`)
+                .then((res) => res.data);
         });
         Promise.all(owners).then(setOwnerDetails);
     }, [publishedStations]);
