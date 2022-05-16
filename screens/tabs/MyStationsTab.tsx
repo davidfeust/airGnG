@@ -1,3 +1,15 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { deleteObject, getStorage, ref } from '@firebase/storage';
+import axios, { AxiosResponse } from 'axios';
+import Constants from 'expo-constants';
+import {
+    collection,
+    deleteDoc,
+    doc,
+    getDocs,
+    query,
+    where,
+} from 'firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react';
 import {
     Alert,
@@ -7,23 +19,13 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
-import {
-    collection,
-    deleteDoc,
-    doc,
-    getDocs,
-    query,
-    where,
-} from 'firebase/firestore';
-import { db } from '../../config/firebase';
-import MyStationCard from '../../components/MyStationCard';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Station } from '../../App.d';
 import { colors } from '../../assets/styles/colors';
-import { publicStationsContext } from '../../providers/PublicStationsProvider';
-import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
-import { deleteObject, getStorage, ref } from '@firebase/storage';
 import { globalStyles } from '../../assets/styles/globalStyles';
 import CustomButton from '../../components/CustomButton';
+import MyStationCard from '../../components/MyStationCard';
+import { db } from '../../config/firebase';
+import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
 
 /**
  * represents the page where a user can see the status of his post.
@@ -33,8 +35,16 @@ import CustomButton from '../../components/CustomButton';
  */
 export default function MyStationsTab({ navigation }) {
     const { user } = useContext(AuthenticatedUserContext);
-    const { stations } = useContext(publicStationsContext);
-    const [myStations, setMyStations] = useState([]);
+    const [stations, setStations] = useState<Station[]>([]);
+    const [myStations, setMyStations] = useState<Station[]>([]);
+
+    useEffect(() => {
+        axios
+            .get<any, AxiosResponse<Station[]>>(
+                `${Constants.manifest.extra.baseUrl}/stations`
+            )
+            .then((res) => setStations(res.data));
+    }, []);
 
     useEffect(() => {
         //give the admin user all the stations
@@ -47,11 +57,11 @@ export default function MyStationsTab({ navigation }) {
         }
     }, [stations]);
 
-    const onEdit = (id) => {
+    const onEdit = (id: string) => {
         navigation.push('EditMyStationScreen', { station_id: id }); // push to the navigation EditMyStationScreen() component' so we could go back
     };
 
-    const onDelete = (id) => {
+    const onDelete = (id: string) => {
         const q = query(
             collection(db, 'orders'),
             where('station_id', '==', id)
@@ -122,6 +132,7 @@ export default function MyStationsTab({ navigation }) {
                                     station_id: station.id,
                                     station_image: station.image,
                                     station_address: station.address,
+                                    plug_type: station.plug_type,
                                 })
                             }
                         />

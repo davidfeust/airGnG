@@ -8,11 +8,13 @@ import {
     arrayUnion,
     collection,
     doc,
+    DocumentData,
     updateDoc,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import Checkbox from 'expo-checkbox';
 import { colors } from '../assets/styles/colors';
+import { Order } from '../App.d';
 
 const PaymentPage = ({ route, navigation }) => {
     const [processing, setProcessing] = useState(false);
@@ -23,7 +25,7 @@ const PaymentPage = ({ route, navigation }) => {
         if (start && end) {
             setProcessing(true);
             addDoc(collection(db, 'orders'), {
-                sub_id: user.uid,
+                user_id: user.uid,
                 order_date: new Date(),
                 reservation: {
                     date_start: start,
@@ -31,8 +33,6 @@ const PaymentPage = ({ route, navigation }) => {
                 },
                 station_id: id,
                 paid: false,
-                sub_car_type:
-                    'the user might have an incompatible type of charge for his card',
             })
                 .then((orderRef) => {
                     const userRef = doc(db, 'users', user.uid);
