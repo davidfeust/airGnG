@@ -1,13 +1,14 @@
 import { Formik } from 'formik';
 import React, { useState } from 'react';
 import { Modal, StyleSheet, Text, TextInput, View } from 'react-native';
+import { TapRatingProps } from 'react-native-elements';
 import { AirbnbRating, Rating } from 'react-native-ratings';
 import { colors } from '../assets/styles/colors';
 import { globalStyles } from '../assets/styles/globalStyles';
 import CustomButton from './CustomButton';
 
 // 
-const CustomRating = ({ onReview, ratingProps }) => {
+const CustomRating = ({ onReview, ratingProps }:{onReview?(rating:number,comment:string):void, ratingProps:TapRatingProps}) => {
     const [showComment, setShowComment] = useState(false);
     const [rating, setRating] = useState(0);
     const [switchRating, setSwitchRating] = useState(false);

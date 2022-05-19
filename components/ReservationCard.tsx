@@ -8,6 +8,7 @@ import { colors } from '../assets/styles/colors';
 import { globalStyles } from '../assets/styles/globalStyles';
 import { db } from '../config/firebase';
 import { dateToString, onCall } from '../utils/GlobalFuncitions';
+import CustomRating from './CustomRating';
 import TimeSlot from './TimeSlot';
 
 export default function ReservationCard({
@@ -18,10 +19,10 @@ export default function ReservationCard({
     onCancel?: (order_id: string) => void;
 }) {
     // stores the order's station details
-    const [stationOrdered, setStationOrdered] = useState({});
+    const [stationOrdered, setStationOrdered] = useState(null);
 
     // stores the order's sub details
-    const [subDetails, setSubDetails] = useState({});
+    const [subDetails, setSubDetails] = useState(null);
     const [subRating, setSubRating] = useState(0);
 
     useEffect(() => {
@@ -45,7 +46,7 @@ export default function ReservationCard({
             const rating = sum / reviews.length;
             setSubRating(rating);
         }
-    }, [subDetails]);
+    },[]);
 
     return (
         <View>

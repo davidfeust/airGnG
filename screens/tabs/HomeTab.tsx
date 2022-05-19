@@ -15,7 +15,6 @@ export default function HomeTab({ navigation }) {
     const [showBigImage, setShowBigImage] = useState(false);
     const { user, unSubUser } = useContext(AuthenticatedUserContext);
     // user.reviews = [{rating:0, reviewer: 'shimon', comment: 'he is awsome'}]
-    useEffect(()=>{console.log(user.re)},[]) // see the current my orders
 
     const handleSignOut = async () => {
         try {

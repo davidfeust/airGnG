@@ -103,7 +103,6 @@ export default function MyOrderCard({
                             <View>
                                 <Card.Title>ordered by: {user.name}</Card.Title>
                                 <CustomRating
-                                    onReview={{}}
                                     ratingProps={{
                                         size: 15,
                                         defaultRating: user.rating,
