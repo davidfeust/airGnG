@@ -7,7 +7,12 @@ import { Order } from '../App.d';
 import { colors } from '../assets/styles/colors';
 import { globalStyles } from '../assets/styles/globalStyles';
 import { db } from '../config/firebase';
-import { dateToString, onCall } from '../utils/GlobalFuncitions';
+import {
+    dateToString,
+    getAverageRate,
+    onCall,
+} from '../utils/GlobalFuncitions';
+import CustomRating from './CustomRating';
 import TimeSlot from './TimeSlot';
 
 export default function ReservationCard({
@@ -22,6 +27,7 @@ export default function ReservationCard({
 
     // stores the order's sub details
     const [subDetails, setSubDetails] = useState(null);
+    const [subRating, setSubRating] = useState(0);
 
     useEffect(() => {
         // update station details from db
@@ -36,6 +42,14 @@ export default function ReservationCard({
             setSubDetails(d.data());
         });
     }, []);
+    useEffect(() => {
+        if (subDetails) {
+            const reviews = subDetails.reviews;
+            const rating = getAverageRate(reviews);
+            setSubRating(rating);
+        }
+    }, []);
+
     return (
         <View>
             {stationOrdered && subDetails && (
@@ -56,6 +70,15 @@ export default function ReservationCard({
                                 ordered by: {subDetails.name}
                             </Card.Title>
                         )}
+                        <View>
+                            <CustomRating
+                                ratingProps={{
+                                    isDisabled: true,
+                                    defaultRating: subRating,
+                                    size: 15,
+                                }}
+                            />
+                        </View>
                     </View>
 
                     <Card.Divider orientation='horizontal' />

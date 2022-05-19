@@ -56,6 +56,7 @@ export default function SignUpScreen() {
                 setDoc(doc(db, 'users', user.uid), {
                     mail: user.email,
                     orders: [],
+                    reviews: [],
                 }).then(() => {});
                 setProcessing(false);
             })

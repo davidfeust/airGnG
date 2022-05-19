@@ -48,9 +48,9 @@ export type Reservation = {
 };
 
 export type Review = {
-    rating: number;
-    comment: string;
-    reviewer_id: string;
-};
+    comment : String
+    rating : number 
+    reviewer : String
+}
 
 export type PlugType = 'BEV' | 'PHEV' | 'HEV';
