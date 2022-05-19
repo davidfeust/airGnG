@@ -7,7 +7,11 @@ import { Order } from '../App.d';
 import { colors } from '../assets/styles/colors';
 import { globalStyles } from '../assets/styles/globalStyles';
 import { db } from '../config/firebase';
-import { dateToString, onCall } from '../utils/GlobalFuncitions';
+import {
+    dateToString,
+    getAverageRate,
+    onCall,
+} from '../utils/GlobalFuncitions';
 import CustomRating from './CustomRating';
 import TimeSlot from './TimeSlot';
 
@@ -39,14 +43,12 @@ export default function ReservationCard({
         });
     }, []);
     useEffect(() => {
-        const reviews = subDetails.reviews;
-        if (reviews) {
-            let sum = 0;
-            reviews.forEach((reaview) => (sum += reaview.rating));
-            const rating = sum / reviews.length;
+        if (subDetails) {
+            const reviews = subDetails.reviews;
+            const rating = getAverageRate(reviews);
             setSubRating(rating);
         }
-    },[]);
+    }, []);
 
     return (
         <View>
