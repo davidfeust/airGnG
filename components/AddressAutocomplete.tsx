@@ -1,16 +1,27 @@
-import React from 'react';
+import React, { MutableRefObject } from 'react';
 import {
     GooglePlacesAutocomplete,
+    GooglePlacesAutocompleteRef,
+    Point,
     Styles,
 } from 'react-native-google-places-autocomplete';
 import Constants from 'expo-constants';
-
+type ViewPort = {
+    northeast: Point;
+    southwest: Point;
+};
 export default function AddressAutocomplete({
     reference,
     setCords,
     placeHolder = 'Address',
     setViewPort = null,
     styleTag = 'default',
+}: {
+    reference: MutableRefObject<GooglePlacesAutocompleteRef>;
+    setCords(cords: Point): void;
+    placeHolder?: string;
+    setViewPort?(viewPort: ViewPort): void;
+    styleTag?: 'default' | 'styleSearch';
 }) {
     const defaultStyle = {
         container: {
@@ -58,6 +69,11 @@ export default function AddressAutocomplete({
 
     return (
         <GooglePlacesAutocomplete
+            textInputProps={{
+                onSelectionChange: (e) => {
+                    setCords(null);
+                },
+            }}
             ref={reference}
             placeholder={placeHolder}
             styles={styleToUse}
@@ -67,8 +83,8 @@ export default function AddressAutocomplete({
                 key: Constants.manifest.extra.googleMapsApi,
                 language: 'en-he',
             }}
-            onPress={(data, details = null) => {
-                setCords(details.geometry.location);
+            onPress={(data, details) => {
+                setCords(details?.geometry?.location);
                 if (setViewPort != null) {
                     setViewPort(details.geometry.viewport);
                 }

@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { colors } from '../assets/styles/colors';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, Timestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import TimeSlot from '../components/TimeSlot';
 import CustomDateRangePicker from '../components/CustomDateRangePicker';
@@ -16,7 +16,7 @@ import { Divider } from 'react-native-elements/dist/divider/Divider';
 import CustomButton from '../components/CustomButton';
 import PaymentPage from '../pages/PaymentPage';
 import MiniCard from '../components/MiniCard';
-
+type Slot = { start: Timestamp; end: Timestamp };
 const ChooseTimeSlot = ({ route, navigation }) => {
     return (
         <View style={{ alignSelf: 'center' }}>
@@ -26,19 +26,19 @@ const ChooseTimeSlot = ({ route, navigation }) => {
                 Lets start with Choosing your Slot
             </Text>
             <ScrollView style={{ marginTop: 20 }}>
-                {route.params.time_slots.map((slot, idx) => {
+                {route.params.time_slots.map((slot: Slot, idx: number) => {
                     const { start, end } = slot;
                     const s = start.toDate();
                     const e = end.toDate();
                     return (
                         <TouchableOpacity
                             key={idx}
-                            onPress={() =>
+                            onPress={() => {
                                 navigation.navigate('Choose Time', {
                                     start: start,
                                     end: end,
-                                })
-                            }
+                                });
+                            }}
                         >
                             <TimeSlot start={s} end={e} />
                         </TouchableOpacity>
@@ -50,8 +50,17 @@ const ChooseTimeSlot = ({ route, navigation }) => {
 };
 
 const OrderStack = ({ route, navigation }) => {
-    const { address, time_slots, price, image, id, phone, owner_id } =
-        route.params;
+    const {
+        address,
+        time_slots,
+        price,
+        image,
+        id,
+        phone,
+        owner_id,
+        plug_type,
+    } = route.params;
+
     const Stack = createStackNavigator();
     const [ownerDetails, setOwnerDetails] = useState(null);
 
@@ -96,11 +105,12 @@ const OrderStack = ({ route, navigation }) => {
                     text='To Payment Page'
                     style={{ marginTop: 140 }}
                     onPress={() => {
-                        navigation.setOptions({ start: start, end: end });
+                        // navigation.setOptions({ start: start, end: end });
                         navigation.navigate('Payment Page', {
                             finalPrice,
-
                             id,
+                            start,
+                            end,
                         });
                     }}
                 />
@@ -127,6 +137,7 @@ const OrderStack = ({ route, navigation }) => {
                         image={image}
                         ownerDetails={ownerDetails}
                         address={address}
+                        plugType={plug_type}
                     />
                 ),
             }}

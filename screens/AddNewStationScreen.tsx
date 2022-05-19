@@ -1,14 +1,13 @@
-import React, { RefObject, useContext, useRef, useState } from 'react';
-import { Keyboard, Text, TouchableWithoutFeedback, View } from 'react-native';
-import { globalStyles } from '../assets/styles/globalStyles';
-import { db } from '../config/firebase';
 import { addDoc, collection, updateDoc } from 'firebase/firestore';
+import React, { useContext, useRef, useState } from 'react';
+import { Keyboard, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
+import { Station } from '../App.d';
+import { globalStyles } from '../assets/styles/globalStyles';
+import StationForm from '../components/StationForm'; // to manage forms. docs: https://formik.org/docs/api/formik
+import { db } from '../config/firebase';
 import { AuthenticatedUserContext } from '../providers/AuthenticatedUserProvider';
 import { uploadImage } from '../utils/GlobalFuncitions';
-import StationForm from '../components/StationForm'; // to manage forms. docs: https://formik.org/docs/api/formik
-import { GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
-import { LatLng } from 'react-native-maps';
-import { Station } from '../App.d';
 
 /**
  * create a page where the user fills a form
@@ -17,7 +16,7 @@ import { Station } from '../App.d';
  * @returns <form>
  */
 
-export default function AddNewStationScreen(props) {
+export default function AddNewStationScreen({ navigation }) {
     const { user } = useContext(AuthenticatedUserContext);
     const googleAddress = useRef<GooglePlacesAutocompleteRef>();
     const [processing, setProcessing] = useState(false);
@@ -26,26 +25,17 @@ export default function AddNewStationScreen(props) {
         phone: '',
         name: '',
         price: '',
-        shadowed: false,
         image: null,
         cords: null,
         plugType: null,
     };
 
-    async function onPost({
-        cords,
-        image,
-        price,
-        shadowed,
-        plugType,
-    }: Station) {
+    async function onPost({ cords, image, price, plugType }: Station) {
         setProcessing(true);
-
         addDoc(collection(db, 'stations'), {
             owner_id: user.uid,
             address: googleAddress?.current?.getAddressText(),
             price: price,
-            shadowed: shadowed,
             time_slots: [],
             cords: cords,
             creation_date: Date(),
@@ -61,11 +51,11 @@ export default function AddNewStationScreen(props) {
                     await updateDoc(docRef, {
                         image: image_url,
                     }).then(() => {
-                        props.navigation.pop();
+                        navigation.pop();
                         setProcessing(false);
                     });
                 } else {
-                    props.navigation.pop();
+                    navigation.pop();
                     setProcessing(false);
                 }
             })

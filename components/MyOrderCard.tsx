@@ -11,16 +11,14 @@ import TimeSlot from './TimeSlot';
 import { AuthenticatedUserContext } from '../providers/AuthenticatedUserProvider';
 import CustomRating from "./CustomRating";
 
+import { Order } from '../App.d';
 
 export default function MyOrderCard({
-    date_of_sub,
-    payed,
-    reservation, // = { start_date:{firebase date type...} , finish_date:{firebase date type...}}
-    station_id,
-    sub_car_type,
-    sub_id,
-    order_id,
+    order,
     onCancel,
+}: {
+    order: Order;
+    onCancel(orderId: string): void;
 }) {
     //the order user details
     const { user } = useContext(AuthenticatedUserContext);
@@ -37,7 +35,7 @@ export default function MyOrderCard({
 
     useEffect(() => {
         // update station details from db
-        getDoc(doc(db, 'stations', station_id)).then(
+        getDoc(doc(db, 'stations', order.station_id)).then(
             (d) =>
                 !ordersRecievedFromFirebase.current &&
                 setStationOrdered(d.data())
@@ -76,7 +74,7 @@ export default function MyOrderCard({
                     <Card.Title>address: {stationOrdered.address}</Card.Title>
                     {/* order date */}
                     <Card.Title>
-                        oredered on: {dateToString(date_of_sub.toDate())}
+                        oredered on: {dateToString(order.order_date.toDate())}
                     </Card.Title>
                     <View
                         style={{
@@ -120,25 +118,26 @@ export default function MyOrderCard({
 
                     {/* reservation details */}
                     <TimeSlot
-                        start={reservation.date_start.toDate()}
-                        end={reservation.date_finish.toDate()}
+                        start={order.reservation.date_start.toDate()}
+                        end={order.reservation.date_finish.toDate()}
                     />
 
-                    {/* is it payed already? */}
-                    <Text>payed: {String(payed)}</Text>
+                    {/* is it Paid already? */}
+                    {order.paid ? (
+                        <Text>{'Reservation Confirmed'}</Text>
+                    ) : (
+                        <Text>{'Wating For Confirmation'}</Text>
+                    )}
 
                     {/* calculated price */}
                     <Text>
                         price:{' '}
-                        {((reservation.date_finish.toDate() -
-                            reservation.date_start.toDate()) /
+                        {((order.reservation.date_finish.toDate().getTime() -
+                            order.reservation.date_start.toDate().getTime()) /
                             36e5) *
                             stationOrdered.price}{' '}
                         nis
                     </Text>
-
-                    {/* car type. we might erase this field in the future */}
-                    <Text>car type: {sub_car_type}</Text>
 
                     {/* image */}
                     {stationOrdered.image !== undefined && (
@@ -151,7 +150,7 @@ export default function MyOrderCard({
                         {onCancel && (
                             <TouchableOpacity
                                 style={styles.icon}
-                                onPress={() => onCancel(order_id)}
+                                onPress={() => onCancel(order.id)}
                             >
                                 <MaterialCommunityIcons
                                     name='trash-can'

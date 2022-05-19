@@ -13,6 +13,12 @@ const PickTime = ({
     identifyRange,
     minTime = null,
     maxTime = null,
+}: {
+    set: (start: Date | null, end: Date | null) => void;
+    time: Date;
+    identifyRange: 'start' | 'end';
+    minTime: Date;
+    maxTime: Date;
 }) => {
     const [mode, setMode]: [Mode, CallableFunction] = useState('date');
     const [show, setShow] = useState(false);
