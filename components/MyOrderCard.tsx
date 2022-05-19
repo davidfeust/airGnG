@@ -9,7 +9,7 @@ import { arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import TimeSlot from './TimeSlot';
 import { AuthenticatedUserContext } from '../providers/AuthenticatedUserProvider';
-import CustomRating from "./CustomRating";
+import CustomRating from './CustomRating';
 
 import { Order } from '../App.d';
 
@@ -55,7 +55,7 @@ export default function MyOrderCard({
             });
     }, [stationOrdered]);
 
-    const onReview = async (rating, comment) => {
+    const onReview = async (rating:number, comment:string) => {
         const review = {
             rating,
             comment,
@@ -103,7 +103,7 @@ export default function MyOrderCard({
                             <View>
                                 <Card.Title>ordered by: {user.name}</Card.Title>
                                 <CustomRating
-                                onReview={{}}
+                                    onReview={{}}
                                     ratingProps={{
                                         size: 15,
                                         defaultRating: user.rating,
