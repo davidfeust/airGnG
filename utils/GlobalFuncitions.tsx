@@ -68,7 +68,7 @@ export const dateToString = (date: Date) => {
 
     return dateToStringNoHours(date) + dateToStringHours(date);
 };
-export const get_average_rate= (reviews: Review[]): number => {
+export const getAverageRate= (reviews: Review[]): number => {
     return(reviews.reduce((a, b) => a + b.rating, 0) / reviews.length);  
 }
 export const dateToStringNoHours = (date: Date) => {

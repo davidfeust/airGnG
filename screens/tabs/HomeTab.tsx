@@ -1,19 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Text, Image, View, Modal, StyleSheet, Pressable } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Rating } from 'react-native-ratings';
 import { globalStyles } from '../../assets/styles/globalStyles';
 import CustomButton from '../../components/CustomButton';
+import { auth } from '../../config/firebase';
 import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
-import { auth, db } from '../../config/firebase';
-import { doc } from 'firebase/firestore';
-import { Rating } from 'react-native-ratings';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { map } from '@firebase/util';
-import { Review } from '../../App.d';
-import { get_average_rate } from '../../utils/GlobalFuncitions';
+import { getAverageRate as getAverageRate } from '../../utils/GlobalFuncitions';
 
 export default function HomeTab({ navigation }) {
     const [showBigImage, setShowBigImage] = useState(false);
-    const { user, unSubUser } = useContext(AuthenticatedUserContext);
+    const { user} = useContext(AuthenticatedUserContext);
     // user.reviews = [{rating:0, reviewer: 'shimon', comment: 'he is awsome'}]
 
     const handleSignOut = async () => {
@@ -58,7 +54,7 @@ export default function HomeTab({ navigation }) {
                     </View>
                 </Modal>
             </Pressable>
-            <Rating readonly startingValue={user.reviews? get_average_rate(user.reviews) : 0 } />
+            <Rating readonly startingValue={user.reviews? getAverageRate(user.reviews) : 0 } />
             <Text>( {user?.reviews.length} )</Text>
             <CustomButton text={'Logout'} onPress={handleSignOut} />
             <CustomButton
