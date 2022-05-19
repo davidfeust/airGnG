@@ -54,6 +54,7 @@ export default function HomeTab({ navigation }) {
                     </View>
                 </Modal>
             </Pressable>
+            {/* <Rating readonly startingValue={user.reviews? getAverageRate(user.reviews) : 0 } /> */}
             <Rating readonly startingValue={user.reviews? getAverageRate(user.reviews) : 0 } />
             <Text>( {user?.reviews.length} )</Text>
             <CustomButton text={'Logout'} onPress={handleSignOut} />
