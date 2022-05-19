@@ -5,7 +5,7 @@ import { globalStyles } from '../../assets/styles/globalStyles';
 import CustomButton from '../../components/CustomButton';
 import { auth } from '../../config/firebase';
 import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
-import { getAverageRate } from '../../utils/GlobalFuncitions';
+import { getAverageRate  } from '../../utils/GlobalFuncitions';
 
 export default function HomeTab({ navigation }) {
     const [showBigImage, setShowBigImage] = useState(false);
