@@ -5,10 +5,12 @@ import { globalStyles } from '../assets/styles/globalStyles';
 import { dateToString, onCall } from '../utils/GlobalFuncitions';
 import { colors } from '../assets/styles/colors';
 import { Card } from 'react-native-elements';
-import { doc, getDoc } from 'firebase/firestore';
+import { arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import TimeSlot from './TimeSlot';
 import { AuthenticatedUserContext } from '../providers/AuthenticatedUserProvider';
+import CustomRating from './CustomRating';
+
 import { Order } from '../App.d';
 
 export default function MyOrderCard({
@@ -27,6 +29,9 @@ export default function MyOrderCard({
     // stores the order's owner details
     const [stationOwner, setStationOwner] = useState(null);
     const ordersRecievedFromFirebase = useRef<boolean>(false);
+
+    // stores th owners rating
+    const [ownerRating, setOwnerRating] = useState(0);
 
     useEffect(() => {
         // update station details from db
@@ -50,6 +55,17 @@ export default function MyOrderCard({
             });
     }, [stationOrdered]);
 
+    const onReview = async (rating:number, comment:string) => {
+        const review = {
+            rating,
+            comment,
+            reviewer: user.name,
+        };
+        await updateDoc(doc(db, 'users', stationOrdered.owner_id), {
+            reviews: arrayUnion(review),
+        });
+    };
+
     return (
         <View>
             {stationOrdered && stationOwner && (
@@ -69,11 +85,31 @@ export default function MyOrderCard({
                     >
                         {/* owner name if exists... */}
                         {stationOwner.name && (
-                            <Card.Title>owner: {stationOwner.name}</Card.Title>
+                            <View>
+                                <Card.Title>
+                                    owner: {stationOwner.name}
+                                </Card.Title>
+                                <CustomRating
+                                    ratingProps={{
+                                        defaultRating: ownerRating,
+                                        size: 15,
+                                    }}
+                                    onReview={onReview}
+                                />
+                            </View>
                         )}
                         {/* the order user name if exists... */}
                         {user.name && (
-                            <Card.Title>ordered by: {user.name}</Card.Title>
+                            <View>
+                                <Card.Title>ordered by: {user.name}</Card.Title>
+                                <CustomRating
+                                    ratingProps={{
+                                        size: 15,
+                                        defaultRating: user.rating,
+                                        isDisabled: true,
+                                    }}
+                                />
+                            </View>
                         )}
                     </View>
 
