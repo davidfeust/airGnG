@@ -1,15 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { deleteObject, getStorage, ref } from '@firebase/storage';
-import axios, { AxiosResponse } from 'axios';
-import Constants from 'expo-constants';
-import {
-    collection,
-    deleteDoc,
-    doc,
-    getDocs,
-    query,
-    where,
-} from 'firebase/firestore';
+import { deleteDoc, doc } from 'firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react';
 import {
     Alert,
@@ -27,6 +18,8 @@ import MyStationCard from '../../components/MyStationCard';
 import { db } from '../../config/firebase';
 import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
 import * as Server from '../../utils/ServerInterface';
+import { getAllOrdersBy } from '../../utils/ServerInterface';
+import { observer } from '../../App';
 
 /**
  * represents the page where a user can see the status of his post.
@@ -38,6 +31,11 @@ export default function MyStationsTab({ navigation }) {
     const { user } = useContext(AuthenticatedUserContext);
     const [stations, setStations] = useState<Station[]>([]);
     const [myStations, setMyStations] = useState<Station[]>([]);
+
+    observer.registerEvent('station-posted', async (e) => {
+        const updatedStations = await Server.getAllStations();
+        setStations(updatedStations);
+    });
 
     useEffect(() => {
         Server.getAllStations().then(setStations);
@@ -58,43 +56,37 @@ export default function MyStationsTab({ navigation }) {
         navigation.push('EditMyStationScreen', { station_id: id }); // push to the navigation EditMyStationScreen() component' so we could go back
     };
 
-    const onDelete = (id: string) => {
-        const q = query(
-            collection(db, 'orders'),
-            where('station_id', '==', id)
-        );
-        getDocs(q).then((snap) => {
-            if (snap.docs.length > 0) {
-                return Alert.alert(
-                    'someone invited your station!',
-                    'you should wait until the reservation will over...'
-                );
-            }
+    const onDelete = async (id: string) => {
+        const orders = await getAllOrdersBy('station_id', '==', id);
 
+        if (orders.length > 0) {
             return Alert.alert(
-                'Are your sure?',
-                'By pressing yes you confirm to remove this station permanently',
-                [
-                    // The "Yes" button
-                    {
-                        text: 'Yes',
-                        onPress: async () => {
-                            await deleteDoc(doc(db, 'stations', id));
-
-                            const storgae = getStorage();
-                            deleteObject(ref(storgae, id + '.jpg')).catch(
-                                () => {}
-                            );
-                        },
-                    },
-                    // The "No" button
-                    // Does nothing but dismiss the dialog when tapped
-                    {
-                        text: 'No',
-                    },
-                ]
+                'someone invited your station!',
+                'you should wait until the reservation will over...'
             );
-        });
+        }
+
+        return Alert.alert(
+            'Are your sure?',
+            'By pressing yes you confirm to remove this station permanently',
+            [
+                // The "Yes" button
+                {
+                    text: 'Yes',
+                    onPress: async () => {
+                        await deleteDoc(doc(db, 'stations', id));
+
+                        const storgae = getStorage();
+                        deleteObject(ref(storgae, id + '.jpg')).catch(() => {});
+                    },
+                },
+                // The "No" button
+                // Does nothing but dismiss the dialog when tapped
+                {
+                    text: 'No',
+                },
+            ]
+        );
     };
 
     if (myStations.length !== 0) {

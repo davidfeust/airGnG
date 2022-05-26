@@ -12,6 +12,7 @@ import { AuthenticatedUserContext } from '../providers/AuthenticatedUserProvider
 import CustomRating from './CustomRating';
 import * as Server from '../utils/ServerInterface';
 import { Order } from '../App.d';
+import { observer } from '../App';
 
 export default function MyOrderCard({
     order,
