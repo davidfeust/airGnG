@@ -10,7 +10,7 @@ import { db } from '../config/firebase';
 import TimeSlot from './TimeSlot';
 import { AuthenticatedUserContext } from '../providers/AuthenticatedUserProvider';
 import CustomRating from './CustomRating';
-
+import * as Server from '../utils/ServerInterface';
 import { Order } from '../App.d';
 
 export default function MyOrderCard({
@@ -35,11 +35,9 @@ export default function MyOrderCard({
 
     useEffect(() => {
         // update station details from db
-        getDoc(doc(db, 'stations', order.station_id)).then(
-            (d) =>
-                !ordersRecievedFromFirebase.current &&
-                setStationOrdered(d.data())
-        );
+        Server.getOneStation(order.station_id).then((d) => {
+            !ordersRecievedFromFirebase.current && setStationOrdered(d);
+        });
         // return callback to cancel the async task. see an example here:
         // https://stackoverflow.com/questions/56450975/to-fix-cancel-all-subscriptions-and-asynchronous-tasks-in-a-useeffect-cleanup-f
         return () => {
@@ -50,12 +48,12 @@ export default function MyOrderCard({
     useEffect(() => {
         // update owner details from db
         stationOrdered &&
-            getDoc(doc(db, 'users', stationOrdered.owner_id)).then((d) => {
-                setStationOwner(d.data());
+            Server.getOneUser(stationOrdered.owner_id).then((d) => {
+                setStationOwner(d);
             });
     }, [stationOrdered]);
 
-    const onReview = async (rating:number, comment:string) => {
+    const onReview = async (rating: number, comment: string) => {
         const review = {
             rating,
             comment,

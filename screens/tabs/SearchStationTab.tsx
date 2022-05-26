@@ -13,6 +13,7 @@ import { colors } from '../../assets/styles/colors';
 import AddressAutocomplete from '../../components/AddressAutocomplete';
 import MiniCard from '../../components/MiniCard';
 import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
+import * as Server from '../../utils/ServerInterface';
 
 export default function SearchStationTab({ navigation }) {
     //for the autocomplete function
@@ -44,11 +45,7 @@ export default function SearchStationTab({ navigation }) {
         }
     });
     useEffect(() => {
-        axios
-            .get<any, AxiosResponse<Station[]>>(
-                `${Constants.manifest.extra.baseUrl}/stations`
-            )
-            .then((res) => setStations(res.data));
+        Server.getAllStations().then(setStations);
     }, []);
     const animateToMarker = () => {
         if (selectedId) {

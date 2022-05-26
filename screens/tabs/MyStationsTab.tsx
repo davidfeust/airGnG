@@ -26,6 +26,7 @@ import CustomButton from '../../components/CustomButton';
 import MyStationCard from '../../components/MyStationCard';
 import { db } from '../../config/firebase';
 import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
+import * as Server from '../../utils/ServerInterface';
 
 /**
  * represents the page where a user can see the status of his post.
@@ -39,11 +40,7 @@ export default function MyStationsTab({ navigation }) {
     const [myStations, setMyStations] = useState<Station[]>([]);
 
     useEffect(() => {
-        axios
-            .get<any, AxiosResponse<Station[]>>(
-                `${Constants.manifest.extra.baseUrl}/stations`
-            )
-            .then((res) => setStations(res.data));
+        Server.getAllStations().then(setStations);
     }, []);
 
     useEffect(() => {
