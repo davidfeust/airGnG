@@ -5,11 +5,11 @@ import { globalStyles } from '../../assets/styles/globalStyles';
 import CustomButton from '../../components/CustomButton';
 import { auth } from '../../config/firebase';
 import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
-import { getAverageRate  } from '../../utils/GlobalFuncitions';
+import { getAverageRate } from '../../utils/GlobalFuncitions';
 
 export default function HomeTab({ navigation }) {
     const [showBigImage, setShowBigImage] = useState(false);
-    const { user} = useContext(AuthenticatedUserContext);
+    const { user } = useContext(AuthenticatedUserContext);
     // user.reviews = [{rating:0, reviewer: 'shimon', comment: 'he is awsome'}]
 
     const handleSignOut = async () => {
@@ -32,7 +32,7 @@ export default function HomeTab({ navigation }) {
                 onPressOut={() => setShowBigImage(false)}
             >
                 <Image
-                    style={{ height: 200, width: 200 }}
+                    style={{ height: 200, width: 200, marginTop: 50 }}
                     borderRadius={100}
                     source={
                         user.image
@@ -54,13 +54,23 @@ export default function HomeTab({ navigation }) {
                     </View>
                 </Modal>
             </Pressable>
-            <Rating readonly startingValue={user.reviews? getAverageRate(user.reviews) : 0 } />
+            <View style={{ marginTop: 35 }}>
+                <Rating
+                    readonly
+                    startingValue={
+                        user.reviews ? getAverageRate(user.reviews) : 0
+                    }
+                />
+            </View>
+
             <Text>( {user?.reviews.length} )</Text>
-            <CustomButton text={'Logout'} onPress={handleSignOut} />
-            <CustomButton
-                text={'Edit your profile'}
-                onPress={() => navigation.push('UserDetailsScreen')}
-            />
+            <View style={{ marginTop: 35 }}>
+                <CustomButton text={'Logout'} onPress={handleSignOut} />
+                <CustomButton
+                    text={'Edit your profile'}
+                    onPress={() => navigation.push('UserDetailsScreen')}
+                />
+            </View>
             {user.admin && (
                 <Text style={{ color: 'red', fontSize: 24 }}>
                     You have an admin privilege
@@ -87,5 +97,3 @@ const styles = StyleSheet.create({
         // bottom: 20,
     },
 });
-
-
