@@ -14,6 +14,7 @@ import AddressAutocomplete from '../../components/AddressAutocomplete';
 import MiniCard from '../../components/MiniCard';
 import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
 import * as Server from '../../utils/ServerInterface';
+import * as getAllStations from '../../utils/getAllStations';
 
 export default function SearchStationTab({ navigation }) {
     //for the autocomplete function
@@ -45,7 +46,7 @@ export default function SearchStationTab({ navigation }) {
         }
     });
     useEffect(() => {
-        Server.getAllStations().then(setStations);
+        getAllStations.getAllStations().then(setStations);
     }, []);
     const animateToMarker = () => {
         if (selectedId) {

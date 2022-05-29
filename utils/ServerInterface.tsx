@@ -3,6 +3,32 @@ import Constants from 'expo-constants';
 import { WhereFilterOp } from 'firebase/firestore';
 import { AirGnGUser, Order, Station } from '../App.d';
 
+export async function getAllStationsBy(
+    x: string,
+    condition: WhereFilterOp,
+    y: string | Array<any>
+): Promise<Station[]> {
+    console.log(
+        `${Constants.manifest.extra.baseUrl}/stations/${x}/${condition}/${y}`
+    );
+
+    return axios
+        .get<Request, AxiosResponse<Station[]>>(
+            `${Constants.manifest.extra.baseUrl}/stations/${x}/${condition}/${y}`
+        )
+        .then((res) => {
+            // console.log('res.data: ', res.data);
+            // console.log('res: ', res);
+            return res.data;
+        })
+        .catch((reason) => {
+            console.error(reason);
+            return new Promise<Station[]>((resolve, reject) => {
+                resolve(null);
+            });
+        });
+}
+
 export async function getAllStations(): Promise<Station[]> {
     return axios
         .get<Request, AxiosResponse<Station[]>>(

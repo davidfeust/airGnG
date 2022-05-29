@@ -10,6 +10,7 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
+import { observer } from '../../App';
 import { Station } from '../../App.d';
 import { colors } from '../../assets/styles/colors';
 import { globalStyles } from '../../assets/styles/globalStyles';
@@ -17,9 +18,9 @@ import CustomButton from '../../components/CustomButton';
 import MyStationCard from '../../components/MyStationCard';
 import { db } from '../../config/firebase';
 import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
+import * as getAllStations from '../../utils/getAllStations';
 import * as Server from '../../utils/ServerInterface';
 import { getAllOrdersBy } from '../../utils/ServerInterface';
-import { observer } from '../../App';
 
 /**
  * represents the page where a user can see the status of his post.
@@ -29,28 +30,23 @@ import { observer } from '../../App';
  */
 export default function MyStationsTab({ navigation }) {
     const { user } = useContext(AuthenticatedUserContext);
-    const [stations, setStations] = useState<Station[]>([]);
     const [myStations, setMyStations] = useState<Station[]>([]);
 
     observer.registerEvent('station-posted', async (e) => {
-        const updatedStations = await Server.getAllStations();
-        setStations(updatedStations);
+        const updatedStations = await getAllStations.getAllStations();
+        setMyStations(updatedStations);
     });
 
     useEffect(() => {
-        Server.getAllStations().then(setStations);
-    }, []);
-
-    useEffect(() => {
-        //give the admin user all the stations
+        // give the admin user all the stations
         if (user.admin) {
-            setMyStations(stations);
+            getAllStations.getAllStations().then(setMyStations);
         } else {
-            setMyStations(
-                stations.filter(({ owner_id }) => owner_id === user.uid)
+            Server.getAllStationsBy('owner_id', '==', user.uid).then(
+                setMyStations
             );
         }
-    }, [stations]);
+    }, []);
 
     const onEdit = (id: string) => {
         navigation.push('EditMyStationScreen', { station_id: id }); // push to the navigation EditMyStationScreen() component' so we could go back
@@ -75,7 +71,6 @@ export default function MyStationsTab({ navigation }) {
                     text: 'Yes',
                     onPress: async () => {
                         await deleteDoc(doc(db, 'stations', id));
-
                         const storgae = getStorage();
                         deleteObject(ref(storgae, id + '.jpg')).catch(() => {});
                     },
