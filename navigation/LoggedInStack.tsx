@@ -15,6 +15,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import CustomButton from '../components/CustomButton';
 import { auth } from '../config/firebase';
 import OrderStack from './OrderStack';
+import ProfileScreen from '../screens/ProfileScreen';
 
 const Stack = createStackNavigator();
 
@@ -62,7 +63,9 @@ export default function LoggedInStack() {
                     component={UserDetailsScreen}
                 />
             )}
+            <Stack.Screen name='ProfileScreen' component={()=><ProfileScreen owner={user} navigation={null}/>}/>
             <Stack.Screen name='TabsNavigator' component={TabsNavigator} />
+                
             <Stack.Screen
                 name='AddNewStationScreen'
                 component={AddNewStationScreen}
