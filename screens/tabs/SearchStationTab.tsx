@@ -1,27 +1,27 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import axios, { AxiosResponse } from 'axios';
+import Constants from 'expo-constants';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Dimensions, FlatList, Platform, StyleSheet, View } from 'react-native';
-import { publicStationsContext } from '../../providers/PublicStationsProvider';
-import MapView, { Marker } from 'react-native-maps';
 import { Image } from 'react-native-elements';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
+import MapView, { Marker } from 'react-native-maps';
+import SlidingUpPanel from 'rn-sliding-up-panel';
+import { AirGnGUser, Station } from '../../App.d';
 import { colors } from '../../assets/styles/colors';
 import AddressAutocomplete from '../../components/AddressAutocomplete';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
-import SlidingUpPanel from 'rn-sliding-up-panel';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import MiniCard from '../../components/MiniCard';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../../config/firebase';
-import { GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
-import { Station } from '../../App.d';
+import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
+import * as Server from '../../utils/ServerInterface';
 
 export default function SearchStationTab({ navigation }) {
     //for the autocomplete function
     const [cords, setCords] = useState(null);
     const [viewPort, setViewPort] = useState(null);
     const [ownerDetails, setOwnerDetails] = useState([]);
-    const { stations } = useContext(publicStationsContext);
     const [selectedId, setSelectedId] = useState(null);
+    const [stations, setStations] = useState<Station[]>([]);
     const [publishedStations, setPublishedStations] =
         useState<Station[]>(stations);
     const { user } = useContext(AuthenticatedUserContext);
@@ -44,7 +44,9 @@ export default function SearchStationTab({ navigation }) {
             setSelectedId(selectedPlace.id);
         }
     });
-
+    useEffect(() => {
+        Server.getAllStations().then(setStations);
+    }, []);
     const animateToMarker = () => {
         if (selectedId) {
             const index = publishedStations.findIndex(
@@ -68,8 +70,12 @@ export default function SearchStationTab({ navigation }) {
     useEffect(() => {
         // updating owner details
         const owners = publishedStations.map(async (station) => {
-            const ownerDoc = await getDoc(doc(db, `users/${station.owner_id}`));
-            return ownerDoc.data();
+            return axios
+                .get<any, AxiosResponse<AirGnGUser>>(
+                    `${Constants.manifest.extra.baseUrl}/users/${station.owner_id}`
+                )
+
+                .then((res) => res.data);
         });
         Promise.all(owners).then(setOwnerDetails);
     }, [publishedStations]);
@@ -167,6 +173,8 @@ export default function SearchStationTab({ navigation }) {
                                     : styles.regularMarker
                             }
                             resizeMode='contain'
+                            height={undefined}
+                            width={undefined}
                         />
                     </Marker>
                 ))}

@@ -8,11 +8,15 @@ import {
     arrayUnion,
     collection,
     doc,
+    DocumentData,
     updateDoc,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import Checkbox from 'expo-checkbox';
 import { colors } from '../assets/styles/colors';
+import { Order } from '../App.d';
+import axios from 'axios';
+import Constants from 'expo-constants';
 
 const PaymentPage = ({ route, navigation }) => {
     const [processing, setProcessing] = useState(false);
@@ -21,8 +25,7 @@ const PaymentPage = ({ route, navigation }) => {
     const [validated, setValidated] = useState(false);
     const onOrder = () => {
         if (start && end) {
-            setProcessing(true);
-            addDoc(collection(db, 'orders'), {
+            const toPost = {
                 user_id: user.uid,
                 order_date: new Date(),
                 reservation: {
@@ -31,20 +34,50 @@ const PaymentPage = ({ route, navigation }) => {
                 },
                 station_id: id,
                 paid: false,
-            })
-                .then((orderRef) => {
+            };
+            setProcessing(true);
+            axios
+                .post(Constants.manifest.extra.baseUrl + '/orders/', toPost)
+                .then((res) => {
                     const userRef = doc(db, 'users', user.uid);
                     updateDoc(userRef, {
-                        orders: arrayUnion(orderRef.id),
-                    }).then(() => {
-                        navigation.navigate('My Orders');
-                        setProcessing(false);
-                    });
-                })
-                .catch((e) => {
-                    console.error('Error adding document: ', e);
+                        orders: arrayUnion(res.data),
+                    })
+                        .then(() => {
+                            navigation.navigate('My Orders');
+                            setProcessing(false);
+                        })
+                        .catch((reason) => {
+                            console.error('response data was: ' + res.data);
+                        });
                     setProcessing(false);
+                })
+                .catch((reason) => {
+                    console.error(reason);
                 });
+            // addDoc(collection(db, 'orders'), {
+            //     user_id: user.uid,
+            //     order_date: new Date(),
+            //     reservation: {
+            //         date_start: start,
+            //         date_finish: end,
+            //     },
+            //     station_id: id,
+            //     paid: false,
+            // })
+            //     .then((orderRef) => {
+            //         const userRef = doc(db, 'users', user.uid);
+            //         updateDoc(userRef, {
+            //             orders: arrayUnion(orderRef.id),
+            //         }).then(() => {
+            //             navigation.navigate('My Orders');
+            //             setProcessing(false);
+            //         });
+            //     })
+            //     .catch((e) => {
+            //         console.error('Error adding document: ', e);
+            //         setProcessing(false);
+            //     });
         } else {
             Alert.alert('Error', 'Please choose a date from the dropdown.', [
                 {

@@ -1,3 +1,6 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { deleteObject, getStorage, ref } from '@firebase/storage';
+import { deleteDoc, doc } from 'firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react';
 import {
     Alert,
@@ -7,23 +10,16 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
-import {
-    collection,
-    deleteDoc,
-    doc,
-    getDocs,
-    query,
-    where,
-} from 'firebase/firestore';
-import { db } from '../../config/firebase';
-import MyStationCard from '../../components/MyStationCard';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Station } from '../../App.d';
 import { colors } from '../../assets/styles/colors';
-import { publicStationsContext } from '../../providers/PublicStationsProvider';
-import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
-import { deleteObject, getStorage, ref } from '@firebase/storage';
 import { globalStyles } from '../../assets/styles/globalStyles';
 import CustomButton from '../../components/CustomButton';
+import MyStationCard from '../../components/MyStationCard';
+import { db } from '../../config/firebase';
+import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
+import * as Server from '../../utils/ServerInterface';
+import { getAllOrdersBy } from '../../utils/ServerInterface';
+import { observer } from '../../App';
 
 /**
  * represents the page where a user can see the status of his post.
@@ -33,8 +29,17 @@ import CustomButton from '../../components/CustomButton';
  */
 export default function MyStationsTab({ navigation }) {
     const { user } = useContext(AuthenticatedUserContext);
-    const { stations } = useContext(publicStationsContext);
-    const [myStations, setMyStations] = useState([]);
+    const [stations, setStations] = useState<Station[]>([]);
+    const [myStations, setMyStations] = useState<Station[]>([]);
+
+    observer.registerEvent('station-posted', async (e) => {
+        const updatedStations = await Server.getAllStations();
+        setStations(updatedStations);
+    });
+
+    useEffect(() => {
+        Server.getAllStations().then(setStations);
+    }, []);
 
     useEffect(() => {
         //give the admin user all the stations
@@ -47,47 +52,41 @@ export default function MyStationsTab({ navigation }) {
         }
     }, [stations]);
 
-    const onEdit = (id) => {
+    const onEdit = (id: string) => {
         navigation.push('EditMyStationScreen', { station_id: id }); // push to the navigation EditMyStationScreen() component' so we could go back
     };
 
-    const onDelete = (id) => {
-        const q = query(
-            collection(db, 'orders'),
-            where('station_id', '==', id)
-        );
-        getDocs(q).then((snap) => {
-            if (snap.docs.length > 0) {
-                return Alert.alert(
-                    'someone invited your station!',
-                    'you should wait until the reservation will over...'
-                );
-            }
+    const onDelete = async (id: string) => {
+        const orders = await getAllOrdersBy('station_id', '==', id);
 
+        if (orders.length > 0) {
             return Alert.alert(
-                'Are your sure?',
-                'By pressing yes you confirm to remove this station permanently',
-                [
-                    // The "Yes" button
-                    {
-                        text: 'Yes',
-                        onPress: async () => {
-                            await deleteDoc(doc(db, 'stations', id));
-
-                            const storgae = getStorage();
-                            deleteObject(ref(storgae, id + '.jpg')).catch(
-                                () => {}
-                            );
-                        },
-                    },
-                    // The "No" button
-                    // Does nothing but dismiss the dialog when tapped
-                    {
-                        text: 'No',
-                    },
-                ]
+                'someone invited your station!',
+                'you should wait until the reservation will over...'
             );
-        });
+        }
+
+        return Alert.alert(
+            'Are your sure?',
+            'By pressing yes you confirm to remove this station permanently',
+            [
+                // The "Yes" button
+                {
+                    text: 'Yes',
+                    onPress: async () => {
+                        await deleteDoc(doc(db, 'stations', id));
+
+                        const storgae = getStorage();
+                        deleteObject(ref(storgae, id + '.jpg')).catch(() => {});
+                    },
+                },
+                // The "No" button
+                // Does nothing but dismiss the dialog when tapped
+                {
+                    text: 'No',
+                },
+            ]
+        );
     };
 
     if (myStations.length !== 0) {
@@ -122,6 +121,7 @@ export default function MyStationsTab({ navigation }) {
                                     station_id: station.id,
                                     station_image: station.image,
                                     station_address: station.address,
+                                    plug_type: station.plug_type,
                                 })
                             }
                         />
