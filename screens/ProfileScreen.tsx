@@ -172,7 +172,7 @@ export default function ProfileScreen({
                 <View style={[globalStyles.container, {}]}>
                     <Text style={globalStyles.subTitle}>
                         {' '}
-                        {owner.name} profile{' '}
+                        {owner.name}'s profile!{' '}
                     </Text>
                     <Rating
                         readonly
