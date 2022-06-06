@@ -1,5 +1,5 @@
-import React from "react";
-import {AuthenticatedUserProvider} from "./AuthenticatedUserProvider";
+import React, { useContext } from "react";
+import {AuthenticatedUserContext, AuthenticatedUserProvider} from "./AuthenticatedUserProvider";
 import RootNavigator from "../navigation/RootNavigator";
 import {PublicStationsProvider} from "./PublicStationsProvider";
 import {MyOrdersProvider} from "./MyOrdersProvider";

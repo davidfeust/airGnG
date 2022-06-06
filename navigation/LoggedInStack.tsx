@@ -63,7 +63,7 @@ export default function LoggedInStack() {
                     component={UserDetailsScreen}
                 />
             )}
-            <Stack.Screen name='ProfileScreen' component={()=><ProfileScreen owner={user} navigation={null}/>}/>
+            {/* <Stack.Screen name='ProfileScreen' children={()=><ProfileScreen owner={user} navigation={null}/>} /> */}
             <Stack.Screen name='TabsNavigator' component={TabsNavigator} />
                 
             <Stack.Screen
