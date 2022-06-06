@@ -14,6 +14,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
 import { Station } from '../../App.d';
+import SlidingStations from '../../components/SlidingStations';
 
 export default function SearchStationTab({ navigation }) {
     //for the autocomplete function
@@ -28,7 +29,6 @@ export default function SearchStationTab({ navigation }) {
     const cardWidth = 360;
     const cardMarginHorizontal = 7;
 
-    const slideUpPanel = useRef<SlidingUpPanel>();
     const googleAddress = useRef<GooglePlacesAutocompleteRef>();
     const map = useRef<MapView>();
     const flatList = useRef<FlatList<Station>>();
@@ -107,7 +107,6 @@ export default function SearchStationTab({ navigation }) {
         );
     }, [stations]);
 
-    slideUpPanel.current?.show();
 
     return (
         <View style={styles.container}>
@@ -171,58 +170,17 @@ export default function SearchStationTab({ navigation }) {
                     </Marker>
                 ))}
             </MapView>
-
-            <SlidingUpPanel
-                draggableRange={{ top: 230, bottom: 130 }}
-                ref={(c) => (slideUpPanel.current = c)}
-                backdropOpacity={0.3}
-                snappingPoints={[130, 230]}
-            >
-                <FlatList
-                    style={{ position: 'absolute' }}
-                    keyExtractor={(item) => item.id}
-                    ref={flatList}
-                    data={publishedStations}
-                    renderItem={({ item, index }) => (
-                        <TouchableWithoutFeedback
-                            onPress={() => onSelectingCard(item)}
-                        >
-                            <View>
-                                <MiniCard
-                                    image={item.image}
-                                    ownerDetails={ownerDetails[index]}
-                                    address={item.address}
-                                    price={item.price}
-                                    plugType={item.plug_type}
-                                    style={{
-                                        width: cardWidth,
-                                        overflow: 'hidden',
-                                        marginHorizontal: cardMarginHorizontal,
-                                    }}
-                                />
-                            </View>
-                        </TouchableWithoutFeedback>
-                    )}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    snapToInterval={cardWidth + 2 * cardMarginHorizontal}
-                    contentContainerStyle={{
-                        paddingHorizontal:
-                            Platform.OS === 'android'
-                                ? cardMarginHorizontal / 2
-                                : 0,
-                    }}
-                    decelerationRate={'fast'}
-                    viewabilityConfig={viewConfig.current}
-                    onViewableItemsChanged={onViewChanged.current}
-                    onMomentumScrollEnd={animateToMarker}
-                    getItemLayout={(data, index) => ({
-                        length: cardWidth + cardMarginHorizontal * 2,
-                        offset: (cardWidth + cardMarginHorizontal * 2) * index,
-                        index,
-                    })}
-                />
-            </SlidingUpPanel>
+            <SlidingStations
+                flatList={flatList}
+                publishedStations={publishedStations}
+                onSelectingCard={onSelectingCard}
+                ownerDetails={ownerDetails}
+                cardWidth={cardWidth}
+                cardMarginHorizontal={cardMarginHorizontal}
+                viewConfig={viewConfig}
+                onViewChanged={onViewChanged}
+                animateToMarker={animateToMarker}
+            />
         </View>
     );
 }
@@ -266,3 +224,4 @@ const styles = StyleSheet.create({
         zIndex: 3,
     },
 });
+

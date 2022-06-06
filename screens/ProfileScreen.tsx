@@ -9,9 +9,10 @@ import {
     Text,
     TouchableWithoutFeedback,
     View,
+    FlatList,
 } from 'react-native';
+import { BackgroundImage } from 'react-native-elements/dist/config';
 import { color } from 'react-native-elements/dist/helpers';
-import { FlatList } from 'react-native-gesture-handler';
 import { GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
 import MapView from 'react-native-maps';
 import { Rating } from 'react-native-ratings';
@@ -21,6 +22,7 @@ import { AirGnGUser, Station } from '../App.d';
 import { globalStyles } from '../assets/styles/globalStyles';
 import CustomButton from '../components/CustomButton';
 import MiniCard from '../components/MiniCard';
+import SlidingStations from '../components/SlidingStations';
 import { auth, db } from '../config/firebase';
 import { AuthenticatedUserContext } from '../providers/AuthenticatedUserProvider';
 import { publicStationsContext } from '../providers/PublicStationsProvider';
@@ -106,6 +108,12 @@ export default function ProfileScreen({
             console.log(error);
         }
     };
+    useEffect(() => {
+        //updating published stations based on stations changes
+        setPublishedStations(
+            stations.filter((s) => s.published && s.owner_id == user.uid)
+        );
+    }, [stations]);
 
     return (
         // main View
@@ -177,11 +185,23 @@ export default function ProfileScreen({
                     </Text>
                 </View>
             </SafeAreaView>
-
-            <Text>up town {publishedStations.length}</Text>
+            <View >
+                <Text>up town {publishedStations.length}</Text>
+            </View>
 
             {/* stations View  */}
             <View style={{ alignItems: 'flex-start', alignSelf: 'flex-start' }}>
+                <SlidingStations
+                    flatList={flatList}
+                    publishedStations={publishedStations}
+                    onSelectingCard={onSelectingCard}
+                    ownerDetails={ownerDetails}
+                    cardWidth={cardWidth}
+                    cardMarginHorizontal={cardMarginHorizontal}
+                    viewConfig={viewConfig}
+                    onViewChanged={onViewChanged}
+                    animateToMarker={animateToMarker}
+                />
                 <SlidingUpPanel
                     draggableRange={{ top: 230, bottom: 130 }}
                     ref={(c) => (slideUpPanel.current = c)}
