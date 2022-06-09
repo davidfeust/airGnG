@@ -180,6 +180,7 @@ export default function SearchStationTab({ navigation }) {
                 viewConfig={viewConfig}
                 onViewChanged={onViewChanged}
                 animateToMarker={animateToMarker}
+                down={true}
             />
         </View>
     );

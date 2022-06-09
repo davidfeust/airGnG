@@ -8,6 +8,7 @@ import {colors} from "../assets/styles/colors";
 import HomeTab from "../screens/tabs/HomeTab";
 import UsersManagerTab from "../screens/tabs/UsersManagerTab";
 import {AuthenticatedUserContext} from "../providers/AuthenticatedUserProvider";
+import ProfileScreen from "../screens/ProfileScreen";
 
 export default function TabsNavigator() {
     const Tab = createBottomTabNavigator();
@@ -48,6 +49,16 @@ export default function TabsNavigator() {
                     ),
                 }}
             />
+            {/* <Tab.Screen
+                name="ProfileScreen"
+                component={ProfileScreen}
+                options={{
+                    headerShown: true,
+                    headerStatusBarHeight: 35,
+                    tabBarLabel: "ProfileScreen",
+                   
+                }}
+            /> */}
             <Tab.Screen
                 name="My Stations"
                 component={MyStationsTab}

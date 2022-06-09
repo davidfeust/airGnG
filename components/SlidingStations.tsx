@@ -17,6 +17,7 @@ export default function SlidingStations({
     viewConfig,
     onViewChanged,
     animateToMarker,
+    down,
 }: {
     flatList: React.MutableRefObject<FlatList<Station>>;
     publishedStations: Station[];
@@ -24,6 +25,7 @@ export default function SlidingStations({
     ownerDetails: any[];
     cardWidth: number;
     cardMarginHorizontal: number;
+    down:boolean;
     viewConfig: React.MutableRefObject<{
         itemVisiblePercentThreshold: number;
         waitForInteraction: boolean;
@@ -36,12 +38,14 @@ export default function SlidingStations({
 }) {
     const slideUpPanel = useRef<SlidingUpPanel>();
     slideUpPanel.current?.show();
-
-    return  <SlidingUpPanel
+    
+    
+    return <SlidingUpPanel
     draggableRange={{ top: 230, bottom: 130 }}
     ref={(c) => (slideUpPanel.current = c)}
     backdropOpacity={0.3}
     snappingPoints={[130, 230]}
+    
 >
     <FlatList
         style={{ position: 'absolute' }}

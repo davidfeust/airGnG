@@ -7,6 +7,10 @@ export const globalStyles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
     },
+    check: {
+        backgroundColor: 'red',
+        borderColor: 'red',
+    },
     title: {
         fontSize: 40,
         fontWeight: 'bold',
