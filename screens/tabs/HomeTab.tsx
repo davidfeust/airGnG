@@ -1,15 +1,20 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Rating } from 'react-native-ratings';
 import { globalStyles } from '../../assets/styles/globalStyles';
 import CustomButton from '../../components/CustomButton';
 import { auth } from '../../config/firebase';
 import { AuthenticatedUserContext } from '../../providers/AuthenticatedUserProvider';
-import { getAverageRate  } from '../../utils/GlobalFuncitions';
+import { getAverageRate } from '../../utils/GlobalFuncitions';
 
 export default function HomeTab({ navigation }) {
     const [showBigImage, setShowBigImage] = useState(false);
-    const { user} = useContext(AuthenticatedUserContext);
+    const { user } = useContext(AuthenticatedUserContext);
+    const [isThereImage, setIsThereImage] = useState(false);
+    const imageUrl =
+        'https://firebasestorage.googleapis.com/v0/b/airgng-dfc98.appspot.com/o/images_profiles%2F' +
+        user.uid +
+        '.jpg?alt=media&token=af588fef-1e73-4f03-8b09-b5642d9253df';
     // user.reviews = [{rating:0, reviewer: 'shimon', comment: 'he is awsome'}]
 
     const handleSignOut = async () => {
@@ -19,7 +24,20 @@ export default function HomeTab({ navigation }) {
             console.log(error);
         }
     };
-
+  
+    useEffect(() => {
+        fetch(imageUrl)
+            .then((response) => {
+                if (response.status === 200) {
+                    setIsThereImage(true);
+                } else {
+                    setIsThereImage(false);
+                }
+            })
+            .catch((err) => {
+                console.log('ERR: ' + err);
+            });
+    }, [isThereImage]);
     return (
         <View style={[globalStyles.container, { justifyContent: 'center' }]}>
             {user.name ? (
@@ -35,8 +53,8 @@ export default function HomeTab({ navigation }) {
                     style={{ height: 200, width: 200 }}
                     borderRadius={100}
                     source={
-                        user.image
-                            ? { uri: user.image }
+                        isThereImage
+                            ? { uri: imageUrl }
                             : require('../../assets/defaults/default_image.png')
                     }
                 />
@@ -45,8 +63,8 @@ export default function HomeTab({ navigation }) {
                         <Image
                             style={{ height: 300, width: 300 }}
                             source={
-                                user.image
-                                    ? { uri: user.image }
+                                isThereImage
+                                    ? { uri: imageUrl }
                                     : require('../../assets/defaults/default_image.png')
                             }
                             borderRadius={10}
@@ -54,7 +72,10 @@ export default function HomeTab({ navigation }) {
                     </View>
                 </Modal>
             </Pressable>
-            <Rating readonly startingValue={user.reviews? getAverageRate(user.reviews) : 0 } />
+            <Rating
+                readonly
+                startingValue={user.reviews ? getAverageRate(user.reviews) : 0}
+            />
             <Text>( {user?.reviews.length} )</Text>
             <CustomButton text={'Logout'} onPress={handleSignOut} />
             <CustomButton
@@ -83,9 +104,5 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
-        // position: 'absolute',
-        // bottom: 20,
     },
 });
-
-

@@ -39,7 +39,7 @@ class MiniCard extends React.PureComponent<{
                 <View style={[styles.station_details, style]}>
                     <Image source={{ uri: image }} style={styles.image} />
                     <View style={styles.text}>
-                        <Text style={styles.address_text}>{address}</Text>
+                        <Text  style={styles.address_text}>{address}</Text>
                         <Text
                             style={styles.owner_text}
                         >{`Plug Type: ${plugType}`}</Text>
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         // justifyContent: 'space-between',
     },
     address_text: {
-        maxWidth: '95%',
+        maxWidth: '80%',
         color: colors.primary,
         fontSize: 15,
         fontWeight: 'bold',

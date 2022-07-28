@@ -48,7 +48,6 @@ const UploadPicture = ({
             } else {
                 await uploadImage(image, fullPath).then(
                     (url) => {
-                    //    console.log("blabla");
                     SetCurrentImage(url);
                     onFinish && onFinish(url);
                 }
